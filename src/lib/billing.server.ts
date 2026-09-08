@@ -1,6 +1,10 @@
 import Stripe from "stripe";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY } from "./pet-config";
+import {
+  PET_SUPABASE_URL,
+  PET_SUPABASE_PUBLISHABLE_KEY,
+  PET_STRIPE_PRODUCT_TAG,
+} from "./pet-config";
 import { requirePetEnv, PetConfigError } from "./pet-env.server";
 
 /**
@@ -70,21 +74,21 @@ export async function resolveOneTimePriceId(): Promise<string> {
 
 
 export function getWebhookSecret(): string {
-  return requireEnv("STRIPE_WEBHOOK_SECRET");
+  return requirePetEnv("STRIPE_WEBHOOK_SECRET");
 }
 
-/** Service-role client for the external Supabase project. Bypasses RLS. */
+/** Service-role client for the Pet Supabase project. Bypasses RLS. */
 export function adminSupabase(): SupabaseClient {
   return createClient(
-    EXTERNAL_SUPABASE_URL,
-    requireEnv("EXTERNAL_SUPABASE_SERVICE_ROLE_KEY"),
+    PET_SUPABASE_URL,
+    requirePetEnv("SUPABASE_SERVICE_ROLE_KEY"),
     { auth: { persistSession: false, autoRefreshToken: false } },
   );
 }
 
 /** Client scoped to an organizer's bearer token (RLS applies as that user). */
 export function authedSupabase(token: string): SupabaseClient {
-  return createClient(EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_PUBLISHABLE_KEY, {
+  return createClient(PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY, {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
   });
@@ -160,7 +164,7 @@ export async function ensureStripeCustomer(
     (
       await stripe.customers.create({
         email: organizer.email ?? undefined,
-        metadata: { user_id: organizer.userId, product: "mosaic_wedding_pro" },
+        metadata: { user_id: organizer.userId, product: PET_STRIPE_PRODUCT_TAG },
       })
     ).id;
 

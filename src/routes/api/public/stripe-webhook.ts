@@ -139,7 +139,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
                   ? intent.customer
                   : (intent.customer?.id ?? null);
               if (!customerId) break;
-              if (intent.metadata?.["product"] !== "mosaic_wedding_pro") break;
+              if (intent.metadata?.["product"] !== PET_STRIPE_PRODUCT_TAG) break;
 
               await recordPurchase({
                 userId: intent.metadata?.["user_id"] ?? null,

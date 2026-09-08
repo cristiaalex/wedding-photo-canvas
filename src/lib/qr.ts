@@ -1,11 +1,9 @@
 import QRCode from "qrcode";
 import { supabase, COVERS_BUCKET } from "./supabase";
+import { PET_SITE_ORIGIN } from "./pet-config";
 
 export function guestUrlForSlug(slug: string) {
-  const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : "https://id-preview--7d3d9e25-bde9-4302-b5fd-592a0b476509.lovable.app";
+  const origin = typeof window !== "undefined" ? window.location.origin : PET_SITE_ORIGIN;
   return `${origin}/e/${slug}`;
 }
 

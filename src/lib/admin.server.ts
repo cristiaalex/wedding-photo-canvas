@@ -1,21 +1,22 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { adminSupabase, requireOrganizer } from "./billing.server";
+import { petEnv, PET_SERVER_ENV } from "./pet-env.server";
 
 /**
  * Server-only admin authorization + metrics.
  *
- * Nothing here may be imported from the browser: it reaches the external
+ * Nothing here may be imported from the browser: it reaches the Pet
  * Supabase service-role client. The `.server.ts` suffix keeps it out of
  * client bundles, and `admin.functions.ts` loads it with a dynamic import.
  *
- * Admin identity is configuration, not data: the allow-list lives in the
- * server-only env var MOSAIC_ADMIN_EMAILS (comma separated). There is no
- * admin registration flow and no client-trusted admin flag.
+ * Admin identity is configuration, not data: the Pet-specific allow-list
+ * lives in the server-only env var PET_ADMIN_EMAILS (comma separated). There
+ * is no admin registration flow and no client-trusted admin flag.
  */
 
 function allowedAdminEmails(): string[] {
-  const raw = process.env["MOSAIC_ADMIN_EMAILS"] ?? "";
+  const raw = petEnv("ADMIN_EMAILS") ?? "";
   return raw
     .split(",")
     .map((s) => s.trim().toLowerCase())
