@@ -1,6 +1,6 @@
 # mosaic-worker
 
-Standalone image-processing backend for **Mosaic Wedding**.
+Standalone image-processing backend for **Mosaic Pet** (dedicated deployment — not shared with any other product).
 
 This service is intentionally **separate** from the main app. The Lovable
 frontend (TanStack Start / Supabase) only triggers jobs and reads status —
