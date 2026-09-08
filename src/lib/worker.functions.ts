@@ -21,21 +21,24 @@ const InputSchema = z.object({
 // (Job C runs immediately after Job A on the worker); there is no
 // separate client-triggered print endpoint anymore.
 
-// External Supabase project (same project the browser client targets).
-// Anon/publishable key is safe in code; it's the same key shipped to the client.
-const EXTERNAL_SUPABASE_URL = "https://redjgmjkgdaplgsqjfrg.supabase.co";
-const EXTERNAL_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_PjmSlDgNlKVPJ1J49xhwZg_Wxi5OfNH";
+// Pet Supabase project (same project the browser client targets). All values
+// come from the single Pet configuration source — nothing hard-coded here.
+import {
+  PET_SUPABASE_URL,
+  PET_SUPABASE_PUBLISHABLE_KEY,
+  isPetStorageUrl,
+} from "./pet-config";
 
 function isStorageUrl(url: string): boolean {
-  // Allow only URLs served from our Supabase Storage (signed or public
-  // object URLs), e.g. https://<project>.supabase.co/storage/v1/object/...
-  return url.startsWith(`${EXTERNAL_SUPABASE_URL}/storage/v1/`);
+  // Allow only URLs served from the Pet project's own Storage (signed or
+  // public object URLs) to prevent SSRF.
+  return isPetStorageUrl(url);
 }
 
 function authedSupabase(token: string) {
   return createClient<Database>(
-    EXTERNAL_SUPABASE_URL,
-    EXTERNAL_SUPABASE_PUBLISHABLE_KEY,
+    PET_SUPABASE_URL,
+    PET_SUPABASE_PUBLISHABLE_KEY,
     {
       global: { headers: { Authorization: `Bearer ${token}` } },
       auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
@@ -60,12 +63,8 @@ async function requireBearerUser() {
 }
 
 async function workerEndpoint(path: string): Promise<{ url: string; token: string }> {
-  const workerUrl = process.env.WORKER_URL;
-  const workerToken = process.env.WORKER_API_TOKEN;
-  if (!workerUrl || !workerToken) {
-    throw new Error("Worker is not configured (WORKER_URL / WORKER_API_TOKEN missing).");
-  }
-  return { url: `${workerUrl.replace(/\/$/, "")}${path}`, token: workerToken };
+  const { petWorkerEndpoint } = await import("./pet-env.server");
+  return petWorkerEndpoint(path);
 }
 
 /**

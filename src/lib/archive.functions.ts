@@ -2,8 +2,8 @@
  * Owner-only "Download All Photos" server functions.
  *
  * These are thin wrappers: ownership is verified with the caller's bearer
- * token, then the existing Railway worker (same WORKER_URL / WORKER_API_TOKEN
- * used by Mosaic generation) does the privileged work.
+ * token, then the Pet mosaic worker (PET_WORKER_URL / PET_WORKER_API_TOKEN,
+ * the same deployment used by Mosaic generation) does the privileged work.
  */
 
 import { createServerFn } from "@tanstack/react-start";
@@ -11,12 +11,10 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
-
-const EXTERNAL_SUPABASE_URL = "https://redjgmjkgdaplgsqjfrg.supabase.co";
-const EXTERNAL_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_PjmSlDgNlKVPJ1J49xhwZg_Wxi5OfNH";
+import { PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY } from "./pet-config";
 
 function authedSupabase(token: string) {
-  return createClient<Database>(EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_PUBLISHABLE_KEY, {
+  return createClient<Database>(PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY, {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
   });
@@ -41,15 +39,13 @@ async function requireOwner(eventId: string) {
   return { supabase, userId: userData.user.id };
 }
 
-function workerEndpoint(path: string) {
-  const workerUrl = process.env["WORKER_URL"];
-  const workerToken = process.env["WORKER_API_TOKEN"];
-  if (!workerUrl || !workerToken) throw new Error("Worker is not configured.");
-  return { url: `${workerUrl.replace(/\/$/, "")}${path}`, token: workerToken };
+async function workerEndpoint(path: string) {
+  const { petWorkerEndpoint } = await import("./pet-env.server");
+  return petWorkerEndpoint(path);
 }
 
 async function callWorker(path: string, body: unknown) {
-  const { url, token } = workerEndpoint(path);
+  const { url, token } = await workerEndpoint(path);
   const res = await fetch(url, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },

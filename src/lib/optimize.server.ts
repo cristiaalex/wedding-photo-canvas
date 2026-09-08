@@ -1,15 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { getRequest } from "@tanstack/react-start/server";
 import type { Database } from "./database.types";
-
-const EXTERNAL_SUPABASE_URL = "https://redjgmjkgdaplgsqjfrg.supabase.co";
-const EXTERNAL_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_PjmSlDgNlKVPJ1J49xhwZg_Wxi5OfNH";
+import { PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY } from "./pet-config";
+import { petWorkerEndpoint } from "./pet-env.server";
 
 type OptimizeInput = { eventId: string; uploadId: string };
 
 function createRequestClient(bearer: string | null) {
-  const key = EXTERNAL_SUPABASE_PUBLISHABLE_KEY;
-  return createClient<Database>(EXTERNAL_SUPABASE_URL, key, {
+  const key = PET_SUPABASE_PUBLISHABLE_KEY;
+  return createClient<Database>(PET_SUPABASE_URL, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
       headers: bearer ? { Authorization: `Bearer ${bearer}` } : {},
@@ -69,10 +68,8 @@ async function requestSupabase(eventId: string) {
 }
 
 async function callWorker(path: string, body: unknown) {
-  const workerUrl = process.env["WORKER_URL"];
-  const workerToken = process.env["WORKER_API_TOKEN"];
-  if (!workerUrl || !workerToken) throw new Error("Worker is not configured.");
-  const response = await fetch(`${workerUrl.replace(/\/$/, "")}${path}`, {
+  const { url: endpoint, token: workerToken } = petWorkerEndpoint(path);
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: { Authorization: `Bearer ${workerToken}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),

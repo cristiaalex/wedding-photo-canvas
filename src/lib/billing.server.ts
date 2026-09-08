@@ -1,40 +1,30 @@
 import Stripe from "stripe";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { PET_SUPABASE_URL, PET_SUPABASE_PUBLISHABLE_KEY } from "./pet-config";
+import { requirePetEnv, PetConfigError } from "./pet-env.server";
 
 /**
- * Server-only Stripe + billing helpers.
+ * Server-only Stripe + billing helpers for Mosaic Pet.
  *
  * Nothing in this file may be imported from the browser: it reads the Stripe
- * secret key and the external Supabase service-role key. The `.server.ts`
- * suffix keeps it out of client bundles.
+ * secret key and the Pet Supabase service-role key. The `.server.ts` suffix
+ * keeps it out of client bundles.
  *
- * Cloudflare Workers bind env at REQUEST time, so every value is read inside
- * a function, never at module scope.
+ * All connection values come from `pet-config.ts` / `pet-env.server.ts`;
+ * nothing is hard-coded. Env is read inside functions, never at module scope.
  */
 
-export const EXTERNAL_SUPABASE_URL = "https://redjgmjkgdaplgsqjfrg.supabase.co";
-export const EXTERNAL_SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_PjmSlDgNlKVPJ1J49xhwZg_Wxi5OfNH";
-
-export class BillingConfigError extends Error {}
-
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new BillingConfigError(`Missing configuration: ${name}`);
-  }
-  return value;
-}
+export const BillingConfigError = PetConfigError;
 
 /** Stripe client configured for the Workers runtime (fetch + WebCrypto). */
 export function getStripe(): Stripe {
-  return new Stripe(requireEnv("STRIPE_SECRET_KEY"), {
+  return new Stripe(requirePetEnv("STRIPE_SECRET_KEY"), {
     httpClient: Stripe.createFetchHttpClient(),
   });
 }
 
 export function getPriceId(): string {
-  return requireEnv("STRIPE_PRICE_ID");
+  return requirePetEnv("STRIPE_PRICE_ID");
 }
 
 /**
