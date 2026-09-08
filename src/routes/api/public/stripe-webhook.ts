@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type Stripe from "stripe";
+import { PET_STRIPE_PRODUCT_TAG } from "@/lib/pet-config";
 
 /**
  * Stripe webhook endpoint.
