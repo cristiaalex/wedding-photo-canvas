@@ -29,7 +29,26 @@ const schema = z.object({
   JOB_TIMEOUT_MS: z.coerce.number().int().positive().default(25 * 60 * 1000),
 });
 
-const parsed = schema.safeParse(process.env);
+/**
+ * Mosaic Pet deployment: the canonical variable names are PET_-prefixed so a
+ * Pet worker can never be started with another product's credentials by
+ * accident. The un-prefixed names are accepted only as a local-dev fallback.
+ *   PET_WORKER_API_TOKEN            -> WORKER_API_TOKEN
+ *   PET_SUPABASE_URL                -> SUPABASE_URL
+ *   PET_SUPABASE_SERVICE_ROLE_KEY   -> SUPABASE_SERVICE_ROLE_KEY
+ *   PET_MOSAICS_BUCKET / PET_PHOTOS_BUCKET -> SUPABASE_STORAGE_BUCKET / SUPABASE_PHOTOS_BUCKET
+ */
+const env: NodeJS.ProcessEnv = {
+  ...process.env,
+  WORKER_API_TOKEN: process.env.PET_WORKER_API_TOKEN ?? process.env.WORKER_API_TOKEN,
+  SUPABASE_URL: process.env.PET_SUPABASE_URL ?? process.env.SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY:
+    process.env.PET_SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY,
+  SUPABASE_STORAGE_BUCKET: process.env.PET_MOSAICS_BUCKET ?? process.env.SUPABASE_STORAGE_BUCKET,
+  SUPABASE_PHOTOS_BUCKET: process.env.PET_PHOTOS_BUCKET ?? process.env.SUPABASE_PHOTOS_BUCKET,
+};
+
+const parsed = schema.safeParse(env);
 if (!parsed.success) {
   // eslint-disable-next-line no-console
   console.error('[config] Invalid environment:', parsed.error.flatten().fieldErrors);

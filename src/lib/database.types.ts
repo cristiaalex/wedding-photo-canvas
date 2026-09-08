@@ -1,5 +1,21 @@
-// Hand-written types mirroring the external Supabase schema.
-// Source: events, uploads, mosaics in the user's existing project.
+// Hand-written types mirroring the Mosaic Pet database schema
+// (supabase/migrations-external/*.sql). Pet product columns added by
+// 20260909_pet_product_model.sql are optional so existing code keeps compiling.
+
+export type PetOrientation = "portrait" | "landscape" | "square";
+export type PetProcessingStatus =
+  | "draft"
+  | "uploads_complete"
+  | "preview_queued"
+  | "preview_processing"
+  | "preview_ready"
+  | "final_queued"
+  | "final_processing"
+  | "final_ready"
+  | "failed";
+export type PetPaymentStatus = "unpaid" | "pending" | "paid" | "refunded" | "failed";
+export type PetDownloadStatus = "unavailable" | "available" | "downloaded" | "expired";
+export type PetSourceCleanupStatus = "pending" | "scheduled" | "running" | "done" | "failed" | "skipped";
 
 export type Event = {
   id: string;
@@ -21,6 +37,29 @@ export type Event = {
   // Owner-upload privacy: when false (default) photos uploaded by the couple
   // are hidden from guests. Enforced by the uploads SELECT policy.
   show_owner_uploads_to_guests?: boolean | null;
+
+  // --- Mosaic Pet project / order model (20260909_pet_product_model) ---
+  product_kind?: string | null;
+  customer_email?: string | null;
+  pet_name?: string | null;
+  main_upload_id?: string | null;
+  orientation?: PetOrientation | null;
+  print_size?: string | null;
+  processing_status?: PetProcessingStatus | string | null;
+  payment_status?: PetPaymentStatus | string | null;
+  paid_at?: string | null;
+  download_status?: PetDownloadStatus | string | null;
+  download_expires_at?: string | null;
+  source_cleanup_status?: PetSourceCleanupStatus | string | null;
+  source_cleanup_at?: string | null;
+  source_cleanup_error?: string | null;
+  source_bytes_total?: number | null;
+  uploads_completed_at?: string | null;
+  preview_requested_at?: string | null;
+  preview_ready_at?: string | null;
+  final_requested_at?: string | null;
+  final_ready_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type EventInsert = {
@@ -60,6 +99,19 @@ export type Upload = {
   original_size_bytes?: number | null;
   optimized_size_bytes?: number | null;
   optimized_at?: string | null;
+  // --- Mosaic Pet source lifecycle (20260909_pet_product_model) ---
+  source_kind?: "photo" | "zip" | "zip_entry" | string | null;
+  parent_upload_id?: string | null;
+  storage_path?: string | null;
+  size_bytes?: number | null;
+  width_px?: number | null;
+  height_px?: number | null;
+  processing_status?: string | null;
+  processing_error?: string | null;
+  extracted_count?: number | null;
+  processed_at?: string | null;
+  deleted_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type UploadInsert = {
@@ -131,6 +183,35 @@ export type Mosaic = {
   } | null;
   created_at: string;
   completed_at?: string | null;
+  // --- Mosaic Pet preview/final lifecycle (20260909_pet_product_model) ---
+  job_kind?: "preview" | "final" | string | null;
+  orientation?: PetOrientation | null;
+  print_size?: string | null;
+  main_upload_id?: string | null;
+  preview_storage_path?: string | null;
+  preview_size_bytes?: number | null;
+  preview_width_px?: number | null;
+  preview_height_px?: number | null;
+  preview_ready_at?: string | null;
+  final_storage_path?: string | null;
+  final_size_bytes?: number | null;
+  final_width_px?: number | null;
+  final_height_px?: number | null;
+  final_format?: string | null;
+  final_ready_at?: string | null;
+  final_verified_at?: string | null;
+  final_available?: boolean | null;
+  expires_at?: string | null;
+  download_count?: number | null;
+  first_downloaded_at?: string | null;
+  last_downloaded_at?: string | null;
+  queued_at?: string | null;
+  started_at?: string | null;
+  print_completed_at?: string | null;
+  dzi_completed_at?: string | null;
+  failed_at?: string | null;
+  sources_released_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type GuestbookMessage = {
