@@ -73,8 +73,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Mosaic — Wedding memories, woven from every guest" },
       { name: "twitter:description", content: "Mosaic turns every guest photo into a private wedding gallery and a stunning interactive mosaic of your portrait." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e42538bf-5b97-416b-8294-cfc1fa35f4f8/id-preview-917bb672--7d3d9e25-bde9-4302-b5fd-592a0b476509.lovable.app-1780722670168.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e42538bf-5b97-416b-8294-cfc1fa35f4f8/id-preview-917bb672--7d3d9e25-bde9-4302-b5fd-592a0b476509.lovable.app-1780722670168.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
