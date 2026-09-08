@@ -7,7 +7,7 @@
 --             {event_id}/{upload_id}/source.<raw>  (RAW/ZIP sources)
 --   mosaics : {event_id}/{mosaic_id}.jpg, {event_id}/{mosaic_id}/print.*,
 --             {event_id}/{mosaic_id}/dzi/**        (tiles, public read)
---   covers  : {user_id}/... or {event_id}/...       (public read)
+--   covers  : {slug}/..., {event_id}/..., {user_id}/... or qr/... (public read)
 --
 -- Retention roles:
 --   photos  = TEMPORARY. Written by customers, read/deleted by the worker
@@ -39,7 +39,7 @@ AS $$
     FROM public.events e
     WHERE e.organizer_id IS NOT NULL
       AND e.organizer_id = auth.uid()
-      AND e.id::text = (storage.foldername(_name))[1]
+      AND (storage.foldername(_name))[1] IN (e.id::text, e.slug)
   );
 $$;
 REVOKE ALL ON FUNCTION public.pet_owns_object_prefix(text) FROM PUBLIC;
@@ -112,7 +112,8 @@ CREATE POLICY "pet covers owner insert"
     bucket_id = 'covers'
     AND (
       (storage.foldername(name))[1] = auth.uid()::text
-      OR public.pet_owns_object_prefix(name)
+      OR (storage.foldername(name))[1] = 'qr'          -- generated QR images
+      OR public.pet_owns_object_prefix(name)            -- {event_id}/ or {slug}/
     )
   );
 -- "Public read covers", "Owners update covers", "Owners delete covers" from
