@@ -99,6 +99,19 @@ export type Upload = {
   original_size_bytes?: number | null;
   optimized_size_bytes?: number | null;
   optimized_at?: string | null;
+  // --- Mosaic Pet source lifecycle (20260909_pet_product_model) ---
+  source_kind?: "photo" | "zip" | "zip_entry" | string | null;
+  parent_upload_id?: string | null;
+  storage_path?: string | null;
+  size_bytes?: number | null;
+  width_px?: number | null;
+  height_px?: number | null;
+  processing_status?: string | null;
+  processing_error?: string | null;
+  extracted_count?: number | null;
+  processed_at?: string | null;
+  deleted_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type UploadInsert = {
@@ -170,6 +183,35 @@ export type Mosaic = {
   } | null;
   created_at: string;
   completed_at?: string | null;
+  // --- Mosaic Pet preview/final lifecycle (20260909_pet_product_model) ---
+  job_kind?: "preview" | "final" | string | null;
+  orientation?: PetOrientation | null;
+  print_size?: string | null;
+  main_upload_id?: string | null;
+  preview_storage_path?: string | null;
+  preview_size_bytes?: number | null;
+  preview_width_px?: number | null;
+  preview_height_px?: number | null;
+  preview_ready_at?: string | null;
+  final_storage_path?: string | null;
+  final_size_bytes?: number | null;
+  final_width_px?: number | null;
+  final_height_px?: number | null;
+  final_format?: string | null;
+  final_ready_at?: string | null;
+  final_verified_at?: string | null;
+  final_available?: boolean | null;
+  expires_at?: string | null;
+  download_count?: number | null;
+  first_downloaded_at?: string | null;
+  last_downloaded_at?: string | null;
+  queued_at?: string | null;
+  started_at?: string | null;
+  print_completed_at?: string | null;
+  dzi_completed_at?: string | null;
+  failed_at?: string | null;
+  sources_released_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type GuestbookMessage = {
