@@ -1,0 +1,339 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Mosaic — Wedding memory platform
+ * Mobile-first bridal aesthetic: ivory canvas, blush, sage, pearl and warm taupe accents.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ivory: var(--ivory);
+  --color-champagne: var(--champagne);
+  --color-blush: var(--blush);
+  --color-sage: var(--sage);
+  --color-ink: var(--ink);
+  --color-gold: var(--gold);
+  --color-dusty: var(--dusty);
+  --color-mist: var(--mist);
+  --color-peach: var(--peach);
+  --color-graphite: var(--graphite);
+  --color-surface: var(--surface);
+
+
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+
+  --shadow-soft: 0 28px 70px -34px oklch(0.48 0.05 35 / 0.2);
+  --shadow-elegant: 0 18px 46px -22px oklch(0.46 0.04 35 / 0.18);
+}
+
+:root {
+  --radius: 0.25rem;
+
+  /* Soft ivory canvas, editorial graphite text */
+  --background: oklch(0.987 0.006 84);            /* warm ivory */
+  --foreground: oklch(0.305 0.012 250);           /* soft graphite */
+  --ink: oklch(0.26 0.014 250);                   /* dark charcoal */
+
+  --ivory: oklch(0.987 0.006 84);
+  /* Card / panel surface — subtle warm tone above the ivory page background */
+  --surface: oklch(0.962 0.011 78);
+  --champagne: oklch(0.945 0.016 76);
+  --blush: oklch(0.93 0.028 38);                  /* pale peach-blush */
+  --peach: oklch(0.945 0.024 44);
+  --sage: oklch(0.76 0.035 145);
+  --gold: oklch(0.72 0.052 76);                   /* restrained warm gold */
+  --dusty: oklch(0.62 0.038 238);                 /* muted dusty blue */
+  --mist: oklch(0.928 0.012 238);                 /* soft blue-grey surface */
+  --graphite: oklch(0.305 0.012 250);
+
+
+  --card: oklch(0.98 0.008 78);
+  --card-foreground: oklch(0.29 0.018 48);
+  --popover: oklch(0.995 0.004 82);
+  --popover-foreground: oklch(0.29 0.018 48);
+
+  --primary: oklch(0.47 0.052 35);                /* rosewood, not black */
+  --primary-foreground: oklch(0.988 0.007 82);
+
+  --secondary: oklch(0.94 0.018 80);
+  --secondary-foreground: oklch(0.32 0.018 48);
+
+  --muted: oklch(0.945 0.008 240);
+  --muted-foreground: oklch(0.52 0.014 248);
+
+  --accent: oklch(0.93 0.028 38);                 /* pale peach accent */
+  --accent-foreground: oklch(0.3 0.012 250);
+
+  --destructive: oklch(0.62 0.18 25);
+  --destructive-foreground: oklch(0.985 0.008 80);
+
+  --border: oklch(0.885 0.008 240);
+  --input: oklch(0.9 0.008 240);
+  --ring: oklch(0.62 0.038 238 / 0.4);
+
+
+  --gradient-warm: linear-gradient(180deg, var(--ivory), oklch(0.955 0.019 75));
+  --gradient-blush: linear-gradient(135deg, oklch(0.97 0.018 35), oklch(0.91 0.045 22));
+  --gradient-cta: linear-gradient(135deg, var(--primary), oklch(0.6 0.06 25));
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body.auth-callback-page pre,
+  body.auth-callback-page code,
+  html.auth-callback-page pre,
+  html.auth-callback-page code,
+  [data-auth-callback-screen] pre,
+  [data-auth-callback-screen] code {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    pointer-events: none !important;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* iOS Safari rubber-band uses background; keep it ivory. */
+    background-color: var(--color-background);
+  }
+
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+
+  /* Larger, comfortable tap targets on touch devices. */
+  @media (hover: none) and (pointer: coarse) {
+    button, a, [role="button"], label[for], input[type="submit"] {
+      min-height: 44px;
+    }
+  }
+
+  /* Native inputs feel like the rest of the suite on iOS. */
+  input, select, textarea, button {
+    font: inherit;
+    color: inherit;
+  }
+  input[type="date"], input[type="email"], input[type="text"], textarea {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  ::selection {
+    background: var(--blush);
+    color: var(--ink);
+  }
+}
+
+@utility surface-fade {
+  background-image: linear-gradient(
+    160deg,
+    var(--ivory),
+    color-mix(in oklab, var(--champagne) 60%, var(--ivory))
+  );
+}
+
+@utility safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+@utility text-script {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+@utility text-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+@utility hairline {
+  height: 1px;
+  width: 3rem;
+  background: var(--ink);
+  opacity: 0.6;
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.9rem;
+  background: var(--ivory);
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
+  border-radius: 999px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background: var(--primary);
+    color: var(--ivory);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-elegant);
+  }
+}
+
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.9rem;
+  border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  background: var(--ivory);
+  transition: background 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background: var(--primary);
+    color: var(--ivory);
+  }
+}
+
+/* Legacy aliases — older components still reference these names */
+@utility btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.9rem;
+  background: var(--ivory);
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background: var(--primary);
+    color: var(--ivory);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-elegant);
+  }
+}
+
+@utility gold-rule {
+  height: 1px;
+  width: 3rem;
+  background: var(--primary);
+  opacity: 0.45;
+}
+
+@utility field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.85rem 0;
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 1rem; /* 16px — prevents iOS Safari auto-zoom on focus */
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: var(--ink);
+  }
+
+  /* Kill Chrome/Safari/iOS blue autofill wash */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-foreground);
+    caret-color: var(--color-foreground);
+    -webkit-box-shadow: 0 0 0 1000px var(--ivory) inset;
+    box-shadow: 0 0 0 1000px var(--ivory) inset;
+    background-color: var(--ivory) !important;
+    background-clip: content-box !important;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.92; }
+  50% { opacity: 1; }
+}
+
+.breathe {
+  animation: breathe 3s ease-in-out infinite;
+}

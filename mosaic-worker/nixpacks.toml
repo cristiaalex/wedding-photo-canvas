@@ -1,0 +1,17 @@
+# Nixpacks build config for Railway.
+# sharp needs libvips at runtime; the prebuilt binary from npm normally
+# covers this, but we pin Node 20 explicitly so installs are reproducible.
+
+[phases.setup]
+# libraw provides dcraw_emu (RAW demosaic) and exiftool extracts the
+# embedded full-size preview from Apple ProRAW DNG files.
+nixPkgs = ["nodejs_20", "libraw", "exiftool"]
+
+[phases.install]
+cmds = ["npm install --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
