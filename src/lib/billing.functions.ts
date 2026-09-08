@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { PET_SITE_ORIGIN, PET_STRIPE_PRODUCT_TAG } from "./pet-config";
 
 /**
  * Client-callable billing RPCs. Every handler resolves the authenticated
@@ -20,7 +21,7 @@ function siteOrigin(): string {
   try {
     return new URL(req!.url).origin;
   } catch {
-    return "https://mosaic.wedding";
+    return PET_SITE_ORIGIN;
   }
 }
 
@@ -124,7 +125,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       const metadata = {
         user_id: organizer.userId,
-        product: "mosaic_wedding_pro",
+        product: PET_STRIPE_PRODUCT_TAG,
         ...(eventId ? { event_id: eventId } : {}),
       };
 

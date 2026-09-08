@@ -1,5 +1,5 @@
 -- =============================================================================
--- SECURITY HARDENING — external Supabase project: redjgmjkgdaplgsqjfrg
+-- SECURITY HARDENING — Mosaic Pet database (target: the Pet Supabase project only)
 -- =============================================================================
 -- Verified on 2026-08-26: the anon/publishable key can currently read EVERY row
 -- in public.events, public.uploads and public.guestbook_messages. The earlier
@@ -9,7 +9,7 @@
 --
 -- HOW TO APPLY (required — tools in this repo cannot reach that project):
 --   Open the external project's SQL editor and run this file end to end, or
---   supabase db push --project-ref redjgmjkgdaplgsqjfrg \
+--   supabase db push --project-ref <PET_PROJECT_REF> \
 --     --file supabase/migrations-external/20260826_rls_hardening.sql
 --
 -- Fixes findings:

@@ -16,7 +16,7 @@
 -- Mosaic generation runs as the organizer, so private photos remain fully
 -- available as Mosaic source photos.
 --
--- Run manually in the external Supabase SQL editor (project redjgmjkgdaplgsqjfrg).
+-- Run manually in the external Supabase SQL editor (the Pet Supabase project).
 -- =============================================================================
 
 BEGIN;

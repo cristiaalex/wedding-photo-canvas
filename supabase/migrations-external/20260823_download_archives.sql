@@ -15,7 +15,7 @@
 --
 -- The Railway worker uses the service role and bypasses RLS.
 --
--- Run manually in the external Supabase SQL editor (project redjgmjkgdaplgsqjfrg).
+-- Run manually in the external Supabase SQL editor (the Pet Supabase project).
 -- =============================================================================
 
 BEGIN;
