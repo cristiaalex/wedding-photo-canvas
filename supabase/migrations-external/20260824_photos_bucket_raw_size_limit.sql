@@ -1,5 +1,5 @@
 -- =============================================================================
--- External Supabase project migration: redjgmjkgdaplgsqjfrg.supabase.co
+-- Mosaic Pet database migration (target: the Pet Supabase project only)
 -- =============================================================================
 -- Allow the TEMPORARY special-RAW source (Apple ProRAW / DNG, ~85 MB) to be
 -- uploaded into the `photos` bucket through the resumable (TUS) endpoint.
@@ -15,7 +15,7 @@
 -- as well, otherwise the bucket limit has no effect.
 --
 -- Apply in the external project's SQL editor OR:
---   supabase db push --project-ref redjgmjkgdaplgsqjfrg \
+--   supabase db push --project-ref <PET_PROJECT_REF> \
 --     --file supabase/migrations-external/20260824_photos_bucket_raw_size_limit.sql
 -- =============================================================================
 

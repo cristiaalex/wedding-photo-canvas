@@ -43,7 +43,7 @@ export async function requireAdmin(
   const allowed = allowedAdminEmails();
 
   if (allowed.length === 0) {
-    console.error("[admin] MOSAIC_ADMIN_EMAILS is not configured");
+    console.error(`[admin] ${PET_SERVER_ENV.ADMIN_EMAILS} is not configured`);
     throw new AdminForbiddenError();
   }
   if (!email || !allowed.includes(email)) {

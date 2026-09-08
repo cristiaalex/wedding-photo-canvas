@@ -1,5 +1,5 @@
 -- =============================================================================
--- External Supabase project migration: redjgmjkgdaplgsqjfrg.supabase.co
+-- Mosaic Pet database migration (target: the Pet Supabase project only)
 -- =============================================================================
 -- Add the columns required by the "Generate Print Version" flow.
 --
@@ -14,7 +14,7 @@
 --
 -- How to apply:
 --   Paste in the external project SQL editor, or:
---   supabase db push --project-ref redjgmjkgdaplgsqjfrg \
+--   supabase db push --project-ref <PET_PROJECT_REF> \
 --     --file supabase/migrations-external/20260628_mosaic_print_columns.sql
 -- =============================================================================
 

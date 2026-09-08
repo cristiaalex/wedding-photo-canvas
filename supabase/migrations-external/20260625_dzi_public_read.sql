@@ -1,5 +1,5 @@
 -- =============================================================================
--- External Supabase project migration: redjgmjkgdaplgsqjfrg.supabase.co
+-- Mosaic Pet database migration (target: the Pet Supabase project only)
 -- =============================================================================
 -- Allow anonymous public read access to Deep Zoom assets in the `mosaics`
 -- bucket so OpenSeadragon can fetch the `.dzi` manifest and every tile
@@ -15,7 +15,7 @@
 --
 -- How to apply:
 --   Open the external project's SQL editor and paste this file, or:
---   supabase db push --project-ref redjgmjkgdaplgsqjfrg \
+--   supabase db push --project-ref <PET_PROJECT_REF> \
 --     --file supabase/migrations-external/20260625_dzi_public_read.sql
 -- =============================================================================
 

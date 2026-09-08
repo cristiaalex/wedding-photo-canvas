@@ -16,7 +16,7 @@
 -- collection period is active, guests can upload by default.
 --
 -- Run this file manually in the external Supabase SQL Editor
--- (project redjgmjkgdaplgsqjfrg). `supabase db push` from this repo does
+-- (the Pet Supabase project). `supabase db push` from this repo does
 -- NOT reach that project.
 -- =============================================================================
 

@@ -1,5 +1,5 @@
 -- =============================================================================
--- External Supabase project migration: redjgmjkgdaplgsqjfrg.supabase.co
+-- Mosaic Pet database migration (target: the Pet Supabase project only)
 -- =============================================================================
 -- This migration MUST be run manually against the EXTERNAL Supabase project
 -- that hosts the application tables (events, uploads, mosaics,
@@ -8,7 +8,7 @@
 --
 -- How to apply:
 --   Option A: Open the external project's SQL editor and paste this file.
---   Option B: supabase db push --project-ref redjgmjkgdaplgsqjfrg \
+--   Option B: supabase db push --project-ref <PET_PROJECT_REF> \
 --             --file supabase/migrations-external/20260624_enable_rls_app_tables.sql
 --
 -- Fixes security findings:
