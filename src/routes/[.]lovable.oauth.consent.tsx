@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 type OAuthApi = {
@@ -39,7 +39,7 @@ function Consent() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
 
   // Load session + authorization details once on mount.
-  useState(() => {
+  useEffect(() => {
     void (async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
@@ -63,7 +63,7 @@ function Consent() {
       }
       setDetails(res.data);
     })();
-  });
+  }, [authorization_id]);
 
   async function sendLink(e: React.FormEvent) {
     e.preventDefault();
