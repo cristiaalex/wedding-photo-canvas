@@ -1,7 +1,8 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 
-const OPTIONS = {
+type Size = { name: string; print: string };
+const OPTIONS: Record<"landscape" | "portrait" | "square", Size[]> = {
   landscape: [
     { name: "Studio", print: '16 x 12 in / 40 x 30 cm' },
     { name: "Gallery", print: '24 x 18 in / 60 x 45 cm' },
@@ -17,7 +18,7 @@ const OPTIONS = {
     { name: "Gallery", print: '20 x 20 in / 50 x 50 cm' },
     { name: "Grand", print: '30 x 30 in / 75 x 75 cm' },
   ],
-} as const;
+};
 
 export default defineTool({
   name: "list_print_options",
