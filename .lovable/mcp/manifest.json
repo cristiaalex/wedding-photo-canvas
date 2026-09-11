@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "sdk_version": "2.0.4",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://gwemxrlifdqoatsswyeg.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "mosaic-pet",
+      "version": "0.1.0",
+      "title": "Mosaic Pet"
+    },
+    "tools": [
+      {
+        "name": "get_mosaic_guide",
+        "title": "How Mosaic Pet works",
+        "description": "Explain the Mosaic Pet process end to end, plus advice on choosing photos for the best mosaic result.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_print_options",
+        "title": "List print options",
+        "description": "List the Mosaic Pet orientations (landscape, portrait, square) and the three print sizes available for each.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "orientation": {
+              "description": "Limit the result to one orientation.",
+              "type": "string",
+              "enum": [
+                "landscape",
+                "portrait",
+                "square"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_mosaics",
+        "title": "List my mosaics",
+        "description": "List the mosaic projects belonging to the signed-in customer, with their current status and print settings.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
