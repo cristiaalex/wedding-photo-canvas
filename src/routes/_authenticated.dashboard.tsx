@@ -26,6 +26,15 @@ function DashboardPage() {
   const [latest, setLatest] = useState<Mosaic | null>(null);
   const [photoCount, setPhotoCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [justPaid, setJustPaid] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("billing") !== "success") return;
+    setJustPaid(true);
+    window.history.replaceState({}, "", window.location.pathname);
+  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -54,6 +63,12 @@ function DashboardPage() {
   return (
     <AppShell projectName={project.pet_name}>
       <div className="space-y-10 py-4 md:space-y-14 md:py-8">
+        {justPaid && (
+          <div className="rounded-[2rem] border-2 border-mint bg-mint/25 p-6">
+            <p className="text-display text-2xl">We&rsquo;re creating your Mosaic ❤️</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">Thank you! Your high-resolution mosaic is being made right now. We&rsquo;ll email you a link the moment it&rsquo;s ready — you can close this page.</p>
+          </div>
+        )}
         <header className="max-w-3xl">
           <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">My Pet Mosaic</span>
           <h1 className="mt-5 text-display text-4xl md:text-6xl">Hey, {petProjectName(project.pet_name || project.event_name)}! Ready for more magic?</h1>

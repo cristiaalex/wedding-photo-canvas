@@ -92,10 +92,28 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
                 console.error("[stripe-webhook] line item lookup failed", err);
               }
 
+              // Anonymous → customer account handover. The project keeps its
+              // identity: we promote the paying session to the checkout email,
+              // or move the project to the returning customer's account.
+              const { linkPurchaseToEmail, markProjectPaid, sendAccessEmail } =
+                await import("@/lib/checkout-account.server");
+              const payingUserId =
+                session.metadata?.["user_id"] ?? session.client_reference_id ?? null;
+              const eventId = session.metadata?.["event_id"] ?? null;
+              const checkoutEmail =
+                session.metadata?.["customer_email"] ??
+                session.customer_details?.email ??
+                null;
+              const ownerId = await linkPurchaseToEmail({
+                payingUserId,
+                email: checkoutEmail,
+                eventId,
+              });
+              await markProjectPaid(eventId);
+
               await recordPurchase({
-                userId:
-                  session.metadata?.["user_id"] ?? session.client_reference_id ?? null,
-                eventId: session.metadata?.["event_id"] ?? null,
+                userId: ownerId,
+                eventId,
                 customerId,
                 paymentIntentId,
                 checkoutSessionId: session.id,
@@ -129,6 +147,10 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
                   }
                 })(),
               });
+
+              // Passwordless access to their account, using the existing
+              // magic-link architecture.
+              await sendAccessEmail(checkoutEmail);
               break;
             }
 

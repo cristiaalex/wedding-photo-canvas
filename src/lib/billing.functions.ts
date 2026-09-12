@@ -88,6 +88,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     z
       .object({
         eventId: z.string().uuid().optional(),
+        // Collected at checkout: the address where we send access to the
+        // finished mosaic. This is the only point the product asks for it.
+        email: z.string().trim().email().max(200).optional(),
         // Raw string only. The discount value, partner and commission are
         // resolved server-side; the browser is never trusted for pricing.
         promoCode: z.string().trim().max(40).optional(),
@@ -121,12 +124,24 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       }
 
       const customerId = await ensureStripeCustomer(organizer);
+
+      // Anonymous studio sessions have no email yet; stamp the checkout
+      // address on the Stripe customer so receipts reach the right inbox.
+      const checkoutEmail = data.email?.toLowerCase() ?? organizer.email ?? null;
+      if (checkoutEmail && checkoutEmail !== organizer.email) {
+        try {
+          await getStripe().customers.update(customerId, { email: checkoutEmail });
+        } catch (err) {
+          console.error("[billing] could not store checkout email", err);
+        }
+      }
       const origin = siteOrigin();
 
       const metadata = {
         user_id: organizer.userId,
         product: PET_STRIPE_PRODUCT_TAG,
         ...(eventId ? { event_id: eventId } : {}),
+        ...(checkoutEmail ? { customer_email: checkoutEmail } : {}),
       };
 
       const priceId = await resolveOneTimePriceId();

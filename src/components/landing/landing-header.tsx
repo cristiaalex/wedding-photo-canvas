@@ -61,8 +61,8 @@ export function LandingHeader() {
               {l.label}
             </a>
           ))}
-          <Link to="/login" className="btn-primary md:px-5 md:py-2.5 md:text-[0.62rem] lg:px-6 lg:py-3 lg:text-[0.68rem]">
-            Create your wedding
+          <Link to="/onboarding" className="btn-primary md:px-5 md:py-2.5 md:text-[0.62rem] lg:px-6 lg:py-3 lg:text-[0.68rem]">
+            Create your mosaic
           </Link>
         </nav>
 
@@ -117,7 +117,7 @@ export function LandingHeader() {
               </a>
             ))}
             <Link
-              to="/login"
+              to="/onboarding"
               onClick={() => setOpen(false)}
               className="btn-primary mx-auto mt-10 w-full max-w-xs py-4 text-[0.76rem]"
               style={{
@@ -126,7 +126,7 @@ export function LandingHeader() {
                 transition: `opacity 400ms ease ${open ? 90 + LINKS.length * 60 : 0}ms, transform 400ms cubic-bezier(0.22,1,0.36,1) ${open ? 90 + LINKS.length * 60 : 0}ms`,
               }}
             >
-              Create your wedding
+              Create your mosaic
             </Link>
           </nav>
         </div>

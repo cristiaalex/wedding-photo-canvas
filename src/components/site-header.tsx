@@ -77,7 +77,7 @@ export function SiteHeader() {
               <Link to="/login" className="text-eyebrow text-foreground/70 hover:text-foreground">
                 Sign in
               </Link>
-              <Link to="/login" className="btn-primary">
+              <Link to="/onboarding" className="btn-primary">
                 Create yours
               </Link>
             </>
@@ -153,7 +153,7 @@ export function SiteHeader() {
                   Sign in
                 </Link>
                 <Link
-                  to="/login"
+                  to="/onboarding"
                   onClick={() => setMenuOpen(false)}
                   className="btn-primary mt-4 w-full"
                 >
