@@ -33,24 +33,24 @@ function Landing() {
   return <div className="min-h-screen overflow-hidden bg-background text-foreground">
     <SiteHeader />
     <main>
-      <section className="relative mx-auto min-h-[91svh] max-w-[1500px] px-5 pb-12 pt-24 sm:px-8 md:px-12 md:pt-28">
-        <div className="grid min-h-[calc(91svh-7rem)] items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+      <section className="relative mx-auto max-w-[1500px] px-5 pb-14 pt-20 sm:px-8 md:px-12 md:pt-28 lg:min-h-[91svh]">
+        <div className="grid items-center gap-6 lg:min-h-[calc(91svh-7rem)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
           <Reveal className="relative z-10 order-2 pb-5 lg:order-1 lg:pb-0">
             <span className="sticker inline-flex items-center gap-2 bg-sunshine/35 px-4 py-2 text-xs font-extrabold text-navy"><Heart className="h-4 w-4 fill-coral text-coral" /> Made from the moments you love</span>
-            <h1 className="mt-6 max-w-2xl text-display text-[2.85rem] leading-[1.04] sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 max-w-2xl text-display text-[2.45rem] leading-[1.04] sm:text-6xl lg:mt-6 lg:text-7xl">
               Your pet. A lifetime of <span className="relative inline-block text-coral">memories.<span className="absolute -bottom-2 left-0 h-2 w-full rounded-full bg-sunshine/70" /></span> One big picture.
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground md:text-lg">Turn the photos filling your camera roll into one unforgettable mosaic of your furry best friend.</p>
-            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <p className="mt-5 max-w-xl text-sm leading-6 text-muted-foreground md:mt-6 md:text-lg md:leading-7">Turn the photos filling your camera roll into one unforgettable mosaic of your furry best friend.</p>
+            <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center md:mt-8">
               <Button asChild size="lg"><Link to="/login">Create your mosaic <ArrowRight /></Link></Button>
               <a href="#how-it-works" className="inline-flex items-center gap-2 px-2 text-sm font-extrabold text-navy">See how it works <span aria-hidden>↓</span></a>
             </div>
-            <div className="mt-8 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
+            <div className="mt-6 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground md:mt-8">
               {["Easy to create", "Preview first", "High-resolution download"].map((text) => <span key={text} className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-2 shadow-sm"><Check className="h-3.5 w-3.5 text-mint" />{text}</span>)}
             </div>
           </Reveal>
 
-          <Reveal delay={100} className="relative order-1 min-h-[390px] lg:order-2 lg:min-h-[630px]">
+          <Reveal delay={100} className="relative order-1 min-h-[300px] sm:min-h-[390px] lg:order-2 lg:min-h-[630px]">
             <div className="absolute inset-x-4 bottom-3 top-5 rotate-2 rounded-[3.5rem] bg-sunshine/25 lg:inset-8" />
             <div className="absolute -left-5 top-10 h-40 w-40 rounded-[45%_55%_50%_50%] bg-mint/40 lg:h-56 lg:w-56" />
             <div className="absolute -right-12 bottom-16 h-48 w-48 rounded-[60%_40%_55%_45%] bg-sky/30 lg:h-72 lg:w-72" />
