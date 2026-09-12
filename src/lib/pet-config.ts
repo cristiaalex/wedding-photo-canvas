@@ -35,13 +35,14 @@ export const PET_SUPABASE_NOT_CONFIGURED_URL = "https://pet-supabase-not-configu
 
 /** Dedicated Mosaic Pet Supabase project — never another product's backend. */
 const PET_PROJECT_URL = "https://mplbjovvquqokjppenuo.supabase.co";
+// Publishable (anon) key of the dedicated Mosaic Pet project — browser-safe by design.
+const PET_PROJECT_PUBLISHABLE_KEY = "sb_publishable_c6z5ussKlCtcMtYRS-El0Q_YZ7VFu1X";
 const PET_PROJECT_ORIGIN = "https://mosaic.pet";
 
 export const PET_SUPABASE_URL: string =
   readEnv("VITE_PET_SUPABASE_URL")?.replace(/\/$/, "") ?? PET_PROJECT_URL;
 
-export const PET_SUPABASE_PUBLISHABLE_KEY: string =
-  readEnv("VITE_PET_SUPABASE_PUBLISHABLE_KEY") ?? "pet-supabase-not-configured";
+export const PET_SUPABASE_PUBLISHABLE_KEY: string = PET_PROJECT_PUBLISHABLE_KEY;
 
 export const isPetSupabaseConfigured: boolean =
   PET_SUPABASE_URL !== PET_SUPABASE_NOT_CONFIGURED_URL &&
