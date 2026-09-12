@@ -14,7 +14,168 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          event_name: string | null
+          id: string
+          organizer_id: string | null
+          plan: string | null
+          qr_image_url: string | null
+          slug: string
+          venue: string | null
+          wedding_date: string | null
+          welcome_message: string | null
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          event_name?: string | null
+          id?: string
+          organizer_id?: string | null
+          plan?: string | null
+          qr_image_url?: string | null
+          slug: string
+          venue?: string | null
+          wedding_date?: string | null
+          welcome_message?: string | null
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          event_name?: string | null
+          id?: string
+          organizer_id?: string | null
+          plan?: string | null
+          qr_image_url?: string | null
+          slug?: string
+          venue?: string | null
+          wedding_date?: string | null
+          welcome_message?: string | null
+        }
+        Relationships: []
+      }
+      guestbook_messages: {
+        Row: {
+          created_at: string
+          event_id: string
+          guest_name: string | null
+          id: string
+          message: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          guest_name?: string | null
+          id?: string
+          message: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          guest_name?: string | null
+          id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guestbook_messages_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mosaics: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          deepzoom_manifest_url: string | null
+          event_id: string
+          id: string
+          mosaic_image_url: string | null
+          photo_count: number | null
+          source_image_url: string | null
+          status: string | null
+          thumb_image_url: string | null
+          tile_count: number | null
+          tiles_json: Json | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          deepzoom_manifest_url?: string | null
+          event_id: string
+          id?: string
+          mosaic_image_url?: string | null
+          photo_count?: number | null
+          source_image_url?: string | null
+          status?: string | null
+          thumb_image_url?: string | null
+          tile_count?: number | null
+          tiles_json?: Json | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          deepzoom_manifest_url?: string | null
+          event_id?: string
+          id?: string
+          mosaic_image_url?: string | null
+          photo_count?: number | null
+          source_image_url?: string | null
+          status?: string | null
+          thumb_image_url?: string | null
+          tile_count?: number | null
+          tiles_json?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mosaics_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      uploads: {
+        Row: {
+          event_id: string
+          file_hash: string | null
+          guest_name: string | null
+          id: string
+          image_url: string
+          uploaded_at: string
+        }
+        Insert: {
+          event_id: string
+          file_hash?: string | null
+          guest_name?: string | null
+          id?: string
+          image_url: string
+          uploaded_at?: string
+        }
+        Update: {
+          event_id?: string
+          file_hash?: string | null
+          guest_name?: string | null
+          id?: string
+          image_url?: string
+          uploaded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uploads_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
