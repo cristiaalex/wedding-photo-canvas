@@ -3,14 +3,12 @@ import { useEffect, useState, type ReactNode } from "react";
 import {
   LayoutGrid,
   Images,
-  Users,
   Sparkles,
-  Settings,
   LogOut,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/mosaic-logo.png.asset.json";
+import { PetWordmark } from "@/components/pet-wordmark";
 
 /**
  * AppShell — permanent application shell for every authenticated page.
@@ -31,25 +29,22 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutGrid },
-  { label: "Gallery", to: "/gallery", icon: Images },
-  { label: "Guests", to: "/guests", icon: Users },
-  { label: "Mosaic", to: "/mosaic", icon: Sparkles },
-  { label: "Settings", to: "/settings", icon: Settings },
+  { label: "Studio", to: "/dashboard", icon: LayoutGrid },
+  { label: "Photos", to: "/gallery", icon: Images },
+  { label: "Preview", to: "/mosaic", icon: Sparkles },
 ];
 
 export type AppShellProps = {
   children: ReactNode;
-  /** Optional wedding name shown centered in the top bar. */
-  weddingName?: string | null;
+  projectName?: string | null;
 };
 
-export function AppShell({ children, weddingName }: AppShellProps) {
+export function AppShell({ children, projectName }: AppShellProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <div className="min-h-screen bg-[color:var(--ivory)] text-foreground">
-      <TopBar weddingName={weddingName} />
+      <TopBar projectName={projectName} />
 
       <div className="mx-auto flex w-full max-w-[1440px]">
         <LeftRail pathname={pathname} />
@@ -71,7 +66,7 @@ export function AppShell({ children, weddingName }: AppShellProps) {
 /* Top bar                                                              */
 /* ------------------------------------------------------------------ */
 
-function TopBar({ weddingName: _weddingName }: { weddingName?: string | null }) {
+function TopBar({ projectName: _projectName }: { projectName?: string | null }) {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
 
@@ -96,13 +91,7 @@ function TopBar({ weddingName: _weddingName }: { weddingName?: string | null }) 
     >
       <div className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 md:h-16 md:px-8">
         <div />
-        <Link to="/dashboard" className="mt-2 flex shrink-0 items-center justify-self-center md:mt-0">
-          <img
-            src={logoAsset.url}
-            alt="Mosaic Wedding"
-            className="h-7 w-auto sm:h-8 md:h-8 lg:h-10"
-          />
-        </Link>
+        <PetWordmark className="justify-self-center" />
         <button
           type="button"
           onClick={signOut}

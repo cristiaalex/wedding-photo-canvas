@@ -15,8 +15,12 @@ const SIGNED_URL_GC_MS = 60 * 60 * 1000;
 export const Route = createFileRoute("/_authenticated/mosaic/$eventId")({
   head: () => ({
     meta: [
-      { title: "Mosaic Viewer — Mosaic" },
-      { name: "description", content: "Zoom into your photo mosaic, tile by tile." },
+      { title: "Explore Your Pet Mosaic — Mosaic Pet" },
+      { name: "description", content: "Zoom into your pet mosaic and discover every memory within the artwork." },
+      { property: "og:title", content: "Explore Your Pet Mosaic — Mosaic Pet" },
+      { property: "og:description", content: "Zoom into your pet mosaic and discover every memory within the artwork." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MosaicViewerPage,
@@ -176,7 +180,7 @@ function MosaicViewerPage() {
     <div className="flex h-[100dvh] flex-col bg-[linear-gradient(180deg,var(--ivory),oklch(0.955_0.02_72))]">
       <header className="flex items-center justify-between border-b border-border/60 bg-[color:var(--ivory)]/86 px-4 py-3 backdrop-blur md:px-8 md:py-4">
         <div className="min-w-0 flex-1 pr-3">
-          <p className="text-eyebrow text-primary">The mosaic</p>
+           <p className="text-eyebrow text-primary">Your pet mosaic</p>
           <h1 className="truncate text-display text-xl md:text-2xl">
             {eventName || "Your mosaic"}
           </h1>
@@ -185,7 +189,7 @@ function MosaicViewerPage() {
           to="/mosaic"
           className="text-eyebrow shrink-0 inline-flex items-center gap-1.5 text-primary/80 hover:text-primary"
         >
-          <span aria-hidden>←</span> Mosaic
+           <span aria-hidden>←</span> Preview
         </Link>
       </header>
       <div className="relative flex-1">

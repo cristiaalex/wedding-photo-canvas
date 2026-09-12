@@ -4,7 +4,14 @@ import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/auth/callback")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Signing you in… — Mosaic" }] }),
+  head: () => ({ meta: [
+    { title: "Signing you in — Mosaic Pet" },
+    { name: "description", content: "Securely opening your private Mosaic Pet studio." },
+    { property: "og:title", content: "Signing you in — Mosaic Pet" },
+    { property: "og:description", content: "Securely opening your private Mosaic Pet studio." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: AuthCallback,
 });
 
@@ -13,7 +20,7 @@ type CallbackState =
   | { kind: "expired"; description: string }
   | { kind: "error"; description: string };
 
-// Business rule: authenticated user → has a wedding event? YES → dashboard,
+// Business rule: authenticated user → has a pet project? YES → studio,
 // NO → onboarding. This is the ONLY branching post-auth.
 async function decideDestination(userId: string): Promise<string> {
   try {
@@ -79,7 +86,7 @@ function AuthCallback() {
         const refreshToken = hashParams.get("refresh_token");
 
         // Recovery is the only override. Every other authenticated user is
-        // routed by the single business rule: has a Wedding Event → dashboard,
+        // routed by the single business rule: has a Pet project → studio,
         // otherwise → onboarding. This is decided AFTER the session exists,
         // below.
         const isRecovery = otpType === "recovery";
