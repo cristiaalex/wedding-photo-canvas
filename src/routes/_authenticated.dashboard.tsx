@@ -26,6 +26,15 @@ function DashboardPage() {
   const [latest, setLatest] = useState<Mosaic | null>(null);
   const [photoCount, setPhotoCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [justPaid, setJustPaid] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("billing") !== "success") return;
+    setJustPaid(true);
+    window.history.replaceState({}, "", window.location.pathname);
+  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
