@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Mosaic — Wedding memory platform
- * Mobile-first bridal aesthetic: ivory canvas, blush, sage, pearl and warm taupe accents.
+ * Mosaic Pet — premium personalized photo artwork.
+ * Mobile-first editorial palette: ivory, warm taupe, graphite and brushed gold.
  */
 
 @theme inline {
@@ -171,6 +171,16 @@
   ::selection {
     background: var(--blush);
     color: var(--ink);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
   }
 }
 

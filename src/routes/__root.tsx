@@ -18,7 +18,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <p className="text-eyebrow text-primary">404</p>
-        <h1 className="mt-6 text-display text-5xl">Lost in the gallery</h1>
+        <h1 className="mt-6 text-display text-5xl">This artwork isn&rsquo;t here</h1>
         <p className="mt-4 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -64,15 +64,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mosaic — Wedding memories, woven from every guest" },
-      { name: "description", content: "Mosaic turns every guest photo into a private wedding gallery and a stunning interactive mosaic of your portrait." },
+      { title: "Mosaic Pet — Your memories, one beautiful mosaic" },
+      { name: "description", content: "Turn your favorite pet photographs into one timeless, high-resolution mosaic artwork." },
       { name: "author", content: "Mosaic" },
-      { property: "og:title", content: "Mosaic — Wedding memories, woven from every guest" },
-      { property: "og:description", content: "Mosaic turns every guest photo into a private wedding gallery and a stunning interactive mosaic of your portrait." },
+      { property: "og:title", content: "Mosaic Pet — Your memories, one beautiful mosaic" },
+      { property: "og:description", content: "Turn your favorite pet photographs into one timeless, high-resolution mosaic artwork." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Mosaic — Wedding memories, woven from every guest" },
-      { name: "twitter:description", content: "Mosaic turns every guest photo into a private wedding gallery and a stunning interactive mosaic of your portrait." },
+      { name: "twitter:title", content: "Mosaic Pet — Your memories, one beautiful mosaic" },
+      { name: "twitter:description", content: "Turn your favorite pet photographs into one timeless, high-resolution mosaic artwork." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
