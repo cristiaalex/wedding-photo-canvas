@@ -4,8 +4,6 @@ import { Download, Trash2, X, ChevronLeft, ChevronRight, Heart } from "lucide-re
 import { useSignedPhotoUrls } from "@/hooks/use-photo-data";
 import { signVariantUrls } from "@/lib/image-variants";
 
-import { displayGuestName } from "@/lib/guest-identity";
-
 export type MemoryLightboxItem = {
   id: string;
   path: string;
