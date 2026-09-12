@@ -1,10 +1,11 @@
 /**
  * Mosaic Pet — single source of truth for PUBLIC infrastructure configuration.
  *
- * This module is safe to import from both browser and server code. It must
- * never contain a hard-coded project URL, project id, key or bucket URL.
- * Every value is read from environment configuration so Mosaic Pet can never
- * accidentally point at another product's infrastructure.
+ * This module is safe to import from both browser and server code. Mosaic Pet
+ * has one dedicated Supabase project, so the project URL and site origin are
+ * declared explicitly here. The publishable (anon) key is still read from
+ * environment configuration because it is project-specific and safe to ship
+ * to the browser, but it NEVER falls back to the generic VITE_SUPABASE_* keys.
  *
  * Public (VITE_) values — safe to ship to the browser:
  *   VITE_PET_SUPABASE_URL              e.g. https://<pet-project>.supabase.co
@@ -32,17 +33,15 @@ function readEnv(name: string): string | undefined {
 /** Sentinel used only when the Pet database has not been configured yet. */
 export const PET_SUPABASE_NOT_CONFIGURED_URL = "https://pet-supabase-not-configured.invalid";
 
-// Pet-specific overrides win. Otherwise we fall back to this project's own
-// managed backend (VITE_SUPABASE_*), which IS the Mosaic Pet backend — it is
-// never another product's project.
+/** Dedicated Mosaic Pet Supabase project — never another product's backend. */
+const PET_PROJECT_URL = "https://mplbjovvquqokjppenuo.supabase.co";
+const PET_PROJECT_ORIGIN = "https://mosaic.pet";
+
 export const PET_SUPABASE_URL: string =
-  (readEnv("VITE_PET_SUPABASE_URL") ?? readEnv("VITE_SUPABASE_URL"))?.replace(/\/$/, "") ??
-  PET_SUPABASE_NOT_CONFIGURED_URL;
+  readEnv("VITE_PET_SUPABASE_URL")?.replace(/\/$/, "") ?? PET_PROJECT_URL;
 
 export const PET_SUPABASE_PUBLISHABLE_KEY: string =
-  readEnv("VITE_PET_SUPABASE_PUBLISHABLE_KEY") ??
-  readEnv("VITE_SUPABASE_PUBLISHABLE_KEY") ??
-  "pet-supabase-not-configured";
+  readEnv("VITE_PET_SUPABASE_PUBLISHABLE_KEY") ?? "pet-supabase-not-configured";
 
 export const isPetSupabaseConfigured: boolean =
   PET_SUPABASE_URL !== PET_SUPABASE_NOT_CONFIGURED_URL &&
@@ -50,7 +49,7 @@ export const isPetSupabaseConfigured: boolean =
 
 /** Canonical public origin of the Pet product (used for QR codes, Stripe return URLs). */
 export const PET_SITE_ORIGIN: string =
-  readEnv("VITE_PET_SITE_ORIGIN")?.replace(/\/$/, "") ?? "https://mosaic.pet";
+  readEnv("VITE_PET_SITE_ORIGIN")?.replace(/\/$/, "") ?? PET_PROJECT_ORIGIN;
 
 /**
  * Storage buckets — all live inside the Pet Supabase project.
