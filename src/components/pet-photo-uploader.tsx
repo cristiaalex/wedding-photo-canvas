@@ -91,17 +91,17 @@ export function PetPhotoUploader({ eventId, petName, compact = false }: Props) {
         }}
         className={compact
           ? "flex flex-col items-center gap-3 text-center"
-          : `border border-dashed p-7 text-center transition-colors md:p-12 ${dragging ? "border-gold bg-champagne/60" : "border-border bg-ivory/50"}`}
+          : `rounded-[2rem] border-2 border-dashed p-7 text-center transition-all md:p-12 ${dragging ? "scale-[1.01] border-coral bg-blush" : "border-sky/50 bg-card shadow-[var(--shadow-soft)]"}`}
       >
         {!compact && (
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-champagne/45 text-primary">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-mist text-sky shadow-[0_4px_0_color-mix(in_oklab,var(--sky)_25%,transparent)]">
             <Images className="h-5 w-5" />
           </div>
         )}
         <div className={compact ? "" : "mt-5"}>
-          <p className="text-display text-2xl">Upload your pet&rsquo;s photos</p>
+          <p className="text-display text-2xl">Let&rsquo;s collect all their little moments.</p>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
-            Choose many photos at once or add a ZIP archive. More varied memories create a richer mosaic.
+            Pick as many favorites as you like, or add a ZIP. More adventures, cuddles and funny faces make the mosaic even better.
           </p>
         </div>
         <Button
@@ -114,7 +114,7 @@ export function PetPhotoUploader({ eventId, petName, compact = false }: Props) {
           {unpacking ? <FileArchive className="animate-pulse" /> : <Upload />}
           {unpacking ? "Opening ZIP…" : "Choose photos"}
         </Button>
-        {!compact && <p className="mt-4 text-xs text-muted-foreground">JPEG, PNG, HEIC, RAW/DNG and ZIP</p>}
+        {!compact && <p className="mt-4 rounded-full bg-mist px-3 py-2 text-xs font-bold text-muted-foreground">Works with photos from your phone, camera, or a ZIP</p>}
         {error && <p className="mt-3 text-sm text-destructive" role="alert">{error}</p>}
       </div>
       <GuestUploadSheet

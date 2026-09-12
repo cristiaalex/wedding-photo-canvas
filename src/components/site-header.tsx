@@ -46,11 +46,11 @@ export function SiteHeader() {
     <header
       className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
         scrolled || menuOpen
-          ? "bg-[color:var(--ivory)]/95 backdrop-blur-md border-b border-border/60"
+          ? "bg-background/95 backdrop-blur-md border-b-2 border-sky/15 shadow-sm"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-12 md:py-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-12 md:py-5">
         <div onClick={() => setMenuOpen(false)}><PetWordmark /></div>
 
         {/* Desktop nav */}
@@ -59,8 +59,10 @@ export function SiteHeader() {
             How it works
           </a>
           <a href="/#pricing" className="text-eyebrow text-foreground/70 hover:text-foreground">
-            Pricing
+            Examples
           </a>
+          <a href="/#reviews" className="text-eyebrow text-foreground/70 hover:text-foreground">Reviews</a>
+          <a href="/#faq" className="text-eyebrow text-foreground/70 hover:text-foreground">FAQ</a>
           {authed ? (
             <>
               <Link to="/dashboard" className="text-eyebrow text-foreground/70 hover:text-foreground">
@@ -108,7 +110,7 @@ export function SiteHeader() {
       {/* Mobile drawer */}
       {menuOpen && (
         <div className="md:hidden">
-          <nav className="flex flex-col gap-1 border-t border-border/60 bg-[color:var(--ivory)] px-5 pb-8 pt-4">
+          <nav className="flex flex-col gap-1 border-t-2 border-sky/15 bg-background px-5 pb-8 pt-4">
             {authed ? (
               <>
                 <Link
@@ -135,12 +137,14 @@ export function SiteHeader() {
                   How it works
                 </a>
                 <a
-                  href="/#pricing"
+                  href="/#examples"
                   onClick={() => setMenuOpen(false)}
                   className="text-display py-3 text-2xl"
                 >
-                  Pricing
+                  Examples
                 </a>
+                <a href="/#reviews" onClick={() => setMenuOpen(false)} className="text-display py-3 text-2xl">Reviews</a>
+                <a href="/#faq" onClick={() => setMenuOpen(false)} className="text-display py-3 text-2xl">FAQ</a>
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}

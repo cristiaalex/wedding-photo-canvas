@@ -1,125 +1,83 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Frame, Images, Search, Upload } from "lucide-react";
+import { ArrowRight, Camera, Check, Download, Heart, Images, MessageCircleHeart, MousePointer2, Sparkles, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Reveal } from "@/components/landing/reveal";
-import heroAsset from "@/assets/pet-mosaic-hero.jpg.asset.json";
-import memoriesAsset from "@/assets/pet-memories.jpg.asset.json";
-import galleryAsset from "@/assets/pet-mosaic-gallery.jpg.asset.json";
+import petDuo from "@/assets/joyful-pet-duo.png";
+import dogMemory from "@/assets/joyful-dog-memory.jpg";
+import catMemory from "@/assets/joyful-cat-memory.jpg";
+import mosaicClose from "@/assets/mosaic-close.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Pet Photo Mosaic — Mosaic Pet" },
-      { name: "description", content: "Transform your pet photos into a timeless, high-resolution mosaic artwork to preview, zoom and print." },
-      { property: "og:type", content: "website" },
-      { property: "og:title", content: "Your pet. One beautiful mosaic." },
-      { property: "og:description", content: "Upload a lifetime of pet memories and turn them into one gallery-worthy portrait." },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => ({ meta: [
+    { title: "Pet Photo Mosaic — Mosaic Pet" },
+    { name: "description", content: "Turn all your favorite dog or cat photos into one joyful, high-resolution pet mosaic." },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: "Your pet. All their little moments. One big picture." },
+    { property: "og:description", content: "Upload the photos you love, preview the magic, and download one unforgettable pet mosaic." },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }),
   component: Landing,
 });
 
 const steps = [
-  { icon: Upload, number: "01", title: "Gather the memories", text: "Choose photos from your phone or computer, or add a ZIP archive. Candid, playful and quiet moments all belong." },
-  { icon: Frame, number: "02", title: "Shape the artwork", text: "Choose landscape, portrait or square, select one of three print sizes, then pick the main portrait to recreate." },
-  { icon: Search, number: "03", title: "Preview every detail", text: "See the mosaic before you buy. Zoom from the full portrait into the tiny photographs that make it yours." },
+  { icon: Upload, n: "1", title: "Upload your photos", text: "Bring the cuddles, adventures, naps and wonderfully weird moments.", tone: "bg-blush" },
+  { icon: MousePointer2, n: "2", title: "Choose & preview", text: "Pick the shape, size and one favorite photo for the big picture.", tone: "bg-mist" },
+  { icon: Heart, n: "3", title: "Make it yours", text: "Explore every tiny memory, then choose your one-time purchase.", tone: "bg-mint/40" },
+  { icon: Download, n: "4", title: "Download & cherish", text: "Save the high-resolution mosaic, ready to print and love forever.", tone: "bg-sunshine/25" },
 ];
 
 function Landing() {
-  return (
-    <div className="min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
-      <main>
-        <section className="relative min-h-[92svh] overflow-hidden bg-ink">
-          <img src={heroAsset.url} alt="Golden retriever beside a framed mosaic portrait made from pet photos" width={1536} height={1280} className="absolute inset-0 h-full w-full object-cover object-[58%_center]" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--ink)_90%,transparent)_0%,color-mix(in_oklab,var(--ink)_62%,transparent)_44%,transparent_78%)]" />
-          <div className="relative mx-auto flex min-h-[92svh] max-w-7xl items-end px-5 pb-16 pt-32 sm:px-8 md:items-center md:px-12 md:pb-24">
-            <div className="max-w-2xl text-ivory">
-              <Reveal>
-                <p className="text-eyebrow text-gold">A portrait made from a lifetime</p>
-                <h1 className="mt-5 text-display text-[3.25rem] leading-[0.98] text-ivory sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-                  Your pet. A lifetime of memories. One beautiful mosaic.
-                </h1>
-                <p className="mt-6 max-w-lg text-base leading-7 text-ivory/80 md:text-lg">
-                  Your favorite photographs become one remarkable portrait—an intimate, print-ready artwork made entirely from moments you shared.
-                </p>
-                <Button asChild size="lg" className="mt-8 h-12 px-7 shadow-elegant">
-                  <Link to="/login">Create your mosaic <ArrowRight /></Link>
-                </Button>
-              </Reveal>
+  return <div className="min-h-screen overflow-hidden bg-background text-foreground">
+    <SiteHeader />
+    <main>
+      <section className="relative mx-auto min-h-[91svh] max-w-[1500px] px-5 pb-12 pt-24 sm:px-8 md:px-12 md:pt-28">
+        <div className="grid min-h-[calc(91svh-7rem)] items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+          <Reveal className="relative z-10 order-2 pb-5 lg:order-1 lg:pb-0">
+            <span className="sticker inline-flex items-center gap-2 bg-sunshine/35 px-4 py-2 text-xs font-extrabold text-navy"><Heart className="h-4 w-4 fill-coral text-coral" /> Made from the moments you love</span>
+            <h1 className="mt-6 max-w-2xl text-display text-[2.85rem] leading-[1.04] sm:text-6xl lg:text-7xl">
+              Your pet. A lifetime of <span className="relative inline-block text-coral">memories.<span className="absolute -bottom-2 left-0 h-2 w-full rounded-full bg-sunshine/70" /></span> One big picture.
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground md:text-lg">Turn the photos filling your camera roll into one unforgettable mosaic of your furry best friend.</p>
+            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <Button asChild size="lg"><Link to="/login">Create your mosaic <ArrowRight /></Link></Button>
+              <a href="#how-it-works" className="inline-flex items-center gap-2 px-2 text-sm font-extrabold text-navy">See how it works <span aria-hidden>↓</span></a>
             </div>
-          </div>
-        </section>
-
-        <section className="py-20 md:py-32">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 md:grid-cols-12 md:items-center md:px-12">
-            <Reveal className="md:col-span-6">
-              <img src={memoriesAsset.url} alt="A collection of joyful everyday photographs of a golden retriever" width={1280} height={1280} loading="lazy" className="aspect-square w-full object-cover shadow-elegant" />
-            </Reveal>
-            <Reveal delay={100} className="md:col-span-5 md:col-start-8">
-              <p className="text-eyebrow text-gold">Every little moment</p>
-              <h2 className="mt-4 text-display text-4xl leading-tight md:text-6xl">All in one picture.</h2>
-              <div className="mt-7 h-px w-16 bg-gold/60" />
-              <p className="mt-7 text-base leading-8 text-muted-foreground">
-                The muddy paws. The birthday hat. The look that always made you laugh. Mosaic Pet brings hundreds of those small moments together to recreate the face you know by heart.
-              </p>
-              <p className="mt-5 text-sm leading-7 text-muted-foreground">
-                From a distance, it is their portrait. Up close, it is your story together.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <section id="how-it-works" className="border-y border-border bg-surface py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 md:px-12">
-            <Reveal className="max-w-2xl">
-              <p className="text-eyebrow text-gold">Made simply</p>
-              <h2 className="mt-4 text-display text-4xl md:text-6xl">From camera roll to gallery wall.</h2>
-            </Reveal>
-            <div className="mt-14 grid gap-px bg-border md:grid-cols-3">
-              {steps.map(({ icon: Icon, number, title, text }, index) => (
-                <Reveal key={title} delay={index * 100} className="bg-surface px-1 py-8 md:px-8 md:py-10">
-                  <div className="flex items-center justify-between"><Icon className="h-5 w-5 text-gold" /><span className="text-eyebrow">{number}</span></div>
-                  <h3 className="mt-8 text-display text-3xl">{title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-muted-foreground">{text}</p>
-                </Reveal>
-              ))}
+            <div className="mt-8 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
+              {["Easy to create", "Preview first", "High-resolution download"].map((text) => <span key={text} className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-2 shadow-sm"><Check className="h-3.5 w-3.5 text-mint" />{text}</span>)}
             </div>
-          </div>
-        </section>
+          </Reveal>
 
-        <section className="bg-ink py-20 text-ivory md:py-32">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 md:grid-cols-12 md:items-center md:px-12">
-            <Reveal className="md:col-span-5">
-              <p className="text-eyebrow text-gold">Look closer</p>
-              <h2 className="mt-4 text-display text-4xl text-ivory md:text-6xl">One portrait. Hundreds of memories.</h2>
-              <p className="mt-6 max-w-md text-base leading-8 text-ivory/65">Explore the finished mosaic at extraordinary detail. Every tile reveals a photograph from your life together.</p>
-              <ul className="mt-8 space-y-4 text-sm text-ivory/80">
-                {["Preview before purchase", "Pinch and zoom on any device", "High-resolution, print-ready final file"].map((item) => <li key={item} className="flex items-center gap-3"><Check className="h-4 w-4 text-gold" />{item}</li>)}
-              </ul>
-            </Reveal>
-            <Reveal delay={100} className="md:col-span-6 md:col-start-7">
-              <img src={galleryAsset.url} alt="Large framed cat mosaic displayed in a quiet gallery" width={1280} height={1536} loading="lazy" className="aspect-[5/6] w-full object-cover shadow-elegant" />
-            </Reveal>
-          </div>
-        </section>
+          <Reveal delay={100} className="relative order-1 min-h-[390px] lg:order-2 lg:min-h-[630px]">
+            <div className="absolute inset-x-4 bottom-3 top-5 rotate-2 rounded-[3.5rem] bg-sunshine/25 lg:inset-8" />
+            <div className="absolute -left-5 top-10 h-40 w-40 rounded-[45%_55%_50%_50%] bg-mint/40 lg:h-56 lg:w-56" />
+            <div className="absolute -right-12 bottom-16 h-48 w-48 rounded-[60%_40%_55%_45%] bg-sky/30 lg:h-72 lg:w-72" />
+            <img src={petDuo} alt="Happy golden retriever and affectionate tabby cat" width={1200} height={1104} className="absolute inset-x-2 bottom-8 z-10 mx-auto w-[94%] rounded-[2.75rem] object-cover shadow-[var(--shadow-soft)] lg:bottom-16" />
+            <div className="photo-float absolute bottom-0 left-1 z-20 w-28 -rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:left-0 lg:w-44" style={{ "--photo-tilt": "-6deg" } as React.CSSProperties}><img src={dogMemory} alt="Happy dog running in the park" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Best day ever!</p></div>
+            <div className="photo-float absolute right-1 top-0 z-20 w-28 rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:right-0 lg:w-44" style={{ "--photo-tilt": "6deg", animationDelay: "-2s" } as React.CSSProperties}><img src={catMemory} alt="Affectionate tabby cat at home" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Professional cuddler</p></div>
+            <div className="sticker absolute bottom-14 right-2 z-30 rotate-6 bg-coral px-4 py-3 text-center text-xs font-extrabold text-primary-foreground lg:right-4 lg:px-6">More photos<br/>More memories!</div>
+            <Sparkles className="absolute left-5 top-3 z-30 h-8 w-8 text-sunshine" />
+          </Reveal>
+        </div>
+      </section>
 
-        <section id="pricing" className="py-20 text-center md:py-32">
-          <div className="mx-auto max-w-3xl px-5 sm:px-8">
-            <Reveal>
-              <Images className="mx-auto h-6 w-6 text-gold" />
-              <h2 className="mt-6 text-display text-4xl md:text-6xl">A lasting portrait of the love they gave you.</h2>
-              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-muted-foreground">Upload and preview first. Choose from exactly three ready-to-print sizes in landscape, portrait or square. Purchase only when it feels right.</p>
-              <Button asChild size="lg" className="mt-9 h-12 px-8"><Link to="/login">Start with your photos <ArrowRight /></Link></Button>
-              <p className="mt-5 text-xs text-muted-foreground">One-time purchase · No subscription</p>
-            </Reveal>
-          </div>
-        </section>
-      </main>
-      <SiteFooter />
-    </div>
-  );
+      <section id="how-it-works" className="bg-card py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 md:px-12">
+          <Reveal className="max-w-2xl"><p className="text-eyebrow text-coral">Four happy little steps</p><h2 className="mt-3 text-display text-4xl md:text-6xl">From camera roll to happy tears.</h2><p className="mt-5 text-muted-foreground">Simple to make. Very hard not to show everyone.</p></Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{steps.map(({icon: Icon,n,title,text,tone},i)=><Reveal key={title} delay={i*80} className={`${tone} rounded-[1.75rem] border-2 border-navy/8 p-6`}><div className="flex items-center justify-between"><span className="grid h-10 w-10 place-items-center rounded-full bg-card text-sm font-extrabold shadow-sm">{n}</span><Icon className="h-6 w-6 text-navy" /></div><h3 className="mt-8 text-display text-xl">{title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{text}</p></Reveal>)}</div>
+        </div>
+      </section>
+
+      <section id="examples" className="py-16 md:py-24"><div className="mx-auto grid max-w-7xl gap-5 px-5 sm:px-8 lg:grid-cols-12 md:px-12">
+        <Reveal className="relative overflow-hidden rounded-[2rem] bg-sky/20 p-7 lg:col-span-7 lg:p-10"><p className="text-eyebrow text-sky">One big picture</p><h2 className="mt-3 max-w-lg text-display text-4xl md:text-5xl">Step back and see your best friend.</h2><img src={petDuo} alt="Happy dog and cat portrait example" width={1200} height={1104} loading="lazy" className="mt-8 aspect-[16/10] w-full rounded-[1.5rem] object-cover" /></Reveal>
+        <div className="grid gap-5 lg:col-span-5"><Reveal delay={80} className="rounded-[2rem] bg-blush p-7 lg:p-9"><Camera className="h-7 w-7 text-coral"/><h3 className="mt-10 text-display text-3xl">Every little moment belongs.</h3><p className="mt-4 text-sm leading-7 text-muted-foreground">The muddy paws, sleepy Sundays and faces that always make you laugh.</p></Reveal><Reveal delay={140} className="rounded-[2rem] bg-mint/35 p-7 lg:p-9"><Images className="h-7 w-7 text-navy"/><h3 className="mt-8 text-display text-3xl">Zoom in. There they all are.</h3><p className="mt-4 text-sm leading-7 text-muted-foreground">Every tiny tile is one of your photos, tucked inside the portrait you chose.</p></Reveal></div>
+      </div></section>
+
+      <section id="reviews" className="bg-mist py-16 md:py-24"><div className="mx-auto max-w-7xl px-5 sm:px-8 md:px-12"><div className="grid gap-5 md:grid-cols-3"><div className="rounded-[2rem] bg-card p-7 md:col-span-2"><MessageCircleHeart className="h-7 w-7 text-coral"/><blockquote className="mt-5 text-display text-3xl md:text-4xl">“It feels like every walk, cuddle and silly face is right there in one picture.”</blockquote><p className="mt-5 text-sm font-bold text-muted-foreground">A keepsake made for pet people</p></div><div className="rounded-[2rem] bg-sunshine/35 p-7"><Heart className="h-7 w-7 fill-coral text-coral"/><p className="mt-8 text-display text-3xl">All their little moments. Together forever.</p></div></div></div></section>
+
+      <section id="faq" className="py-16 md:py-24"><div className="mx-auto max-w-4xl px-5 sm:px-8"><Reveal className="text-center"><p className="text-eyebrow text-coral">Good to know</p><h2 className="mt-3 text-display text-4xl md:text-5xl">Questions, answered.</h2></Reveal><div className="mt-10 grid gap-4 md:grid-cols-2">{[["Can I preview it first?","Yes. Create and explore your mosaic before deciding to buy."],["What photos can I add?","Choose many at once, including JPEG, PNG, HEIC, RAW/DNG, or a ZIP."],["What do I download?","Your finished high-resolution pet mosaic—not a bundle of the original photos."],["Is it a subscription?","Never. Your final mosaic is a simple one-time purchase."]].map(([q,a])=><div key={q} className="joyful-card p-6"><h3 className="text-display text-lg">{q}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{a}</p></div>)}</div><div className="mt-12 text-center"><Button asChild size="lg"><Link to="/login">Create your mosaic <ArrowRight /></Link></Button></div></div></section>
+    </main>
+    <SiteFooter />
+  </div>;
 }

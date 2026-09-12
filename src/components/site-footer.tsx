@@ -2,14 +2,14 @@ import { PetWordmark } from "@/components/pet-wordmark";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/60 bg-[color:var(--champagne)]/40">
+    <footer className="border-t-2 border-sky/15 bg-sky/10">
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-12">
         <div className="flex flex-col items-center gap-4 text-center">
           <PetWordmark />
           <p className="text-script text-lg text-muted-foreground">
-            every little moment, all in one picture
+            All their little moments. One big picture.
           </p>
-          <div className="mt-6 hairline" />
+          <div className="mt-6 h-2 w-16 rounded-full bg-sunshine" />
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-eyebrow">
             <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms</a>
