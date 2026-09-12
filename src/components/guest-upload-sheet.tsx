@@ -560,8 +560,8 @@ export function GuestUploadSheet({
 
   if (!open) return null;
 
-  const coupleName = eventName?.trim() || "the couple";
-  void coupleName;
+  const petLabel = eventName?.trim() || "your pet";
+  void petLabel;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 motion-safe:animate-[fade-in_220ms_ease-out_both]">
@@ -591,7 +591,7 @@ export function GuestUploadSheet({
               </h3>
               <div className="mx-auto mt-4 h-px w-16 bg-foreground/25" />
               <p className="mt-4 text-sm text-foreground/75">
-                Remove any photo you don't want to share.
+                 Remove any photo you don&rsquo;t want in your mosaic.
               </p>
 
               {removeError && (
@@ -677,7 +677,7 @@ export function GuestUploadSheet({
                 </p>
               ) : (
                 <p className="mt-4 text-sm text-foreground/75">
-                  Thank you for sharing your memories.
+                   Your memories are ready for the next step.
                 </p>
               )}
               <div className="mt-8 flex flex-col gap-3">
@@ -712,7 +712,7 @@ export function GuestUploadSheet({
           ) : (
             <div className="flex flex-col items-center text-center motion-safe:animate-[fade-in_220ms_ease-out_both]">
               <h3 className="text-display text-2xl sm:text-3xl">
-                Sharing your memories…
+                 Uploading your photos…
               </h3>
               <div className="mx-auto mt-4 h-px w-16 bg-foreground/25" />
               <p className="mt-4 text-sm text-foreground/75">

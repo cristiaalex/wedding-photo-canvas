@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import logoAsset from "@/assets/mosaic-logo.png.asset.json";
+import { PetWordmark } from "@/components/pet-wordmark";
 
 export function SiteHeader() {
   const navigate = useNavigate();
@@ -51,13 +51,7 @@ export function SiteHeader() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-12 md:py-6">
-        <Link to="/" className="mt-2 flex items-center md:mt-0" onClick={() => setMenuOpen(false)}>
-          <img
-            src={logoAsset.url}
-            alt="Mosaic Wedding"
-            className="h-7 w-auto sm:h-8 md:h-8 lg:h-10"
-          />
-        </Link>
+        <div onClick={() => setMenuOpen(false)}><PetWordmark /></div>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 md:flex">
@@ -70,7 +64,7 @@ export function SiteHeader() {
           {authed ? (
             <>
               <Link to="/dashboard" className="text-eyebrow text-foreground/70 hover:text-foreground">
-                Suite
+                My artwork
               </Link>
               <button onClick={handleSignOut} className="text-eyebrow text-foreground/70 hover:text-foreground">
                 Sign out
@@ -82,7 +76,7 @@ export function SiteHeader() {
                 Sign in
               </Link>
               <Link to="/login" className="btn-primary">
-                Begin
+                Create yours
               </Link>
             </>
           )}
@@ -122,7 +116,7 @@ export function SiteHeader() {
                   onClick={() => setMenuOpen(false)}
                   className="text-display py-3 text-2xl"
                 >
-                  Suite
+                  My artwork
                 </Link>
                 <button
                   onClick={handleSignOut}
@@ -159,7 +153,7 @@ export function SiteHeader() {
                   onClick={() => setMenuOpen(false)}
                   className="btn-primary mt-4 w-full"
                 >
-                  Begin your wedding
+                  Create your mosaic
                 </Link>
               </>
             )}
