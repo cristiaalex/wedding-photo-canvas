@@ -32,11 +32,17 @@ function readEnv(name: string): string | undefined {
 /** Sentinel used only when the Pet database has not been configured yet. */
 export const PET_SUPABASE_NOT_CONFIGURED_URL = "https://pet-supabase-not-configured.invalid";
 
+// Pet-specific overrides win. Otherwise we fall back to this project's own
+// managed backend (VITE_SUPABASE_*), which IS the Mosaic Pet backend — it is
+// never another product's project.
 export const PET_SUPABASE_URL: string =
-  readEnv("VITE_PET_SUPABASE_URL")?.replace(/\/$/, "") ?? PET_SUPABASE_NOT_CONFIGURED_URL;
+  (readEnv("VITE_PET_SUPABASE_URL") ?? readEnv("VITE_SUPABASE_URL"))?.replace(/\/$/, "") ??
+  PET_SUPABASE_NOT_CONFIGURED_URL;
 
 export const PET_SUPABASE_PUBLISHABLE_KEY: string =
-  readEnv("VITE_PET_SUPABASE_PUBLISHABLE_KEY") ?? "pet-supabase-not-configured";
+  readEnv("VITE_PET_SUPABASE_PUBLISHABLE_KEY") ??
+  readEnv("VITE_SUPABASE_PUBLISHABLE_KEY") ??
+  "pet-supabase-not-configured";
 
 export const isPetSupabaseConfigured: boolean =
   PET_SUPABASE_URL !== PET_SUPABASE_NOT_CONFIGURED_URL &&

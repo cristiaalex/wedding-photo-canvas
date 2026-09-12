@@ -61,7 +61,7 @@ export function LandingHeader() {
               {l.label}
             </a>
           ))}
-          <Link to="/onboarding" className="btn-primary md:px-5 md:py-2.5 md:text-[0.62rem] lg:px-6 lg:py-3 lg:text-[0.68rem]">
+          <Link to="/create" className="btn-primary md:px-5 md:py-2.5 md:text-[0.62rem] lg:px-6 lg:py-3 lg:text-[0.68rem]">
             Create your mosaic
           </Link>
         </nav>
@@ -117,7 +117,7 @@ export function LandingHeader() {
               </a>
             ))}
             <Link
-              to="/onboarding"
+              to="/create"
               onClick={() => setOpen(false)}
               className="btn-primary mx-auto mt-10 w-full max-w-xs py-4 text-[0.76rem]"
               style={{

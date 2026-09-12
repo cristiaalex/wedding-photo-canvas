@@ -129,7 +129,7 @@ function MosaicPage() {
         .limit(1);
       if (cancelled) return;
       if (!events || events.length === 0) {
-        navigate({ to: "/onboarding", replace: true });
+        navigate({ to: "/create", replace: true });
         return;
       }
       const ev = events[0];
