@@ -5,8 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Mosaic Pet — premium personalized photo artwork.
- * Mobile-first editorial palette: ivory, warm taupe, graphite and brushed gold.
+ * Mosaic Pet — joyful memories, one big picture.
  */
 
 @theme inline {
@@ -45,65 +44,62 @@
   --color-peach: var(--peach);
   --color-graphite: var(--graphite);
   --color-surface: var(--surface);
+  --color-sky: var(--sky);
+  --color-coral: var(--coral);
+  --color-sunshine: var(--sunshine);
+  --color-mint: var(--mint);
+  --color-navy: var(--navy);
 
 
-  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-serif: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-soft: 0 28px 70px -34px oklch(0.48 0.05 35 / 0.2);
-  --shadow-elegant: 0 18px 46px -22px oklch(0.46 0.04 35 / 0.18);
+  --shadow-soft: 0 24px 60px -26px oklch(0.47 0.06 235 / 0.2);
+  --shadow-elegant: 0 16px 36px -18px oklch(0.47 0.06 235 / 0.22);
+  --shadow-pop: 0 7px 0 color-mix(in oklab, var(--primary) 72%, var(--navy));
 }
 
 :root {
-  --radius: 0.25rem;
-
-  /* Soft ivory canvas, editorial graphite text */
-  --background: oklch(0.987 0.006 84);            /* warm ivory */
-  --foreground: oklch(0.305 0.012 250);           /* soft graphite */
-  --ink: oklch(0.26 0.014 250);                   /* dark charcoal */
-
-  --ivory: oklch(0.987 0.006 84);
-  /* Card / panel surface — subtle warm tone above the ivory page background */
-  --surface: oklch(0.962 0.011 78);
-  --champagne: oklch(0.945 0.016 76);
-  --blush: oklch(0.93 0.028 38);                  /* pale peach-blush */
-  --peach: oklch(0.945 0.024 44);
-  --sage: oklch(0.76 0.035 145);
-  --gold: oklch(0.72 0.052 76);                   /* restrained warm gold */
-  --dusty: oklch(0.62 0.038 238);                 /* muted dusty blue */
-  --mist: oklch(0.928 0.012 238);                 /* soft blue-grey surface */
-  --graphite: oklch(0.305 0.012 250);
-
-
-  --card: oklch(0.98 0.008 78);
-  --card-foreground: oklch(0.29 0.018 48);
-  --popover: oklch(0.995 0.004 82);
-  --popover-foreground: oklch(0.29 0.018 48);
-
-  --primary: oklch(0.47 0.052 35);                /* rosewood, not black */
-  --primary-foreground: oklch(0.988 0.007 82);
-
-  --secondary: oklch(0.94 0.018 80);
-  --secondary-foreground: oklch(0.32 0.018 48);
-
-  --muted: oklch(0.945 0.008 240);
-  --muted-foreground: oklch(0.52 0.014 248);
-
-  --accent: oklch(0.93 0.028 38);                 /* pale peach accent */
-  --accent-foreground: oklch(0.3 0.012 250);
-
+  --radius: 1rem;
+  --background: oklch(0.985 0.012 82);
+  --foreground: oklch(0.3 0.055 252);
+  --ink: oklch(0.27 0.07 252);
+  --navy: oklch(0.27 0.07 252);
+  --ivory: oklch(0.985 0.012 82);
+  --surface: oklch(0.968 0.022 207);
+  --champagne: oklch(0.945 0.052 201);
+  --blush: oklch(0.925 0.055 28);
+  --peach: oklch(0.79 0.12 35);
+  --sage: oklch(0.8 0.095 157);
+  --gold: oklch(0.82 0.17 83);
+  --dusty: oklch(0.72 0.12 235);
+  --mist: oklch(0.94 0.035 225);
+  --graphite: oklch(0.3 0.055 252);
+  --sky: oklch(0.74 0.12 232);
+  --coral: oklch(0.72 0.18 25);
+  --sunshine: oklch(0.86 0.18 86);
+  --mint: oklch(0.82 0.1 160);
+  --card: oklch(0.998 0.003 82);
+  --card-foreground: var(--ink);
+  --popover: oklch(0.998 0.003 82);
+  --popover-foreground: var(--ink);
+  --primary: var(--coral);
+  --primary-foreground: oklch(0.995 0.004 82);
+  --secondary: var(--mist);
+  --secondary-foreground: var(--navy);
+  --muted: oklch(0.95 0.025 205);
+  --muted-foreground: oklch(0.5 0.045 252);
+  --accent: var(--blush);
+  --accent-foreground: var(--navy);
   --destructive: oklch(0.62 0.18 25);
   --destructive-foreground: oklch(0.985 0.008 80);
-
-  --border: oklch(0.885 0.008 240);
-  --input: oklch(0.9 0.008 240);
-  --ring: oklch(0.62 0.038 238 / 0.4);
-
-
-  --gradient-warm: linear-gradient(180deg, var(--ivory), oklch(0.955 0.019 75));
-  --gradient-blush: linear-gradient(135deg, oklch(0.97 0.018 35), oklch(0.91 0.045 22));
-  --gradient-cta: linear-gradient(135deg, var(--primary), oklch(0.6 0.06 25));
+  --border: oklch(0.88 0.035 225);
+  --input: oklch(0.88 0.035 225);
+  --ring: oklch(0.72 0.12 235 / 0.45);
+  --gradient-warm: linear-gradient(180deg, var(--ivory), color-mix(in oklab, var(--sunshine) 12%, var(--ivory)));
+  --gradient-blush: linear-gradient(135deg, color-mix(in oklab, var(--blush) 75%, var(--ivory)), color-mix(in oklab, var(--coral) 24%, var(--ivory)));
+  --gradient-cta: linear-gradient(135deg, var(--coral), color-mix(in oklab, var(--coral) 82%, var(--peach)));
 }
 
 @layer base {
@@ -139,7 +135,7 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-weight: 300;
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
@@ -163,8 +159,8 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: 0;
     color: var(--ink);
   }
 
@@ -185,11 +181,9 @@
 }
 
 @utility surface-fade {
-  background-image: linear-gradient(
-    160deg,
-    var(--ivory),
-    color-mix(in oklab, var(--champagne) 60%, var(--ivory))
-  );
+  background: var(--card);
+  border: 2px solid color-mix(in oklab, var(--sky) 20%, var(--border));
+  box-shadow: var(--shadow-soft);
 }
 
 @utility safe-bottom {
@@ -198,9 +192,9 @@
 
 @utility text-display {
   font-family: var(--font-display);
-  font-weight: 300;
-  letter-spacing: -0.015em;
-  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.08;
   color: var(--ink);
 }
 
@@ -213,9 +207,9 @@
 
 @utility text-eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
@@ -310,10 +304,10 @@
 
 @utility field {
   width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--color-border);
-  padding: 0.85rem 0;
+  background: var(--card);
+  border: 2px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-size: 1rem; /* 16px — prevents iOS Safari auto-zoom on focus */
@@ -347,3 +341,13 @@
 .breathe {
   animation: breathe 3s ease-in-out infinite;
 }
+
+
+@keyframes float-photo {
+  0%, 100% { transform: translateY(0) rotate(var(--photo-tilt, 0deg)); }
+  50% { transform: translateY(-7px) rotate(var(--photo-tilt, 0deg)); }
+}
+@utility photo-float { animation: float-photo 5s ease-in-out infinite; }
+@utility joyful-card { background: var(--card); border: 2px solid color-mix(in oklab, var(--sky) 22%, var(--border)); border-radius: 1.5rem; box-shadow: var(--shadow-soft); }
+@utility sticker { border: 2px solid color-mix(in oklab, var(--navy) 18%, transparent); border-radius: 999px; box-shadow: 0 4px 0 color-mix(in oklab, var(--navy) 12%, transparent); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
