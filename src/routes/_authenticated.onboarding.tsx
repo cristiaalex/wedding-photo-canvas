@@ -89,18 +89,18 @@ function OnboardingPage() {
   const current = order.indexOf(step);
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <header className="flex items-center justify-between border-b border-border px-5 py-5 md:px-12">
+      <header className="flex items-center justify-between border-b-2 border-sky/15 bg-card px-5 py-4 md:px-12">
         <PetWordmark />
         <div className="flex gap-1.5" aria-label={`Step ${current + 1} of 4`}>
-          {order.map((item, index) => <span key={item} className={`h-1.5 rounded-full transition-all ${index === current ? "w-8 bg-gold" : "w-2 bg-border"}`} />)}
+          {order.map((item, index) => <span key={item} className={`h-2 rounded-full transition-all ${index === current ? "w-9 bg-coral" : index < current ? "w-2 bg-mint" : "w-2 bg-border"}`} />)}
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-5 py-10 sm:px-8 md:py-16">
         {step === "name" && (
           <section className="mx-auto max-w-2xl">
-            <p className="text-eyebrow text-gold">Let&rsquo;s begin</p>
-            <h1 className="mt-4 text-display text-5xl md:text-7xl">Who is this artwork for?</h1>
-            <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground">Tell us your pet&rsquo;s name. You&rsquo;ll add the photographs that tell their story next.</p>
+            <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">Let&rsquo;s make something happy</span>
+            <h1 className="mt-5 text-display text-4xl md:text-6xl">Who&rsquo;s your furry best friend?</h1>
+            <p className="mt-5 max-w-lg text-base leading-7 text-muted-foreground">Tell us their name, then we&rsquo;ll gather all the little moments that make them one of a kind.</p>
             <label htmlFor="pet-name" className="mt-12 block text-eyebrow">Pet&rsquo;s name</label>
             <input id="pet-name" autoFocus className="field mt-3 text-2xl" value={petName} onChange={(e) => setPetName(e.target.value)} placeholder="e.g. Mabel" onKeyDown={(e) => { if (e.key === "Enter") void createProject(); }} />
             <Button size="lg" className="mt-8 w-full sm:w-auto" disabled={!petName.trim() || working} onClick={() => void createProject()}>{working ? "Beginning…" : "Continue"}<ArrowRight /></Button>
@@ -108,12 +108,12 @@ function OnboardingPage() {
         )}
         {step === "photos" && project && (
           <section>
-            <p className="text-eyebrow text-gold">Step 2 · The memories</p>
-            <h1 className="mt-4 text-display text-5xl md:text-7xl">Upload {petName}&rsquo;s photos.</h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">Choose everyday moments as well as favorites. Different light, seasons and expressions give the mosaic depth.</p>
+            <p className="text-eyebrow text-coral">Step 2 · The fun part</p>
+            <h1 className="mt-4 text-display text-4xl md:text-6xl">Bring us {petName}&rsquo;s best moments.</h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">The cuddles, adventures, naps and wonderfully weird faces. They all belong.</p>
             <div className="mt-10"><PetPhotoUploader eventId={project.id} petName={petName} /></div>
-            <div className="mt-7 flex items-center justify-between border-t border-border pt-6">
-              <p className="text-sm text-muted-foreground"><strong className="font-medium text-foreground">{uploads.length}</strong> photos uploaded</p>
+            <div className="mt-7 flex flex-col gap-4 rounded-3xl bg-mist p-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-foreground"><strong className="font-extrabold text-foreground">{uploads.length}</strong> little {uploads.length === 1 ? "moment" : "moments"} collected</p>
               <Button size="lg" disabled={uploads.length === 0} onClick={() => setStep("format")}>Choose format <ArrowRight /></Button>
             </div>
           </section>
@@ -121,11 +121,11 @@ function OnboardingPage() {
         {step === "format" && (
           <section>
             <button onClick={() => setStep("photos")} className="inline-flex items-center gap-2 text-sm text-muted-foreground"><ArrowLeft className="h-4 w-4" /> Photos</button>
-            <p className="mt-8 text-eyebrow text-gold">Step 3 · Shape and size</p>
-            <h1 className="mt-4 text-display text-5xl md:text-7xl">Choose how it will live.</h1>
+            <p className="mt-8 text-eyebrow text-coral">Step 3 · Pick your shape</p>
+            <h1 className="mt-4 text-display text-4xl md:text-6xl">How should the big picture look?</h1>
             <div className="mt-10 grid grid-cols-3 gap-3">
               {(["landscape", "portrait", "square"] as PetOrientation[]).map((value) => (
-                <Button key={value} variant={orientation === value ? "default" : "outline"} className="h-20 flex-col capitalize" onClick={() => { setOrientation(value); setPrintSize(PET_PRINT_OPTIONS[value][1].id); }}>
+                 <Button key={value} variant={orientation === value ? "default" : "outline"} className="h-24 flex-col capitalize" onClick={() => { setOrientation(value); setPrintSize(PET_PRINT_OPTIONS[value][1].id); }}>
                   <span className={value === "landscape" ? "h-5 w-8 border" : value === "portrait" ? "h-8 w-5 border" : "h-6 w-6 border"} />{value}
                 </Button>
               ))}
@@ -133,8 +133,8 @@ function OnboardingPage() {
             <p className="mt-10 text-eyebrow">Print size</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {PET_PRINT_OPTIONS[orientation].map((option) => (
-                <button key={option.id} type="button" onClick={() => setPrintSize(option.id)} className={`min-h-24 border p-5 text-left transition-colors ${printSize === option.id ? "border-gold bg-champagne/40" : "border-border bg-card hover:border-gold/60"}`}>
-                  <span className="flex items-center justify-between text-display text-2xl">{option.label}{printSize === option.id && <Check className="h-4 w-4 text-gold" />}</span>
+                 <button key={option.id} type="button" onClick={() => setPrintSize(option.id)} className={`min-h-24 rounded-3xl border-2 p-5 text-left transition-all ${printSize === option.id ? "border-coral bg-blush shadow-sm" : "border-border bg-card hover:border-sky"}`}>
+                   <span className="flex items-center justify-between text-display text-xl">{option.label}{printSize === option.id && <Check className="h-5 w-5 text-coral" />}</span>
                   <span className="mt-2 block text-sm text-muted-foreground">{option.dimensions}</span>
                 </button>
               ))}
@@ -145,13 +145,13 @@ function OnboardingPage() {
         {step === "portrait" && (
           <section>
             <button onClick={() => setStep("format")} className="inline-flex items-center gap-2 text-sm text-muted-foreground"><ArrowLeft className="h-4 w-4" /> Format</button>
-            <p className="mt-8 text-eyebrow text-gold">Step 4 · Main portrait</p>
-            <h1 className="mt-4 text-display text-5xl md:text-7xl">Which photo should the mosaic recreate?</h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">Choose a clear, expressive portrait. This becomes the large image; every other photograph becomes part of it.</p>
+            <p className="mt-8 text-eyebrow text-coral">Step 4 · The star of the show</p>
+            <h1 className="mt-4 text-display text-4xl md:text-6xl">Which photo looks most like your best friend?</h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">This becomes the big picture. Every other little memory will fit inside it.</p>
             <div className="mt-9 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
               {uploads.map((upload) => {
                 const src = signed.data?.get(upload.image_url);
-                return <button key={upload.id} type="button" onClick={() => setMainUploadId(upload.id)} aria-label="Choose as main photo" className={`relative aspect-square overflow-hidden border-2 ${mainUploadId === upload.id ? "border-gold" : "border-transparent"}`}>
+                 return <button key={upload.id} type="button" onClick={() => setMainUploadId(upload.id)} aria-label="Choose as main photo" className={`relative aspect-square overflow-hidden rounded-2xl border-4 transition-transform hover:-translate-y-1 ${mainUploadId === upload.id ? "border-coral shadow-[var(--shadow-soft)]" : "border-card"}`}>
                   {src ? <img src={src} alt="Uploaded pet photo" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center bg-muted"><ImageIcon className="h-5 w-5" /></span>}
                   {mainUploadId === upload.id && <span className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-primary text-primary-foreground"><Check className="h-3.5 w-3.5" /></span>}
                 </button>;
