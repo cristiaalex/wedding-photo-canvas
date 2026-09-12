@@ -815,6 +815,7 @@ export type Database = {
         Args: { _guest_uuid: string; _upload_id: string }
         Returns: Json
       }
+      pet_owns_object_prefix: { Args: { _name: string }; Returns: boolean }
       pet_sources_ready_for_cleanup: {
         Args: { _limit?: number }
         Returns: {
