@@ -19,10 +19,14 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           event_name: string | null
+          guestbook_enabled: boolean
+          guestbook_public: boolean
+          guests_can_view_gallery: boolean
           id: string
           organizer_id: string | null
           plan: string | null
           qr_image_url: string | null
+          show_owner_uploads_to_guests: boolean
           slug: string
           venue: string | null
           wedding_date: string | null
@@ -32,10 +36,14 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           event_name?: string | null
+          guestbook_enabled?: boolean
+          guestbook_public?: boolean
+          guests_can_view_gallery?: boolean
           id?: string
           organizer_id?: string | null
           plan?: string | null
           qr_image_url?: string | null
+          show_owner_uploads_to_guests?: boolean
           slug: string
           venue?: string | null
           wedding_date?: string | null
@@ -45,10 +53,14 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           event_name?: string | null
+          guestbook_enabled?: boolean
+          guestbook_public?: boolean
+          guests_can_view_gallery?: boolean
           id?: string
           organizer_id?: string | null
           plan?: string | null
           qr_image_url?: string | null
+          show_owner_uploads_to_guests?: boolean
           slug?: string
           venue?: string | null
           wedding_date?: string | null
@@ -105,6 +117,7 @@ export type Database = {
           metadata: Json | null
           mosaic_image_url: string | null
           photo_count: number | null
+          preview_url: string | null
           print_status: string | null
           print_url: string | null
           progress: number
@@ -134,6 +147,7 @@ export type Database = {
           metadata?: Json | null
           mosaic_image_url?: string | null
           photo_count?: number | null
+          preview_url?: string | null
           print_status?: string | null
           print_url?: string | null
           progress?: number
@@ -163,6 +177,7 @@ export type Database = {
           metadata?: Json | null
           mosaic_image_url?: string | null
           photo_count?: number | null
+          preview_url?: string | null
           print_status?: string | null
           print_url?: string | null
           progress?: number
@@ -191,25 +206,31 @@ export type Database = {
           event_id: string
           file_hash: string | null
           guest_name: string | null
+          guest_uuid: string | null
           id: string
           image_url: string
           uploaded_at: string
+          uploaded_by_owner: boolean
         }
         Insert: {
           event_id: string
           file_hash?: string | null
           guest_name?: string | null
+          guest_uuid?: string | null
           id?: string
           image_url: string
           uploaded_at?: string
+          uploaded_by_owner?: boolean
         }
         Update: {
           event_id?: string
           file_hash?: string | null
           guest_name?: string | null
+          guest_uuid?: string | null
           id?: string
           image_url?: string
           uploaded_at?: string
+          uploaded_by_owner?: boolean
         }
         Relationships: [
           {
@@ -226,7 +247,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      finalize_own_upload_delete: {
+        Args: { _guest_uuid: string; _upload_id: string }
+        Returns: Json
+      }
+      prepare_own_upload_delete: {
+        Args: { _guest_uuid: string; _upload_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
