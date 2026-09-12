@@ -47,6 +47,66 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_codes: {
+        Row: {
+          amount_off_cents: number | null
+          code: string
+          commission_percent: number | null
+          created_at: string
+          currency: string
+          discount_type: string
+          id: string
+          internal_note: string | null
+          max_redemptions: number | null
+          partner_name: string | null
+          per_customer_limit: number | null
+          percent_off: number | null
+          status: string
+          stripe_coupon_id: string | null
+          stripe_promotion_code_id: string | null
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          amount_off_cents?: number | null
+          code: string
+          commission_percent?: number | null
+          created_at?: string
+          currency?: string
+          discount_type: string
+          id?: string
+          internal_note?: string | null
+          max_redemptions?: number | null
+          partner_name?: string | null
+          per_customer_limit?: number | null
+          percent_off?: number | null
+          status?: string
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          amount_off_cents?: number | null
+          code?: string
+          commission_percent?: number | null
+          created_at?: string
+          currency?: string
+          discount_type?: string
+          id?: string
+          internal_note?: string | null
+          max_redemptions?: number | null
+          partner_name?: string | null
+          per_customer_limit?: number | null
+          percent_off?: number | null
+          status?: string
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       download_batch_items: {
         Row: {
           batch_id: string
@@ -353,13 +413,20 @@ export type Database = {
           amount_total: number | null
           cancel_at_period_end: boolean
           canceled_at: string | null
+          commission_amount_cents: number | null
+          commission_percent: number | null
           created_at: string
           currency: string | null
           current_period_end: string | null
           current_period_start: string | null
+          discount_amount_cents: number | null
+          discount_code: string | null
+          discount_code_id: string | null
           event_id: string | null
           id: string
+          original_amount_cents: number | null
           paid_at: string | null
+          partner_name: string | null
           status: string
           stripe_checkout_session_id: string | null
           stripe_customer_id: string
@@ -373,13 +440,20 @@ export type Database = {
           amount_total?: number | null
           cancel_at_period_end?: boolean
           canceled_at?: string | null
+          commission_amount_cents?: number | null
+          commission_percent?: number | null
           created_at?: string
           currency?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
+          discount_amount_cents?: number | null
+          discount_code?: string | null
+          discount_code_id?: string | null
           event_id?: string | null
           id?: string
+          original_amount_cents?: number | null
           paid_at?: string | null
+          partner_name?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
           stripe_customer_id: string
@@ -393,13 +467,20 @@ export type Database = {
           amount_total?: number | null
           cancel_at_period_end?: boolean
           canceled_at?: string | null
+          commission_amount_cents?: number | null
+          commission_percent?: number | null
           created_at?: string
           currency?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
+          discount_amount_cents?: number | null
+          discount_code?: string | null
+          discount_code_id?: string | null
           event_id?: string | null
           id?: string
+          original_amount_cents?: number | null
           paid_at?: string | null
+          partner_name?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string
