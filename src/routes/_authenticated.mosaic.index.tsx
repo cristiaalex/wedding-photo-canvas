@@ -496,7 +496,8 @@ function MosaicPage() {
         data: {
           eventId: event.id,
           mosaicId: inserted.id,
-          coverImageUrl: event.cover_image_url ?? opts.tempCoverImageUrl ?? "",
+          coverImageUrl:
+            event.cover_image_url ?? opts.tempCoverImageUrl ?? undefined,
           tempCoverImageUrl: opts.tempCoverImageUrl ?? undefined,
         },
       });
