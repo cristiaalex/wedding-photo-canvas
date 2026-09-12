@@ -201,7 +201,7 @@
 @utility text-script {
   font-family: var(--font-display);
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: 0;
 }
 
@@ -217,8 +217,8 @@
 @utility hairline {
   height: 1px;
   width: 3rem;
-  background: var(--ink);
-  opacity: 0.6;
+  background: var(--sky);
+  opacity: 1;
 }
 
 @utility btn-primary {
@@ -227,22 +227,21 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.95rem 1.9rem;
-  background: var(--ivory);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  border: 2px solid color-mix(in oklab, var(--primary) 76%, var(--navy));
   border-radius: 999px;
   transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background: var(--primary);
-    color: var(--ivory);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-elegant);
+    background: color-mix(in oklab, var(--primary) 88%, var(--navy));
+    color: var(--primary-foreground);
+    transform: translateY(-2px) rotate(-0.5deg);
+    box-shadow: var(--shadow-pop);
   }
 }
 
@@ -253,19 +252,18 @@
   gap: 0.5rem;
   padding: 0.95rem 1.9rem;
   border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
-  color: var(--primary);
+  color: var(--navy);
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0;
   border-radius: 999px;
   background: var(--ivory);
   transition: background 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background: var(--primary);
-    color: var(--ivory);
+    background: var(--mist);
+    color: var(--navy);
   }
 }
 
@@ -276,20 +274,19 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.95rem 1.9rem;
-  background: var(--ivory);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
   border: 1px solid color-mix(in oklab, var(--primary) 42%, var(--border));
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0;
   border-radius: 999px;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
 
   &:hover {
     background: var(--primary);
-    color: var(--ivory);
+    color: var(--primary-foreground);
     transform: translateY(-1px);
     box-shadow: var(--shadow-elegant);
   }
@@ -298,8 +295,8 @@
 @utility gold-rule {
   height: 1px;
   width: 3rem;
-  background: var(--primary);
-  opacity: 0.45;
+  background: var(--sunshine);
+  opacity: 1;
 }
 
 @utility field {
@@ -315,7 +312,8 @@
   transition: border-color 0.3s ease;
 
   &:focus {
-    border-color: var(--ink);
+    border-color: var(--sky);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--sky) 18%, transparent);
   }
 
   /* Kill Chrome/Safari/iOS blue autofill wash */
