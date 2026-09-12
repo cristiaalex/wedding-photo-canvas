@@ -705,10 +705,11 @@ function generationDuration(row: MosaicRow): string | null {
 function MosaicHero({ status: _status }: { status: "ready" | "growing" | "empty" }) {
   return (
     <header className="pt-1">
-      <h1 className="text-display text-4xl md:text-6xl">The mosaic</h1>
-      <div className="mt-6 hairline" />
-      <p className="mt-6 max-w-xl text-script text-base text-foreground/75 md:text-lg">
-        Thousands of memories becoming one timeless artwork.
+      <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">The big reveal</span>
+      <h1 className="mt-5 text-display text-4xl md:text-6xl">All those little moments. Look what they made!</h1>
+      <div className="mt-6 h-2 w-20 rounded-full bg-coral" />
+      <p className="mt-6 max-w-xl text-base font-bold text-foreground/75 md:text-lg">
+        Zoom in and every tiny memory is waiting inside.
       </p>
     </header>
   );
@@ -770,9 +771,9 @@ const PROGRESS_STEPS: Array<{
   },
   {
     key: "deepzoom",
-    label: "Creating gallery-quality print",
-    title: "Creating your gallery-quality print",
-    subtitle: "Optimized for large-format printing.",
+    label: "Getting the big file ready",
+    title: "Getting your final mosaic ready",
+    subtitle: "Making it beautifully clear for printing.",
   },
   {
     key: "print",
@@ -784,7 +785,7 @@ const PROGRESS_STEPS: Array<{
     key: "completed",
     label: "Ready",
     title: "Your mosaic is ready ✨",
-    subtitle: "Every memory, together in one masterpiece.",
+    subtitle: "Every cuddle, adventure and silly face—together at last.",
   },
 ];
 
@@ -928,7 +929,7 @@ function MosaicProgress({ row, onCancel }: { row: MosaicRow; onCancel?: () => vo
 
   return (
     <section>
-      <div className="rounded-[2rem] bg-[linear-gradient(160deg,var(--ivory),color-mix(in_oklab,var(--champagne)_55%,var(--ivory)))] p-8 md:p-12">
+      <div className="rounded-[2rem] border-2 border-sky/20 bg-mist/45 p-8 md:p-12">
         <div className="text-center">
           <p className="text-eyebrow">In progress</p>
           <CrossfadeText
@@ -945,9 +946,9 @@ function MosaicProgress({ row, onCancel }: { row: MosaicRow; onCancel?: () => vo
 
         <div className="mt-8 mx-auto max-w-2xl">
           <div className="flex items-center gap-3">
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-[color:var(--ink)]/8">
+            <div className="h-3 flex-1 overflow-hidden rounded-full bg-card">
               <div
-                className="h-full rounded-full bg-[color:var(--primary)] will-change-[width]"
+                className="h-full rounded-full bg-coral will-change-[width]"
                 style={{
                   width: `${smooth}%`,
                   transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -997,8 +998,7 @@ function MosaicProgress({ row, onCancel }: { row: MosaicRow; onCancel?: () => vo
         </div>
 
         <p className="mt-8 mx-auto max-w-xl text-center text-xs leading-relaxed text-muted-foreground">
-          You can safely leave this page. Generation continues in the background
-          and your Mosaic will appear here once it&rsquo;s ready.
+          Feel free to wander off. We&rsquo;ll keep making the magic and your Mosaic will be waiting here.
         </p>
 
         {onCancel && (
@@ -1197,9 +1197,9 @@ function ArtworkStage({
           Crafted {formatRelativeTime(latestReady.row.completed_at ?? latestReady.row.created_at)}
         </p>
 
-        <div className="mt-10 rounded-[2rem] bg-[linear-gradient(160deg,var(--ivory),color-mix(in_oklab,var(--champagne)_55%,var(--ivory)))] p-6 md:p-10">
+          <div className="mt-10 rounded-[2rem] border-2 border-sky/20 bg-mist/45 p-6 md:p-10">
           <div className="text-center">
-            <h2 className="text-eyebrow">MOSAIC STUDIO</h2>
+              <h2 className="text-display text-2xl">Play with your mosaic</h2>
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -1210,7 +1210,7 @@ function ArtworkStage({
                   params={{ eventId }}
                   className={mosaicAction({ variant: "primary" })}
                 >
-                  Open Interactive
+                   Zoom into the memories
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
               ) : interactiveFailed ? (
@@ -1230,7 +1230,7 @@ function ArtworkStage({
                 </span>
               )}
               <p className="mt-3 text-xs text-muted-foreground">
-                Explore your mosaic in full size.
+                 Find the tiny moments hiding inside.
               </p>
             </div>
 
@@ -1252,7 +1252,7 @@ function ArtworkStage({
               ) : (
                 <span className={mosaicAction({ variant: "idle" })}>
                   <Printer className="h-3.5 w-3.5 animate-pulse" />
-                  Preparing final artwork…
+                   Getting your final mosaic ready…
                 </span>
               )}
               <p className="mt-3 text-xs text-muted-foreground">
@@ -1271,18 +1271,18 @@ function ArtworkStage({
                 Regenerate
               </button>
               <p className="mt-3 text-xs text-muted-foreground">
-                Craft a fresh version from your latest memories.
+                 Try a fresh version with your latest photos.
               </p>
             </div>
           </div>
         </div>
 
         {!purchased && (
-          <div className="mt-10 border-y border-border py-10">
+          <div className="mt-10 rounded-[2rem] bg-blush px-5 py-10">
             <div className="mx-auto max-w-2xl text-center">
-              <p className="text-eyebrow text-gold">One-time purchase</p>
-              <h2 className="mt-4 text-display text-4xl">Make it yours in full resolution.</h2>
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-muted-foreground">You&rsquo;re buying the final generated pet mosaic: a high-resolution, print-ready artwork in your selected format. No subscription.</p>
+              <p className="text-eyebrow text-coral">One-time purchase</p>
+              <h2 className="mt-4 text-display text-4xl">Keep the big picture forever.</h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-muted-foreground">Get the finished high-resolution pet mosaic in your chosen shape and size. One payment, no subscription.</p>
             </div>
             <div className="mx-auto mt-8 max-w-2xl"><BillingCard eventId={eventId} /></div>
           </div>
@@ -1333,18 +1333,17 @@ function EmptyArtwork({
 }) {
   return (
     <section>
-      <div className="w-full overflow-hidden rounded-[2.25rem] bg-[linear-gradient(160deg,var(--ivory),color-mix(in_oklab,var(--champagne)_55%,var(--ivory)))]">
+      <div className="w-full overflow-hidden rounded-[2.25rem] border-2 border-sky/20 bg-mist/45">
         <div className="grid aspect-square w-full place-items-center">
           <div className="px-8 text-center">
-            <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-border/60 bg-[color:var(--ivory)] shadow-[var(--shadow-soft)]">
-              <Sparkles className="h-9 w-9 text-foreground/60" />
+            <div className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-sunshine/35 shadow-[var(--shadow-soft)]">
+              <Sparkles className="h-9 w-9 text-coral" />
             </div>
             <h2 className="text-display mt-8 text-3xl text-foreground md:text-5xl">
-              Your artwork hasn&rsquo;t started yet.
+              Ready to see the magic?
             </h2>
             <p className="mt-5 mx-auto max-w-md text-base leading-relaxed text-foreground/70">
-              Add your pet&rsquo;s favorite moments, choose one clear main portrait,
-              then create a preview before you purchase.
+              Add your pet&rsquo;s favorite moments, choose the photo that looks most like them, then create your free preview.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link to="/gallery" className="btn-primary inline-flex items-center gap-2">Add photos <UploadIcon className="h-3.5 w-3.5" /></Link>
@@ -1391,7 +1390,7 @@ function StorySection({
         <StoryStat value={contributors || 1} label="private collection" />
       </div>
       <p className="mt-8 text-script text-2xl text-foreground/75 md:text-3xl">
-        Every uploaded memory becomes part of your pet&rsquo;s artwork.
+        Every uploaded memory becomes part of the big picture.
       </p>
     </section>
   );
