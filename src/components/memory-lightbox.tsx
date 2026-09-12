@@ -9,7 +9,6 @@ export type MemoryLightboxItem = {
   path: string;
   guestName: string | null;
   uploadedAt: string;
-  hasGuestbook?: boolean;
 };
 
 type Props = {
