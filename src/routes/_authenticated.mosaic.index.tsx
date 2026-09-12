@@ -111,6 +111,7 @@ function MosaicPage() {
   const [crafting, setCrafting] = useState(false);
   const [regenerateOpen, setRegenerateOpen] = useState(false);
   const studioRef = useRef<HTMLDivElement | null>(null);
+  const autoStarted = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
