@@ -97,6 +97,8 @@ export type Database = {
           id: string
           mosaic_image_url: string | null
           photo_count: number | null
+          print_status: string | null
+          print_url: string | null
           source_image_url: string | null
           status: string | null
           thumb_image_url: string | null
@@ -111,6 +113,8 @@ export type Database = {
           id?: string
           mosaic_image_url?: string | null
           photo_count?: number | null
+          print_status?: string | null
+          print_url?: string | null
           source_image_url?: string | null
           status?: string | null
           thumb_image_url?: string | null
@@ -125,6 +129,8 @@ export type Database = {
           id?: string
           mosaic_image_url?: string | null
           photo_count?: number | null
+          print_status?: string | null
+          print_url?: string | null
           source_image_url?: string | null
           status?: string | null
           thumb_image_url?: string | null
