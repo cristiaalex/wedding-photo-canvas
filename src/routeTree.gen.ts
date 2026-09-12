@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -46,6 +47,11 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/onboarding': typeof OnboardingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/create': typeof AuthenticatedCreateRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/onboarding': typeof OnboardingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/create': typeof AuthenticatedCreateRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/onboarding': typeof OnboardingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/create': typeof AuthenticatedCreateRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/mcp'
+    | '/onboarding'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
     | '/create'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/login'
     | '/mcp'
+    | '/onboarding'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
     | '/create'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/mcp'
+    | '/onboarding'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/create'
@@ -427,6 +439,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
+  OnboardingRoute: typeof OnboardingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -442,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -746,6 +766,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
+  OnboardingRoute: OnboardingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
