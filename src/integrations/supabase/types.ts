@@ -90,52 +90,91 @@ export type Database = {
       }
       mosaics: {
         Row: {
+          checkpoints: Json
           completed_at: string | null
           created_at: string
           deepzoom_manifest_url: string | null
+          deepzoom_progress: number
+          deepzoom_ready: boolean
+          dzi_status: string | null
+          dzi_url: string | null
+          error: string | null
           event_id: string
           id: string
+          image_url: string | null
+          metadata: Json | null
           mosaic_image_url: string | null
           photo_count: number | null
           print_status: string | null
           print_url: string | null
+          progress: number
           source_image_url: string | null
+          stage: string | null
           status: string | null
           thumb_image_url: string | null
+          thumb_url: string | null
+          tile_base_url: string | null
           tile_count: number | null
           tiles_json: Json | null
+          worker_id: string | null
         }
         Insert: {
+          checkpoints?: Json
           completed_at?: string | null
           created_at?: string
           deepzoom_manifest_url?: string | null
+          deepzoom_progress?: number
+          deepzoom_ready?: boolean
+          dzi_status?: string | null
+          dzi_url?: string | null
+          error?: string | null
           event_id: string
           id?: string
+          image_url?: string | null
+          metadata?: Json | null
           mosaic_image_url?: string | null
           photo_count?: number | null
           print_status?: string | null
           print_url?: string | null
+          progress?: number
           source_image_url?: string | null
+          stage?: string | null
           status?: string | null
           thumb_image_url?: string | null
+          thumb_url?: string | null
+          tile_base_url?: string | null
           tile_count?: number | null
           tiles_json?: Json | null
+          worker_id?: string | null
         }
         Update: {
+          checkpoints?: Json
           completed_at?: string | null
           created_at?: string
           deepzoom_manifest_url?: string | null
+          deepzoom_progress?: number
+          deepzoom_ready?: boolean
+          dzi_status?: string | null
+          dzi_url?: string | null
+          error?: string | null
           event_id?: string
           id?: string
+          image_url?: string | null
+          metadata?: Json | null
           mosaic_image_url?: string | null
           photo_count?: number | null
           print_status?: string | null
           print_url?: string | null
+          progress?: number
           source_image_url?: string | null
+          stage?: string | null
           status?: string | null
           thumb_image_url?: string | null
+          thumb_url?: string | null
+          tile_base_url?: string | null
           tile_count?: number | null
           tiles_json?: Json | null
+          worker_id?: string | null
         }
         Relationships: [
           {
