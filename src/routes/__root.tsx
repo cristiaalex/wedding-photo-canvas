@@ -18,9 +18,9 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <p className="text-eyebrow text-primary">404</p>
-        <h1 className="mt-6 text-display text-5xl">This artwork isn&rsquo;t here</h1>
+        <h1 className="mt-5 text-display text-5xl">Oops, this trail went cold.</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Even the best noses miss a turn sometimes. Let&rsquo;s head home.
         </p>
         <div className="mt-8">
           <Link to="/" className="btn-primary">Return home</Link>
@@ -40,8 +40,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <p className="text-eyebrow text-primary">Something broke</p>
-        <h1 className="mt-6 text-display text-4xl">This page didn't load</h1>
+        <p className="text-eyebrow text-primary">Small hiccup</p>
+        <h1 className="mt-6 text-display text-4xl">Something got its paws crossed.</h1>
         <p className="mt-4 text-sm text-muted-foreground">
           Try refreshing or head back home.
         </p>
@@ -76,10 +76,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -130,7 +130,7 @@ function RootComponent() {
         toastOptions={{
           classNames: {
             toast:
-              "!bg-[color:var(--ivory)] !text-foreground !border !border-border/60 !shadow-[var(--shadow-soft)] !rounded-2xl",
+              "!bg-card !text-foreground !border-2 !border-sky/20 !shadow-[var(--shadow-soft)] !rounded-3xl",
             description: "!text-muted-foreground",
           },
         }}

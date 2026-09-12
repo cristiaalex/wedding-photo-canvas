@@ -149,7 +149,7 @@ export function MosaicViewer({ imageUrl, dziUrl, manifest, onTileClick }: Props)
 
   return (
     <div className="relative h-full w-full">
-      <div ref={hostRef} className="h-full w-full bg-[color:var(--champagne)]/25" />
+      <div ref={hostRef} className="h-full w-full bg-mist/50" />
     </div>
   );
 }

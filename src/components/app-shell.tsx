@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
-  LayoutGrid,
+  Heart,
   Images,
   Sparkles,
   LogOut,
@@ -29,7 +29,7 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { label: "Studio", to: "/dashboard", icon: LayoutGrid },
+  { label: "My mosaic", to: "/dashboard", icon: Heart },
   { label: "Photos", to: "/gallery", icon: Images },
   { label: "Preview", to: "/mosaic", icon: Sparkles },
 ];
@@ -43,7 +43,7 @@ export function AppShell({ children, projectName }: AppShellProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="min-h-screen bg-[color:var(--ivory)] text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <TopBar projectName={projectName} />
 
       <div className="mx-auto flex w-full max-w-[1440px]">
@@ -51,7 +51,7 @@ export function AppShell({ children, projectName }: AppShellProps) {
 
         <main className="min-w-0 flex-1 overflow-x-hidden pb-28 pt-16 md:pb-16 md:pt-20 md:pl-8">
           {/* Single content column for the whole app — pages must not re-cap width. */}
-          <div className="mx-auto w-full max-w-5xl px-5 md:px-8 lg:px-10">
+            <div className="mx-auto w-full max-w-5xl px-5 md:px-8 lg:px-10">
             {children}
           </div>
         </main>
@@ -85,8 +85,8 @@ function TopBar({ projectName: _projectName }: { projectName?: string | null }) 
     <header
       className={`fixed inset-x-0 top-0 z-30 transition-all duration-300 ${
         scrolled
-          ? "border-b border-border/60 bg-[color:var(--ivory)]/85 backdrop-blur-md"
-          : "border-b border-transparent bg-[color:var(--ivory)]"
+          ? "border-b-2 border-sky/15 bg-background/92 shadow-sm backdrop-blur-md"
+          : "border-b border-transparent bg-background"
       }`}
     >
       <div className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 md:h-16 md:px-8">
@@ -96,7 +96,7 @@ function TopBar({ projectName: _projectName }: { projectName?: string | null }) 
           type="button"
           onClick={signOut}
           aria-label="Sign out"
-          className="justify-self-end grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-[color:var(--champagne)]/40 hover:text-foreground"
+          className="justify-self-end grid h-10 w-10 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-blush hover:text-coral"
         >
           <LogOut className="h-4 w-4" strokeWidth={1.5} />
         </button>
@@ -122,10 +122,10 @@ function LeftRail({ pathname }: { pathname: string }) {
               key={item.to}
               to={item.to}
               className={cn(
-                "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition-colors",
+                 "group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold transition-all",
                 active
-                  ? "bg-[color:var(--champagne)]/55 text-foreground"
-                  : "text-muted-foreground hover:bg-[color:var(--champagne)]/30 hover:text-foreground",
+                  ? "bg-mist text-navy shadow-sm"
+                  : "text-muted-foreground hover:bg-blush/70 hover:text-navy",
               )}
             >
               <Icon
@@ -182,7 +182,7 @@ function BottomTabs({ pathname }: { pathname: string }) {
     <nav
       aria-hidden={keyboardOpen}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-[color:var(--ivory)]/95 backdrop-blur-md transition-transform duration-150 md:hidden",
+        "fixed inset-x-0 bottom-0 z-30 border-t-2 border-sky/15 bg-background/95 shadow-[0_-8px_30px_-20px_color-mix(in_oklab,var(--sky)_50%,transparent)] backdrop-blur-md transition-transform duration-150 md:hidden",
         keyboardOpen && "pointer-events-none translate-y-full",
       )}
     >
@@ -196,7 +196,7 @@ function BottomTabs({ pathname }: { pathname: string }) {
                 to={item.to}
                 tabIndex={keyboardOpen ? -1 : 0}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[0.62rem] tracking-[0.18em] uppercase transition-colors",
+                  "flex flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[0.62rem] font-extrabold transition-colors",
                   active
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground",
