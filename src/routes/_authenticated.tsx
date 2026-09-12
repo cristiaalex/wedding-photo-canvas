@@ -19,9 +19,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthGate() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [status, setStatus] = useState<"loading" | "authed" | "anon">("loading");
+  const [status, setStatus] = useState<"loading" | "authed" | "unavailable">("loading");
 
   useEffect(() => {
     let mounted = true;
@@ -39,12 +37,14 @@ function AuthGate() {
         }
         user = guest.data?.user ?? null;
       }
-      setStatus(user ? "authed" : "anon");
+      setStatus(user ? "authed" : "unavailable");
     })();
 
+    // Only ever upgrade to "authed" here. A null session during start-up simply
+    // means the guest session has not been created yet — it must never bounce
+    // the customer to /login, because creating a mosaic requires no account.
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) return;
-      setStatus(session?.user ? "authed" : "anon");
+      if (mounted && session?.user) setStatus("authed");
     });
 
     return () => {
@@ -53,21 +53,18 @@ function AuthGate() {
     };
   }, []);
 
-  useEffect(() => {
-    if (status === "anon" && !location.pathname.startsWith("/login")) {
-      navigate({
-        to: "/login",
-        search: { redirect: location.pathname },
-        replace: true,
-      });
-    }
-  }, [status, navigate, location.pathname]);
-
   if (status === "authed") return <Outlet />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <p className="text-eyebrow text-muted-foreground">Loading…</p>
+    <div className="min-h-screen flex items-center justify-center bg-background px-6 text-center">
+      {status === "unavailable" ? (
+        <p className="max-w-sm text-sm leading-6 text-muted-foreground">
+          We couldn&rsquo;t open your private studio just now. Please refresh the page and try again.
+        </p>
+      ) : (
+        <p className="text-eyebrow text-muted-foreground">Loading…</p>
+      )}
     </div>
   );
 }
+
