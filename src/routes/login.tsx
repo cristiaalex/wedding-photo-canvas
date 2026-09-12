@@ -31,7 +31,11 @@ function LoginPage() {
 
   useEffect(() => {
     let cancelled = false;
-    void supabase.auth.getUser().then(({ data }) => { if (!cancelled && data.user) window.location.replace(safeRedirect); });
+    // Only a real customer account skips the sign-in form. A guest studio
+    // session (no email) must still be able to sign in to an existing account.
+    void supabase.auth.getUser().then(({ data }) => {
+      if (!cancelled && data.user?.email) window.location.replace(safeRedirect);
+    });
     return () => { cancelled = true; };
   }, [safeRedirect]);
 
