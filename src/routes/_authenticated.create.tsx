@@ -9,7 +9,7 @@ import type { Event, EventInsert, PetOrientation } from "@/lib/database.types";
 import { PET_PRINT_OPTIONS } from "@/lib/pet-product";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/_authenticated/onboarding")({
+export const Route = createFileRoute("/_authenticated/create")({
   ssr: false,
   head: () => ({ meta: [
     { title: "Create your pet mosaic — Mosaic Pet" },
