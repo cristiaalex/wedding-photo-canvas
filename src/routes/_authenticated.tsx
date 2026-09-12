@@ -8,8 +8,11 @@ import { supabase } from "@/lib/supabase";
 // before restoration completes returns null and bounces the user back to
 // /login — which is exactly the bug we were seeing.
 //
-// Instead, mount the route, subscribe to onAuthStateChange, and wait for the
-// INITIAL_SESSION event before deciding whether to render or redirect.
+// Mosaic Pet is a no-account-required product: creating, uploading,
+// configuring and previewing a mosaic must never ask for an email. When no
+// session exists we therefore open a private anonymous session instead of
+// redirecting to /login. The session becomes a real customer account at
+// checkout, so the project and every upload stay attached to the same owner.
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   component: AuthGate,
@@ -27,7 +30,15 @@ function AuthGate() {
       const sessionRes = await supabase.auth.getSession();
       const userRes = await supabase.auth.getUser();
       if (!mounted) return;
-      const user = sessionRes.data.session?.user ?? userRes.data.user ?? null;
+      let user = sessionRes.data.session?.user ?? userRes.data.user ?? null;
+      if (!user) {
+        const guest = await supabase.auth.signInAnonymously();
+        if (!mounted) return;
+        if (guest.error) {
+          console.error("[mosaic-pet] private session unavailable", guest.error.message);
+        }
+        user = guest.data?.user ?? null;
+      }
       setStatus(user ? "authed" : "anon");
     })();
 
