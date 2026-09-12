@@ -78,7 +78,7 @@ function OnboardingPage() {
     const { error: saveError } = await supabase.from("events").update({
       orientation, print_size: selectedSize.id, main_upload_id: mainUploadId,
       cover_image_url: chosen?.image_url ?? project.cover_image_url,
-      processing_status: "uploads_complete", uploads_completed_at: new Date().toISOString(),
+      processing_status: "uploads_complete",
     }).eq("id", project.id);
     setWorking(false);
     if (saveError) { setError("We couldn’t save those choices. Please try again."); return; }

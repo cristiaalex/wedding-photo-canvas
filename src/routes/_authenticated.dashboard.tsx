@@ -52,7 +52,7 @@ function DashboardPage() {
   const finalReady = latest?.final_available === true || (latest?.print_status === "ready" && project.payment_status === "paid");
 
   return (
-    <AppShell weddingName={project.pet_name}>
+    <AppShell projectName={project.pet_name}>
       <div className="space-y-16 py-4 md:space-y-24 md:py-8">
         <header className="max-w-3xl">
           <p className="text-eyebrow text-gold">Private artwork studio</p>

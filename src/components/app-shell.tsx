@@ -38,16 +38,15 @@ const NAV: NavItem[] = [
 
 export type AppShellProps = {
   children: ReactNode;
-  /** Optional project name retained for backwards-compatible callers. */
-  weddingName?: string | null;
+  projectName?: string | null;
 };
 
-export function AppShell({ children, weddingName }: AppShellProps) {
+export function AppShell({ children, projectName }: AppShellProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <div className="min-h-screen bg-[color:var(--ivory)] text-foreground">
-      <TopBar weddingName={weddingName} />
+      <TopBar projectName={projectName} />
 
       <div className="mx-auto flex w-full max-w-[1440px]">
         <LeftRail pathname={pathname} />
@@ -69,7 +68,7 @@ export function AppShell({ children, weddingName }: AppShellProps) {
 /* Top bar                                                              */
 /* ------------------------------------------------------------------ */
 
-function TopBar({ weddingName: _weddingName }: { weddingName?: string | null }) {
+function TopBar({ projectName: _projectName }: { projectName?: string | null }) {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
 

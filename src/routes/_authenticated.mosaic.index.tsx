@@ -2,11 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Sparkles,
-  ExternalLink,
   Download,
   RefreshCw,
-  Copy,
-  Check,
   ImageIcon,
   Printer,
   Upload as UploadIcon,
@@ -16,7 +13,6 @@ import { AppShell } from "@/components/app-shell";
 import { PageStack } from "@/components/page-layout";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import { guestUrlForSlug } from "@/lib/qr";
 import { isTrialPlan } from "@/lib/trial";
 import { MIN_PHOTOS_FOR_MOSAIC } from "@/lib/run-mosaic-generation";
 
@@ -38,11 +34,15 @@ import type { Event, Mosaic, MosaicStatus } from "@/lib/database.types";
 export const Route = createFileRoute("/_authenticated/mosaic/")({
   head: () => ({
     meta: [
-      { title: "Your Mosaic — Mosaic" },
+      { title: "Your Pet Mosaic Preview — Mosaic Pet" },
       {
         name: "description",
-        content: "The emotional centerpiece of your wedding memories.",
+        content: "Preview and explore the pet portrait made from your favorite memories.",
       },
+      { property: "og:title", content: "Your Pet Mosaic Preview — Mosaic Pet" },
+      { property: "og:description", content: "Preview and explore the pet portrait made from your favorite memories." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MosaicPage,
@@ -383,7 +383,7 @@ function MosaicPage() {
 
   if (loading || !event) {
     return (
-      <AppShell weddingName={event?.event_name ?? undefined}>
+      <AppShell projectName={event?.pet_name ?? event?.event_name ?? undefined}>
         <div className="flex min-h-[60vh] items-center justify-center">
           <p className="text-eyebrow text-muted-foreground">
             Opening your mosaic…
@@ -439,7 +439,7 @@ function MosaicPage() {
     if (!event.cover_image_url && !opts.tempCoverImageUrl) {
       setCrafting(false);
       toast.error("Mosaic generation failed", {
-        description: "Event has no cover image.",
+        description: "Choose a main pet photo before creating your preview.",
       });
       return;
     }
@@ -520,7 +520,7 @@ function MosaicPage() {
 
 
   return (
-    <AppShell weddingName={event.event_name}>
+    <AppShell projectName={event.pet_name ?? event.event_name}>
       <PageStack>
         <MosaicHero status={heroStatus} />
 
@@ -741,7 +741,7 @@ const PROGRESS_STEPS: Array<{
     key: "collecting",
     label: "Collecting your memories",
     title: "Collecting your memories",
-    subtitle: "Gathering every photo shared by your guests.",
+    subtitle: "Gathering every photo in your private collection.",
   },
   {
     key: "connecting",
@@ -1298,7 +1298,6 @@ function TrialWatermark() {
 
 
 function EmptyArtwork({
-  slug,
   photoCount,
   isProcessing,
 }: {
@@ -1306,20 +1305,6 @@ function EmptyArtwork({
   photoCount: number;
   isProcessing: boolean;
 }) {
-  const guestUrl = guestUrlForSlug(slug);
-  const [copied, setCopied] = useState(false);
-
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(guestUrl);
-      setCopied(true);
-      toast.success("Guest link copied");
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      toast.error("Could not copy link");
-    }
-  };
-
   return (
     <section>
       <div className="w-full overflow-hidden rounded-[2.25rem] bg-[linear-gradient(160deg,var(--ivory),color-mix(in_oklab,var(--champagne)_55%,var(--ivory)))]">
@@ -1332,31 +1317,11 @@ function EmptyArtwork({
               Your artwork hasn&rsquo;t started yet.
             </h2>
             <p className="mt-5 mx-auto max-w-md text-base leading-relaxed text-foreground/70">
-              Invite your guests to begin sharing memories. Your first Mosaic
-              can be crafted once enough memories have been collected.
+              Add your pet&rsquo;s favorite moments, choose one clear main portrait,
+              then create a preview before you purchase.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <a
-                href={`https://${guestUrl}`}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary inline-flex items-center gap-2"
-              >
-                Open Guest Page
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-              <button
-                type="button"
-                onClick={onCopy}
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-[color:var(--ivory)] px-5 py-2.5 text-eyebrow text-foreground/80 transition-colors hover:border-primary hover:text-primary"
-              >
-                {copied ? (
-                  <Check className="h-3.5 w-3.5" />
-                ) : (
-                  <Copy className="h-3.5 w-3.5" />
-                )}
-                {copied ? "Copied" : "Copy Guest Link"}
-              </button>
+              <Link to="/gallery" className="btn-primary inline-flex items-center gap-2">Add photos <UploadIcon className="h-3.5 w-3.5" /></Link>
             </div>
             <p className="mt-9 text-eyebrow text-muted-foreground">
               {isProcessing
@@ -1397,10 +1362,10 @@ function StorySection({
       <SectionHeading eyebrow="The story so far" title={headline} />
       <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
         <StoryStat value={photos} label="memories collected" />
-        <StoryStat value={contributors} label="guests contributed" />
+        <StoryStat value={contributors || 1} label="private collection" />
       </div>
       <p className="mt-8 text-script text-2xl text-foreground/75 md:text-3xl">
-        Every uploaded memory became part of your wedding artwork.
+        Every uploaded memory becomes part of your pet&rsquo;s artwork.
       </p>
     </section>
   );
@@ -1577,8 +1542,8 @@ const Studio = forwardRef<HTMLDivElement, StudioProps>(function Studio(
           />
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
             {hasReady
-              ? "Craft a fresh version from the current cover or a new source image. Guest photos and previous versions stay safe."
-              : "As new memories arrive, you can craft a fresh Mosaic while preserving every previous edition."}
+              ? "Craft a fresh version from the selected main portrait. Your photos and previous versions stay safe."
+              : "Create your included preview from the main portrait and private photo collection."}
           </p>
           <button
             type="button"
@@ -1798,7 +1763,7 @@ function RegenerateMosaicDialog({
                 Upload another image
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Used only for this generation — the event cover stays unchanged.
+                 Used only for this version — your selected main portrait stays unchanged.
               </p>
               {source === "upload" && (
                 <div className="mt-3">
@@ -1819,7 +1784,7 @@ function RegenerateMosaicDialog({
         </div>
 
         <div className="mt-5 rounded-2xl bg-[color:var(--champagne)]/30 p-4 text-xs leading-relaxed text-foreground/75">
-          This will replace the current mosaic. Guest photos will remain unchanged.
+           This will replace the current preview. Your source photos will remain unchanged.
         </div>
 
         <div className="mt-5 flex items-center justify-end gap-3">

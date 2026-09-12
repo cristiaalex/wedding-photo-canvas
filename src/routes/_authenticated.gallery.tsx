@@ -29,7 +29,7 @@ function GalleryPage() {
   const uploads = uploadsQuery.data ?? [];
   const urls = useSignedPhotoUrls(uploads.map((upload) => upload.image_url), "thumb_600");
   const items: MemoryLightboxItem[] = useMemo(() => uploads.map((upload) => ({ id: upload.id, path: upload.image_url, guestName: null, uploadedAt: upload.uploaded_at })), [uploads]);
-  return <AppShell weddingName={project?.pet_name}><div className="space-y-12 py-4 md:py-8">
+  return <AppShell projectName={project?.pet_name}><div className="space-y-12 py-4 md:py-8">
     <header><p className="text-eyebrow text-gold">Private source library</p><h1 className="mt-4 text-display text-5xl md:text-7xl">Your pet&rsquo;s photos</h1><p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground">These memories create your mosaic. They are processing materials—not the purchased download—and remain private while your artwork is prepared.</p></header>
     {project && <PetPhotoUploader eventId={project.id} petName={project.pet_name} compact />}
     <div className="flex items-center justify-between border-y border-border py-4"><p className="text-eyebrow">{uploads.length} {uploads.length === 1 ? "photo" : "photos"}</p><p className="text-xs text-muted-foreground">Tap any image to view it</p></div>
