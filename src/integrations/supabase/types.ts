@@ -14,6 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
+      download_batch_items: {
+        Row: {
+          batch_id: string
+          event_id: string
+          upload_id: string
+        }
+        Insert: {
+          batch_id: string
+          event_id: string
+          upload_id: string
+        }
+        Update: {
+          batch_id?: string
+          event_id?: string
+          upload_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "download_batch_items_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "download_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_batch_items_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_batch_items_upload_id_fkey"
+            columns: ["upload_id"]
+            isOneToOne: false
+            referencedRelation: "uploads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      download_batches: {
+        Row: {
+          attempts: number
+          batch_number: number
+          completed_at: string | null
+          created_at: string
+          error: string | null
+          event_id: string
+          id: string
+          photo_count: number
+          size_bytes: number | null
+          started_at: string | null
+          status: string
+          storage_path: string | null
+          worker_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          batch_number: number
+          completed_at?: string | null
+          created_at?: string
+          error?: string | null
+          event_id: string
+          id?: string
+          photo_count?: number
+          size_bytes?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+          worker_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          batch_number?: number
+          completed_at?: string | null
+          created_at?: string
+          error?: string | null
+          event_id?: string
+          id?: string
+          photo_count?: number
+          size_bytes?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+          worker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "download_batches_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           cover_image_url: string | null
@@ -209,6 +305,13 @@ export type Database = {
           guest_uuid: string | null
           id: string
           image_url: string
+          optimize_error: string | null
+          optimize_status: string | null
+          optimized_at: string | null
+          optimized_size_bytes: number | null
+          original_format: string | null
+          original_size_bytes: number | null
+          source_path: string | null
           uploaded_at: string
           uploaded_by_owner: boolean
         }
@@ -219,6 +322,13 @@ export type Database = {
           guest_uuid?: string | null
           id?: string
           image_url: string
+          optimize_error?: string | null
+          optimize_status?: string | null
+          optimized_at?: string | null
+          optimized_size_bytes?: number | null
+          original_format?: string | null
+          original_size_bytes?: number | null
+          source_path?: string | null
           uploaded_at?: string
           uploaded_by_owner?: boolean
         }
@@ -229,6 +339,13 @@ export type Database = {
           guest_uuid?: string | null
           id?: string
           image_url?: string
+          optimize_error?: string | null
+          optimize_status?: string | null
+          optimized_at?: string | null
+          optimized_size_bytes?: number | null
+          original_format?: string | null
+          original_size_bytes?: number | null
+          source_path?: string | null
           uploaded_at?: string
           uploaded_by_owner?: boolean
         }
@@ -247,6 +364,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_download_batch: {
+        Args: { _event_id: string }
+        Returns: {
+          attempts: number
+          batch_number: number
+          completed_at: string | null
+          created_at: string
+          error: string | null
+          event_id: string
+          id: string
+          photo_count: number
+          size_bytes: number | null
+          started_at: string | null
+          status: string
+          storage_path: string | null
+          worker_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "download_batches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       finalize_own_upload_delete: {
         Args: { _guest_uuid: string; _upload_id: string }
         Returns: Json
