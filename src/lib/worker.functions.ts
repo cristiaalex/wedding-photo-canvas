@@ -7,7 +7,9 @@ import type { Database } from "./database.types";
 const InputSchema = z.object({
   eventId: z.string().uuid(),
   mosaicId: z.string().uuid(),
-  coverImageUrl: z.string().url(),
+  // Either an absolute URL or a Storage object path inside the Pet project's
+  // private photo area (the Pet main-photo case).
+  coverImageUrl: z.string().min(1).optional(),
   /**
    * Optional one-shot override of the cover image (used by the
    * "upload another image" branch of Regenerate Mosaic). Accepted only
@@ -106,12 +108,27 @@ export const triggerMosaicWorker = createServerFn({ method: "POST" })
     // ---- Cover URL selection ----------------------------------------------
     // tempCoverImageUrl is honored only when it lives inside our own Storage,
     // so an attacker cannot coerce the worker into fetching arbitrary URLs.
-    let coverImageUrl = ev.cover_image_url ?? data.coverImageUrl;
+    let coverImageUrl = ev.cover_image_url ?? data.coverImageUrl ?? "";
     if (data.tempCoverImageUrl && isStorageUrl(data.tempCoverImageUrl)) {
       coverImageUrl = data.tempCoverImageUrl;
     }
-    if (!coverImageUrl || !/^https?:\/\//i.test(coverImageUrl)) {
-      throw new Error("Event has no valid cover image URL.");
+    if (!coverImageUrl) {
+      throw new Error("Choose a main pet photo before creating your preview.");
+    }
+
+    // The Pet main photo lives in the private source-photo area, so the value
+    // stored on the project is an object path, not a URL. Sign it (as the
+    // owner, so RLS still applies) before handing it to the processing service.
+    if (!/^https?:\/\//i.test(coverImageUrl)) {
+      const { PET_PHOTOS_BUCKET } = await import("./pet-config");
+      const objectPath = coverImageUrl.replace(/^\/+/, "");
+      const { data: signed, error: signErr } = await supabase.storage
+        .from(PET_PHOTOS_BUCKET)
+        .createSignedUrl(objectPath, 60 * 60 * 6);
+      if (signErr || !signed?.signedUrl) {
+        throw new Error("Could not read the main pet photo. Please pick it again.");
+      }
+      coverImageUrl = signed.signedUrl;
     }
 
     const { url: endpoint, token: workerToken } = await workerEndpoint("/generate");
