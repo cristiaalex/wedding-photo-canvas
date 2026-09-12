@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, Circle, Download, Images, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Circle, Download, Images } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { PetPhotoUploader } from "@/components/pet-photo-uploader";
 import { Button } from "@/components/ui/button";
@@ -72,7 +72,7 @@ function DashboardPage() {
             <p className="text-eyebrow text-gold">Continue setup</p>
             <h2 className="mt-3 text-display text-4xl">Finish choosing your artwork.</h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">Add your photos, choose a format and select the main portrait the mosaic will recreate.</p>
-            <Button asChild size="lg" className="mt-7"><Link to="/onboarding">Continue <ArrowRight /></Link></Button>
+            <Button asChild size="lg" className="mt-7"><Link to="/gallery">Add photos <ArrowRight /></Link></Button>
           </section>
         ) : (
           <section className="grid gap-8 md:grid-cols-2 md:items-center">
