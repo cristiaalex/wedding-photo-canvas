@@ -5,6 +5,7 @@ import {
   Images,
   Sparkles,
   LogOut,
+  type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -25,7 +26,7 @@ import { PetWordmark } from "@/components/pet-wordmark";
 type NavItem = {
   label: string;
   to: string;
-  icon: typeof LayoutGrid;
+  icon: LucideIcon;
 };
 
 const NAV: NavItem[] = [
