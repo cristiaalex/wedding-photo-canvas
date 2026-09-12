@@ -3,7 +3,9 @@ import { generateMosaic } from "@/lib/mosaic-generator";
 import { signVariantUrls } from "@/lib/image-variants";
 import { fetchAllUploads } from "@/lib/fetch-all-uploads";
 
-export const MIN_PHOTOS_FOR_MOSAIC = 50;
+// Mosaic Pet: a pet collection is far smaller than an event collection.
+// Ten memories is enough for the engine to build a convincing mosaic.
+export const MIN_PHOTOS_FOR_MOSAIC = 10;
 export const STALE_MS = 15 * 60 * 1000;
 
 export type RunOptions = {

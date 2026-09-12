@@ -111,6 +111,7 @@ function MosaicPage() {
   const [crafting, setCrafting] = useState(false);
   const [regenerateOpen, setRegenerateOpen] = useState(false);
   const studioRef = useRef<HTMLDivElement | null>(null);
+  const autoStarted = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -383,6 +384,19 @@ function MosaicPage() {
     return () => window.clearInterval(interval);
   }, [event, isProcessing, printProcessing]);
 
+  // First visit straight out of the creation studio: the customer already
+  // pressed "Generate my preview", so start it for them instead of making
+  // them press a second button.
+  useEffect(() => {
+    if (loading || !event) return;
+    if (autoStarted.current) return;
+    if (mosaics.length > 0 || crafting || isProcessing) return;
+    if (!event.cover_image_url) return;
+    if (photoCount < MIN_PHOTOS_FOR_MOSAIC) return;
+    autoStarted.current = true;
+    void launchGeneration();
+  }, [loading, event, mosaics.length, crafting, isProcessing, photoCount]);
+
   if (loading || !event) {
     return (
       <AppShell projectName={event?.pet_name ?? event?.event_name ?? undefined}>
@@ -496,14 +510,19 @@ function MosaicPage() {
         data: {
           eventId: event.id,
           mosaicId: inserted.id,
-          coverImageUrl: event.cover_image_url ?? opts.tempCoverImageUrl ?? "",
+          coverImageUrl:
+            event.cover_image_url ?? opts.tempCoverImageUrl ?? undefined,
           tempCoverImageUrl: opts.tempCoverImageUrl ?? undefined,
         },
       });
       setReloadKey((k) => k + 1);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const workerFailPayload = { status: "failed" };
+      const raw = e instanceof Error ? e.message : String(e);
+      const msg = /PET_WORKER_URL|PET_WORKER_API_TOKEN|not configured/i.test(raw)
+        ? "Our mosaic studio isn’t reachable right now. Your photos are safe — please try again shortly."
+        : raw;
+      // Keep the reason on the record so Retry can show what went wrong.
+      const workerFailPayload = { status: "failed", error: raw };
       console.info("[mosaics-db-write:before]", {
         operation: "UPDATE",
         table: "public.mosaics",
