@@ -43,7 +43,7 @@ function DashboardPage() {
       if (!auth.user) return setLoading(false);
       const { data: event } = await supabase.from("events").select("*").eq("organizer_id", auth.user.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
       if (cancelled) return;
-      if (!event) { navigate({ to: "/onboarding", replace: true }); return; }
+      if (!event) { navigate({ to: "/create", replace: true }); return; }
       const [{ count }, { data: mosaic }] = await Promise.all([
         supabase.from("uploads").select("id", { count: "exact", head: true }).eq("event_id", event.id),
         supabase.from("mosaics").select("*").eq("event_id", event.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),

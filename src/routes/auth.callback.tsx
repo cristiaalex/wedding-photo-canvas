@@ -29,7 +29,7 @@ async function decideDestination(userId: string): Promise<string> {
       .select("id")
       .eq("organizer_id", userId)
       .limit(1);
-    return data && data.length > 0 ? "/dashboard" : "/onboarding";
+    return data && data.length > 0 ? "/dashboard" : "/create";
   } catch {
     return "/dashboard";
   }

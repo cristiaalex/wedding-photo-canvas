@@ -24,7 +24,7 @@ function GalleryPage() {
   const navigate = useNavigate();
   const [project, setProject] = useState<Event | null>(null);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  useEffect(() => { let stop = false; void (async () => { const { data: auth } = await supabase.auth.getUser(); if (!auth.user) return; const { data } = await supabase.from("events").select("*").eq("organizer_id", auth.user.id).order("created_at", { ascending: false }).limit(1).maybeSingle(); if (stop) return; if (!data) navigate({ to: "/onboarding", replace: true }); else setProject(data); })(); return () => { stop = true; }; }, [navigate]);
+  useEffect(() => { let stop = false; void (async () => { const { data: auth } = await supabase.auth.getUser(); if (!auth.user) return; const { data } = await supabase.from("events").select("*").eq("organizer_id", auth.user.id).order("created_at", { ascending: false }).limit(1).maybeSingle(); if (stop) return; if (!data) navigate({ to: "/create", replace: true }); else setProject(data); })(); return () => { stop = true; }; }, [navigate]);
   const uploadsQuery = useEventUploads(project?.id);
   const uploads = uploadsQuery.data ?? [];
   const urls = useSignedPhotoUrls(uploads.map((upload) => upload.image_url), "thumb_600");
