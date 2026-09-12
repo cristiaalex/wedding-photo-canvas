@@ -448,6 +448,10 @@ function MosaicPage() {
 
     const insertPayload = {
       event_id: event.id,
+      job_kind: "preview",
+      orientation: event.orientation ?? "portrait",
+      print_size: event.print_size ?? null,
+      main_upload_id: event.main_upload_id ?? null,
       status: "processing",
       stage: "processing",
       progress: 0,

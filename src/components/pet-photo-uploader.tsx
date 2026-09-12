@@ -5,6 +5,10 @@ import { GuestUploadSheet } from "@/components/guest-upload-sheet";
 import { Button } from "@/components/ui/button";
 
 const IMAGE_EXTENSIONS = /\.(jpe?g|png|webp|heic|heif|dng)$/i;
+const MIME_BY_EXTENSION: Record<string, string> = {
+  jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp",
+  heic: "image/heic", heif: "image/heif", dng: "image/x-adobe-dng",
+};
 
 type Props = {
   eventId: string;
@@ -19,7 +23,11 @@ function extractZip(file: File): Promise<File[]> {
         if (error) return reject(error);
         const files = Object.entries(entries)
           .filter(([name, bytes]) => !name.startsWith("__MACOSX/") && IMAGE_EXTENSIONS.test(name) && bytes.length > 0)
-          .map(([name, bytes]) => new File([bytes], name.split("/").pop() || name));
+          .map(([name, bytes]) => {
+            const filename = name.split("/").pop() || name;
+            const extension = filename.split(".").pop()?.toLowerCase() ?? "";
+            return new File([bytes], filename, { type: MIME_BY_EXTENSION[extension] ?? "application/octet-stream" });
+          });
         resolve(files);
       });
     }).catch(reject);
@@ -114,8 +122,8 @@ export function PetPhotoUploader({ eventId, petName, compact = false }: Props) {
         onClose={() => setOpen(false)}
         eventId={eventId}
         eventName={petName}
-        guestName="Owner"
-        guestUuid="owner"
+        guestName={null}
+        guestUuid={null}
         initialFiles={files}
       />
     </>
