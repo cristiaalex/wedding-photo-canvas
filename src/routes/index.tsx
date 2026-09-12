@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { ArrowRight, Camera, Check, Download, Heart, Images, MessageCircleHeart, MousePointer2, Sparkles, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
@@ -54,8 +55,8 @@ function Landing() {
             <div className="absolute -left-5 top-10 h-40 w-40 rounded-[45%_55%_50%_50%] bg-mint/40 lg:h-56 lg:w-56" />
             <div className="absolute -right-12 bottom-16 h-48 w-48 rounded-[60%_40%_55%_45%] bg-sky/30 lg:h-72 lg:w-72" />
             <img src={petDuo} alt="Happy golden retriever and affectionate tabby cat" width={1200} height={1104} className="absolute inset-x-2 bottom-8 z-10 mx-auto w-[94%] rounded-[2.75rem] object-cover shadow-[var(--shadow-soft)] lg:bottom-16" />
-            <div className="photo-float absolute bottom-0 left-1 z-20 w-28 -rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:left-0 lg:w-44" style={{ "--photo-tilt": "-6deg" } as React.CSSProperties}><img src={dogMemory} alt="Happy dog running in the park" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Best day ever!</p></div>
-            <div className="photo-float absolute right-1 top-0 z-20 w-28 rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:right-0 lg:w-44" style={{ "--photo-tilt": "6deg", animationDelay: "-2s" } as React.CSSProperties}><img src={catMemory} alt="Affectionate tabby cat at home" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Professional cuddler</p></div>
+            <div className="photo-float absolute bottom-0 left-1 z-20 w-28 -rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:left-0 lg:w-44" style={{ "--photo-tilt": "-6deg" } as CSSProperties}><img src={dogMemory} alt="Happy dog running in the park" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Best day ever!</p></div>
+            <div className="photo-float absolute right-1 top-0 z-20 w-28 rotate-6 rounded-2xl bg-card p-2 shadow-[var(--shadow-soft)] sm:w-36 lg:right-0 lg:w-44" style={{ "--photo-tilt": "6deg", animationDelay: "-2s" } as CSSProperties}><img src={catMemory} alt="Affectionate tabby cat at home" width={900} height={1100} className="aspect-[4/5] rounded-xl object-cover" /><p className="px-1 pb-1 pt-2 text-center text-[0.65rem] font-bold">Professional cuddler</p></div>
             <div className="sticker absolute bottom-14 right-2 z-30 rotate-6 bg-coral px-4 py-3 text-center text-xs font-extrabold text-primary-foreground lg:right-4 lg:px-6">More photos<br/>More memories!</div>
             <Sparkles className="absolute left-5 top-3 z-30 h-8 w-8 text-sunshine" />
           </Reveal>

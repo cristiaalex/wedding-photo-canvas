@@ -68,10 +68,10 @@ type Props = {
 };
 
 const REASSURANCE_MESSAGES = [
-  "Preparing your memories…",
-  "Optimizing photos…",
-  "Uploading securely…",
-  "Almost there…",
+  "Gathering the good stuff…",
+  "Getting every memory ready…",
+  "Keeping your photos safe…",
+  "Nearly there — tails up!",
 ];
 
 export function GuestUploadSheet({
@@ -569,7 +569,7 @@ export function GuestUploadSheet({
         className="absolute inset-0 bg-foreground/45 backdrop-blur-sm"
         onClick={running ? undefined : onClose}
       />
-      <div className="relative z-10 flex w-full max-w-sm flex-col overflow-hidden rounded-[1.75rem] border border-border/60 bg-[color:var(--ivory)] shadow-[var(--shadow-soft)]">
+      <div className="relative z-10 flex w-full max-w-sm flex-col overflow-hidden rounded-[2rem] border-2 border-sky/25 bg-card shadow-[var(--shadow-soft)]">
         {!running && (
           <button
             type="button"
@@ -587,9 +587,9 @@ export function GuestUploadSheet({
           {allDone && reviewOpen ? (
             <div className="motion-safe:animate-[fade-in_240ms_ease-out_both] text-center">
               <h3 className="text-display text-2xl sm:text-3xl">
-                Your uploads
+                Your happy little collection
               </h3>
-              <div className="mx-auto mt-4 h-px w-16 bg-foreground/25" />
+              <div className="mx-auto mt-4 h-2 w-16 rounded-full bg-sunshine" />
               <p className="mt-4 text-sm text-foreground/75">
                  Remove any photo you don&rsquo;t want in your mosaic.
               </p>
@@ -667,17 +667,17 @@ export function GuestUploadSheet({
             <div className="text-center motion-safe:animate-[fade-in_280ms_ease-out_both]">
               <h3 className="text-display text-2xl sm:text-3xl">
                 {sharedCount > 0
-                  ? `${sharedCount} ${sharedCount === 1 ? "photo" : "photos"} uploaded successfully`
-                  : "Photos uploaded successfully"}
+                  ? `${sharedCount} ${sharedCount === 1 ? "memory is" : "memories are"} ready!`
+                  : "Your photos are ready!"}
               </h3>
-              <div className="mx-auto mt-4 h-px w-16 bg-foreground/25" />
+              <div className="mx-auto mt-4 h-2 w-16 rounded-full bg-mint" />
               {hasFailures ? (
                 <p className="mt-4 mx-auto max-w-xs text-sm text-foreground/75 leading-relaxed">
                   {counts.failed} couldn't be uploaded.
                 </p>
               ) : (
                 <p className="mt-4 text-sm text-foreground/75">
-                   Your memories are ready for the next step.
+                   Looking good! Your big picture is one step closer.
                 </p>
               )}
               <div className="mt-8 flex flex-col gap-3">
@@ -712,9 +712,9 @@ export function GuestUploadSheet({
           ) : (
             <div className="flex flex-col items-center text-center motion-safe:animate-[fade-in_220ms_ease-out_both]">
               <h3 className="text-display text-2xl sm:text-3xl">
-                 Uploading your photos…
+                  Adding the memories…
               </h3>
-              <div className="mx-auto mt-4 h-px w-16 bg-foreground/25" />
+              <div className="mx-auto mt-4 h-2 w-16 rounded-full bg-sunshine" />
               <p className="mt-4 text-sm text-foreground/75">
                 {REASSURANCE_MESSAGES[messageIndex]}
               </p>
@@ -725,14 +725,14 @@ export function GuestUploadSheet({
               )}
 
               <div
-                className="mt-8 h-[3px] w-full max-w-xs overflow-hidden rounded-full bg-border/60"
+                className="mt-8 h-3 w-full max-w-xs overflow-hidden rounded-full bg-mist"
                 role="progressbar"
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={overallPct}
               >
                 <div
-                  className="h-full rounded-full bg-[color:var(--dusty)] transition-[width] duration-500 ease-out"
+                  className="h-full rounded-full bg-coral transition-[width] duration-500 ease-out"
                   style={{ width: `${Math.max(4, overallPct)}%` }}
                 />
               </div>
@@ -775,7 +775,7 @@ export function ConfirmRemoveDialog({
       className="fixed inset-0 z-[110] flex items-center justify-center p-4 motion-safe:animate-[fade-in_180ms_ease-out_both]"
     >
       <div className="absolute inset-0 bg-foreground/55" onClick={busy ? undefined : onCancel} />
-      <div className="relative z-10 w-full max-w-xs rounded-2xl bg-[color:var(--ivory)] p-6 shadow-[var(--shadow-soft)]">
+      <div className="relative z-10 w-full max-w-xs rounded-3xl bg-card p-6 shadow-[var(--shadow-soft)]">
         <h4 className="text-display text-lg text-foreground">{title}</h4>
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
         <div className="mt-5 flex justify-end gap-2">

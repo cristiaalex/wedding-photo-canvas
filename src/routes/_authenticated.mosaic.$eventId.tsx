@@ -36,7 +36,7 @@ export const Route = createFileRoute("/_authenticated/mosaic/$eventId")({
               reset();
               router.invalidate();
             }}
-            className="mt-4 rounded-sm border border-foreground px-3 py-2 text-foreground"
+            className="btn-primary mt-4"
           >
             Try again
           </button>
@@ -177,10 +177,10 @@ function MosaicViewerPage() {
 
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-[linear-gradient(180deg,var(--ivory),oklch(0.955_0.02_72))]">
-      <header className="flex items-center justify-between border-b border-border/60 bg-[color:var(--ivory)]/86 px-4 py-3 backdrop-blur md:px-8 md:py-4">
+    <div className="flex h-[100dvh] flex-col bg-mist/40">
+      <header className="flex items-center justify-between border-b-2 border-sky/15 bg-background/90 px-4 py-3 backdrop-blur md:px-8 md:py-4">
         <div className="min-w-0 flex-1 pr-3">
-           <p className="text-eyebrow text-primary">Your pet mosaic</p>
+            <p className="text-eyebrow text-coral">Look what your memories made</p>
           <h1 className="truncate text-display text-xl md:text-2xl">
             {eventName || "Your mosaic"}
           </h1>
@@ -189,7 +189,7 @@ function MosaicViewerPage() {
           to="/mosaic"
           className="text-eyebrow shrink-0 inline-flex items-center gap-1.5 text-primary/80 hover:text-primary"
         >
-           <span aria-hidden>←</span> Preview
+           <span aria-hidden>←</span> Back
         </Link>
       </header>
       <div className="relative flex-1">
