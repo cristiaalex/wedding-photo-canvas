@@ -78,6 +78,16 @@ export type EventInsert = {
   guestbook_enabled?: boolean;
   guestbook_public?: boolean;
   show_owner_uploads_to_guests?: boolean;
+  product_kind?: string | null;
+  customer_email?: string | null;
+  pet_name?: string | null;
+  main_upload_id?: string | null;
+  orientation?: PetOrientation | null;
+  print_size?: string | null;
+  processing_status?: PetProcessingStatus | string | null;
+  payment_status?: PetPaymentStatus | string | null;
+  download_status?: PetDownloadStatus | string | null;
+  source_cleanup_status?: PetSourceCleanupStatus | string | null;
 };
 
 export type Upload = {
@@ -129,6 +139,16 @@ export type UploadInsert = {
   original_size_bytes?: number | null;
   optimized_size_bytes?: number | null;
   optimized_at?: string | null;
+  source_kind?: "photo" | "zip" | "zip_entry" | string | null;
+  parent_upload_id?: string | null;
+  storage_path?: string | null;
+  size_bytes?: number | null;
+  width_px?: number | null;
+  height_px?: number | null;
+  processing_status?: string | null;
+  processing_error?: string | null;
+  extracted_count?: number | null;
+  processed_at?: string | null;
 };
 
 export type MosaicStatus =
