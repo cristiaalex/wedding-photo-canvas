@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Sparkles,
+  ExternalLink,
   Download,
   RefreshCw,
   ImageIcon,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
+import { BillingCard } from "@/components/billing-card";
 import { PageStack } from "@/components/page-layout";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -583,6 +585,7 @@ function MosaicPage() {
         {latestReady ? (
           <>
             <ArtworkStage
+              event={event}
               eventId={event.id}
               latestReady={latestReady}
               isProcessing={isProcessing}
@@ -1083,12 +1086,14 @@ function mosaicAction({
 }
 
 function ArtworkStage({
+  event,
   eventId,
   latestReady,
   isProcessing,
   isTrial,
   onRegenerate,
 }: {
+  event: Event;
   eventId: string;
   latestReady: SignedMosaic;
   isProcessing: boolean;
@@ -1138,6 +1143,7 @@ function ArtworkStage({
   const printGenerating =
     printStatus === "processing" || (!printUrl && printStatus != null && printStatus !== "failed");
   const printReady = !!printUrl && printStatus === "ready";
+  const purchased = event.payment_status === "paid" || event.plan === "pro";
 
   return (
     <section>
@@ -1225,19 +1231,24 @@ function ArtworkStage({
             </div>
 
             <div className="flex flex-col items-center text-center">
-              {printReady && printSignedUrl ? (
+              {purchased && printReady && printSignedUrl ? (
                 <a
                   href={printSignedUrl}
                   download={`mosaic-print-${eventId}.jpg`}
                   className={mosaicAction({ variant: "accent" })}
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Download Print
+                  Download final mosaic
                 </a>
+              ) : !purchased ? (
+                <span className={mosaicAction({ variant: "idle" })}>
+                  <Printer className="h-3.5 w-3.5" />
+                  Available after purchase
+                </span>
               ) : (
                 <span className={mosaicAction({ variant: "idle" })}>
                   <Printer className="h-3.5 w-3.5 animate-pulse" />
-                  Preparing…
+                  Preparing final artwork…
                 </span>
               )}
               <p className="mt-3 text-xs text-muted-foreground">
@@ -1261,6 +1272,17 @@ function ArtworkStage({
             </div>
           </div>
         </div>
+
+        {!purchased && (
+          <div className="mt-10 border-y border-border py-10">
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="text-eyebrow text-gold">One-time purchase</p>
+              <h2 className="mt-4 text-display text-4xl">Make it yours in full resolution.</h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-muted-foreground">You&rsquo;re buying the final generated pet mosaic: a high-resolution, print-ready artwork in your selected format. No subscription.</p>
+            </div>
+            <div className="mx-auto mt-8 max-w-2xl"><BillingCard eventId={eventId} /></div>
+          </div>
+        )}
       </div>
     </section>
   );

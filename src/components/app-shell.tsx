@@ -4,7 +4,6 @@ import {
   LayoutGrid,
   Images,
   Sparkles,
-  Settings,
   LogOut,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -33,7 +32,6 @@ const NAV: NavItem[] = [
   { label: "Studio", to: "/dashboard", icon: LayoutGrid },
   { label: "Photos", to: "/gallery", icon: Images },
   { label: "Preview", to: "/mosaic", icon: Sparkles },
-  { label: "Settings", to: "/settings", icon: Settings },
 ];
 
 export type AppShellProps = {
