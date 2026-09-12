@@ -503,8 +503,12 @@ function MosaicPage() {
       });
       setReloadKey((k) => k + 1);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const workerFailPayload = { status: "failed" };
+      const raw = e instanceof Error ? e.message : String(e);
+      const msg = /PET_WORKER_URL|PET_WORKER_API_TOKEN|not configured/i.test(raw)
+        ? "Our mosaic studio isn’t reachable right now. Your photos are safe — please try again shortly."
+        : raw;
+      // Keep the reason on the record so Retry can show what went wrong.
+      const workerFailPayload = { status: "failed", error: raw };
       console.info("[mosaics-db-write:before]", {
         operation: "UPDATE",
         table: "public.mosaics",
