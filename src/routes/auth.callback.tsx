@@ -188,7 +188,7 @@ function AuthCallback() {
   return (
     <div
       data-auth-callback-screen
-      className="min-h-screen flex items-center justify-center bg-background px-4"
+      className="min-h-screen flex items-center justify-center bg-mist/35 px-4"
     >
       <div className="w-full max-w-lg text-center">
         {state.kind === "working" && (
@@ -197,12 +197,12 @@ function AuthCallback() {
               className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin"
               aria-hidden="true"
             />
-            <p className="text-eyebrow text-primary">Signing you in…</p>
+            <p className="text-display text-2xl">Opening your happy place…</p>
           </div>
         )}
         {state.kind === "expired" && (
-          <div className="border border-border/60 rounded-sm p-6 text-left">
-            <p className="text-eyebrow text-primary">Link expired</p>
+          <div className="joyful-card bg-card p-7 text-left">
+            <p className="text-eyebrow text-coral">That link had a short little life</p>
             <p className="mt-3 text-sm text-foreground">{state.description}</p>
             <Link to="/login" className="btn-primary mt-6 inline-flex">
               Request a new link
@@ -210,7 +210,7 @@ function AuthCallback() {
           </div>
         )}
         {state.kind === "error" && (
-          <div className="border border-border/60 rounded-sm p-6 text-left">
+          <div className="joyful-card bg-card p-7 text-left">
             <p className="text-eyebrow text-destructive">Sign-in error</p>
             <p className="mt-3 text-sm text-foreground">{state.description}</p>
             <Link to="/login" className="btn-primary mt-6 inline-flex">

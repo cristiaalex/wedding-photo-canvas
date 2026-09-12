@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Set a new password — Mosaic" }] }),
+  head: () => ({ meta: [{ title: "Set a new password — Mosaic Pet" }, { name: "description", content: "Choose a new password for your private Mosaic Pet workspace." }, { property: "og:title", content: "Set a new password — Mosaic Pet" }, { property: "og:description", content: "Choose a new password for your private Mosaic Pet workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ResetPasswordPage,
 });
 
@@ -90,19 +90,19 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        <p className="text-eyebrow text-primary">Account recovery</p>
-        <h1 className="text-display mt-4 text-4xl">Set a new password</h1>
+    <div className="min-h-screen flex items-center justify-center bg-mist/35 px-4">
+      <div className="joyful-card w-full max-w-md bg-card p-7 md:p-9">
+        <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">Almost back to the memories</span>
+        <h1 className="text-display mt-5 text-4xl">Choose a new password</h1>
 
         {checking && (
           <p className="mt-8 text-sm text-muted-foreground">Verifying your recovery link…</p>
         )}
 
         {!checking && success && (
-          <div className="mt-8 border border-border/60 rounded-sm p-6">
-            <p className="text-eyebrow text-primary">Password updated</p>
-            <p className="mt-3 text-sm">Redirecting you to your dashboard…</p>
+          <div className="mt-8 rounded-3xl bg-mint/30 p-6">
+            <p className="text-eyebrow text-navy">All sorted!</p>
+            <p className="mt-3 text-sm">Taking you back to your mosaic…</p>
           </div>
         )}
 

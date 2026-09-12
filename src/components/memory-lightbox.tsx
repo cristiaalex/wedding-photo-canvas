@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Download, Trash2, X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
+import { Download, Trash2, X, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { useSignedPhotoUrls } from "@/hooks/use-photo-data";
 import { signVariantUrls } from "@/lib/image-variants";
-
-import { displayGuestName } from "@/lib/guest-identity";
 
 export type MemoryLightboxItem = {
   id: string;
   path: string;
   guestName: string | null;
   uploadedAt: string;
-  hasGuestbook?: boolean;
 };
 
 type Props = {
@@ -314,15 +311,11 @@ export function MemoryLightbox({ items, index, onIndexChange, onClose, onDelete 
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate font-sans text-[0.95rem] leading-tight text-white">
-              {displayGuestName(displayedItem.guestName) || "A guest"}
+              Favorite memory
             </p>
             <p className="mt-0.5 truncate text-[0.7rem] tabular-nums text-white/55">
               {dateLabel} · {timeLabel}
-              {displayedItem.hasGuestbook && (
-                <span className="ml-2 inline-flex items-center gap-1 text-white/60">
-                  <MessageCircle className="h-3 w-3" /> Message
-                </span>
-              )}
+              <span className="ml-2 inline-flex items-center gap-1 text-white/60"><Heart className="h-3 w-3" /> Pet memory</span>
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -363,14 +356,8 @@ export function MemoryLightbox({ items, index, onIndexChange, onClose, onDelete 
         </div>
 
         <div className="space-y-1">
-          <p className="text-[0.65rem] uppercase tracking-[0.22em] text-white/50">Uploaded by</p>
-          <p className="font-sans text-xl text-white">{displayGuestName(displayedItem.guestName) || "A guest"}</p>
-          {displayedItem.hasGuestbook && (
-            <p className="inline-flex items-center gap-1.5 pt-1 text-[0.7rem] text-white/60">
-              <MessageCircle className="h-3 w-3" />
-              Also left a message
-            </p>
-          )}
+          <p className="text-[0.65rem] font-bold text-white/50">ONE OF THE LITTLE MOMENTS</p>
+          <p className="font-sans text-xl font-bold text-white">Favorite memory</p>
         </div>
 
         <div className="space-y-2 text-sm text-white/80">
