@@ -207,16 +207,37 @@ export type Database = {
         Row: {
           cover_image_url: string | null
           created_at: string
+          customer_email: string | null
+          download_expires_at: string | null
+          download_status: string
           event_name: string | null
+          final_ready_at: string | null
+          final_requested_at: string | null
           guestbook_enabled: boolean
           guestbook_public: boolean
           guests_can_view_gallery: boolean
           id: string
+          main_upload_id: string | null
           organizer_id: string | null
+          orientation: string | null
+          paid_at: string | null
+          payment_status: string
+          pet_name: string | null
           plan: string | null
+          preview_ready_at: string | null
+          preview_requested_at: string | null
+          print_size: string | null
+          processing_status: string
+          product_kind: string
           qr_image_url: string | null
           show_owner_uploads_to_guests: boolean
           slug: string
+          source_bytes_total: number | null
+          source_cleanup_at: string | null
+          source_cleanup_error: string | null
+          source_cleanup_status: string
+          updated_at: string
+          uploads_completed_at: string | null
           venue: string | null
           wedding_date: string | null
           welcome_message: string | null
@@ -224,16 +245,37 @@ export type Database = {
         Insert: {
           cover_image_url?: string | null
           created_at?: string
+          customer_email?: string | null
+          download_expires_at?: string | null
+          download_status?: string
           event_name?: string | null
+          final_ready_at?: string | null
+          final_requested_at?: string | null
           guestbook_enabled?: boolean
           guestbook_public?: boolean
           guests_can_view_gallery?: boolean
           id?: string
+          main_upload_id?: string | null
           organizer_id?: string | null
+          orientation?: string | null
+          paid_at?: string | null
+          payment_status?: string
+          pet_name?: string | null
           plan?: string | null
+          preview_ready_at?: string | null
+          preview_requested_at?: string | null
+          print_size?: string | null
+          processing_status?: string
+          product_kind?: string
           qr_image_url?: string | null
           show_owner_uploads_to_guests?: boolean
           slug: string
+          source_bytes_total?: number | null
+          source_cleanup_at?: string | null
+          source_cleanup_error?: string | null
+          source_cleanup_status?: string
+          updated_at?: string
+          uploads_completed_at?: string | null
           venue?: string | null
           wedding_date?: string | null
           welcome_message?: string | null
@@ -241,21 +283,50 @@ export type Database = {
         Update: {
           cover_image_url?: string | null
           created_at?: string
+          customer_email?: string | null
+          download_expires_at?: string | null
+          download_status?: string
           event_name?: string | null
+          final_ready_at?: string | null
+          final_requested_at?: string | null
           guestbook_enabled?: boolean
           guestbook_public?: boolean
           guests_can_view_gallery?: boolean
           id?: string
+          main_upload_id?: string | null
           organizer_id?: string | null
+          orientation?: string | null
+          paid_at?: string | null
+          payment_status?: string
+          pet_name?: string | null
           plan?: string | null
+          preview_ready_at?: string | null
+          preview_requested_at?: string | null
+          print_size?: string | null
+          processing_status?: string
+          product_kind?: string
           qr_image_url?: string | null
           show_owner_uploads_to_guests?: boolean
           slug?: string
+          source_bytes_total?: number | null
+          source_cleanup_at?: string | null
+          source_cleanup_error?: string | null
+          source_cleanup_status?: string
+          updated_at?: string
+          uploads_completed_at?: string | null
           venue?: string | null
           wedding_date?: string | null
           welcome_message?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "events_main_upload_fk"
+            columns: ["main_upload_id"]
+            isOneToOne: false
+            referencedRelation: "uploads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       guestbook_messages: {
         Row: {
@@ -297,27 +368,55 @@ export type Database = {
           deepzoom_manifest_url: string | null
           deepzoom_progress: number
           deepzoom_ready: boolean
+          download_count: number
+          dzi_completed_at: string | null
           dzi_status: string | null
           dzi_url: string | null
           error: string | null
           event_id: string
+          expires_at: string | null
+          failed_at: string | null
+          final_available: boolean
+          final_format: string | null
+          final_height_px: number | null
+          final_ready_at: string | null
+          final_size_bytes: number | null
+          final_storage_path: string | null
+          final_verified_at: string | null
+          final_width_px: number | null
+          first_downloaded_at: string | null
           id: string
           image_url: string | null
+          job_kind: string
+          last_downloaded_at: string | null
+          main_upload_id: string | null
           metadata: Json | null
           mosaic_image_url: string | null
+          orientation: string | null
           photo_count: number | null
+          preview_height_px: number | null
+          preview_ready_at: string | null
+          preview_size_bytes: number | null
+          preview_storage_path: string | null
           preview_url: string | null
+          preview_width_px: number | null
+          print_completed_at: string | null
+          print_size: string | null
           print_status: string | null
           print_url: string | null
           progress: number
+          queued_at: string | null
           source_image_url: string | null
+          sources_released_at: string | null
           stage: string | null
+          started_at: string | null
           status: string | null
           thumb_image_url: string | null
           thumb_url: string | null
           tile_base_url: string | null
           tile_count: number | null
           tiles_json: Json | null
+          updated_at: string
           worker_id: string | null
         }
         Insert: {
@@ -327,27 +426,55 @@ export type Database = {
           deepzoom_manifest_url?: string | null
           deepzoom_progress?: number
           deepzoom_ready?: boolean
+          download_count?: number
+          dzi_completed_at?: string | null
           dzi_status?: string | null
           dzi_url?: string | null
           error?: string | null
           event_id: string
+          expires_at?: string | null
+          failed_at?: string | null
+          final_available?: boolean
+          final_format?: string | null
+          final_height_px?: number | null
+          final_ready_at?: string | null
+          final_size_bytes?: number | null
+          final_storage_path?: string | null
+          final_verified_at?: string | null
+          final_width_px?: number | null
+          first_downloaded_at?: string | null
           id?: string
           image_url?: string | null
+          job_kind?: string
+          last_downloaded_at?: string | null
+          main_upload_id?: string | null
           metadata?: Json | null
           mosaic_image_url?: string | null
+          orientation?: string | null
           photo_count?: number | null
+          preview_height_px?: number | null
+          preview_ready_at?: string | null
+          preview_size_bytes?: number | null
+          preview_storage_path?: string | null
           preview_url?: string | null
+          preview_width_px?: number | null
+          print_completed_at?: string | null
+          print_size?: string | null
           print_status?: string | null
           print_url?: string | null
           progress?: number
+          queued_at?: string | null
           source_image_url?: string | null
+          sources_released_at?: string | null
           stage?: string | null
+          started_at?: string | null
           status?: string | null
           thumb_image_url?: string | null
           thumb_url?: string | null
           tile_base_url?: string | null
           tile_count?: number | null
           tiles_json?: Json | null
+          updated_at?: string
           worker_id?: string | null
         }
         Update: {
@@ -357,27 +484,55 @@ export type Database = {
           deepzoom_manifest_url?: string | null
           deepzoom_progress?: number
           deepzoom_ready?: boolean
+          download_count?: number
+          dzi_completed_at?: string | null
           dzi_status?: string | null
           dzi_url?: string | null
           error?: string | null
           event_id?: string
+          expires_at?: string | null
+          failed_at?: string | null
+          final_available?: boolean
+          final_format?: string | null
+          final_height_px?: number | null
+          final_ready_at?: string | null
+          final_size_bytes?: number | null
+          final_storage_path?: string | null
+          final_verified_at?: string | null
+          final_width_px?: number | null
+          first_downloaded_at?: string | null
           id?: string
           image_url?: string | null
+          job_kind?: string
+          last_downloaded_at?: string | null
+          main_upload_id?: string | null
           metadata?: Json | null
           mosaic_image_url?: string | null
+          orientation?: string | null
           photo_count?: number | null
+          preview_height_px?: number | null
+          preview_ready_at?: string | null
+          preview_size_bytes?: number | null
+          preview_storage_path?: string | null
           preview_url?: string | null
+          preview_width_px?: number | null
+          print_completed_at?: string | null
+          print_size?: string | null
           print_status?: string | null
           print_url?: string | null
           progress?: number
+          queued_at?: string | null
           source_image_url?: string | null
+          sources_released_at?: string | null
           stage?: string | null
+          started_at?: string | null
           status?: string | null
           thumb_image_url?: string | null
           thumb_url?: string | null
           tile_base_url?: string | null
           tile_count?: number | null
           tiles_json?: Json | null
+          updated_at?: string
           worker_id?: string | null
         }
         Relationships: [
@@ -386,6 +541,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mosaics_main_upload_id_fkey"
+            columns: ["main_upload_id"]
+            isOneToOne: false
+            referencedRelation: "uploads"
             referencedColumns: ["id"]
           },
         ]
@@ -424,9 +586,14 @@ export type Database = {
           discount_code_id: string | null
           event_id: string | null
           id: string
+          mosaic_id: string | null
+          orientation: string | null
           original_amount_cents: number | null
           paid_at: string | null
           partner_name: string | null
+          print_size: string | null
+          product_tag: string | null
+          refunded_at: string | null
           status: string
           stripe_checkout_session_id: string | null
           stripe_customer_id: string
@@ -451,9 +618,14 @@ export type Database = {
           discount_code_id?: string | null
           event_id?: string | null
           id?: string
+          mosaic_id?: string | null
+          orientation?: string | null
           original_amount_cents?: number | null
           paid_at?: string | null
           partner_name?: string | null
+          print_size?: string | null
+          product_tag?: string | null
+          refunded_at?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
           stripe_customer_id: string
@@ -478,9 +650,14 @@ export type Database = {
           discount_code_id?: string | null
           event_id?: string | null
           id?: string
+          mosaic_id?: string | null
+          orientation?: string | null
           original_amount_cents?: number | null
           paid_at?: string | null
           partner_name?: string | null
+          print_size?: string | null
+          product_tag?: string | null
+          refunded_at?: string | null
           status?: string
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string
@@ -490,14 +667,25 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_mosaic_id_fkey"
+            columns: ["mosaic_id"]
+            isOneToOne: false
+            referencedRelation: "mosaics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       uploads: {
         Row: {
+          deleted_at: string | null
           event_id: string
+          extracted_count: number | null
           file_hash: string | null
           guest_name: string | null
           guest_uuid: string | null
+          height_px: number | null
           id: string
           image_url: string
           optimize_error: string | null
@@ -506,15 +694,27 @@ export type Database = {
           optimized_size_bytes: number | null
           original_format: string | null
           original_size_bytes: number | null
+          parent_upload_id: string | null
+          processed_at: string | null
+          processing_error: string | null
+          processing_status: string
+          size_bytes: number | null
+          source_kind: string
           source_path: string | null
+          storage_path: string | null
+          updated_at: string
           uploaded_at: string
           uploaded_by_owner: boolean
+          width_px: number | null
         }
         Insert: {
+          deleted_at?: string | null
           event_id: string
+          extracted_count?: number | null
           file_hash?: string | null
           guest_name?: string | null
           guest_uuid?: string | null
+          height_px?: number | null
           id?: string
           image_url: string
           optimize_error?: string | null
@@ -523,15 +723,27 @@ export type Database = {
           optimized_size_bytes?: number | null
           original_format?: string | null
           original_size_bytes?: number | null
+          parent_upload_id?: string | null
+          processed_at?: string | null
+          processing_error?: string | null
+          processing_status?: string
+          size_bytes?: number | null
+          source_kind?: string
           source_path?: string | null
+          storage_path?: string | null
+          updated_at?: string
           uploaded_at?: string
           uploaded_by_owner?: boolean
+          width_px?: number | null
         }
         Update: {
+          deleted_at?: string | null
           event_id?: string
+          extracted_count?: number | null
           file_hash?: string | null
           guest_name?: string | null
           guest_uuid?: string | null
+          height_px?: number | null
           id?: string
           image_url?: string
           optimize_error?: string | null
@@ -540,9 +752,18 @@ export type Database = {
           optimized_size_bytes?: number | null
           original_format?: string | null
           original_size_bytes?: number | null
+          parent_upload_id?: string | null
+          processed_at?: string | null
+          processing_error?: string | null
+          processing_status?: string
+          size_bytes?: number | null
+          source_kind?: string
           source_path?: string | null
+          storage_path?: string | null
+          updated_at?: string
           uploaded_at?: string
           uploaded_by_owner?: boolean
+          width_px?: number | null
         }
         Relationships: [
           {
@@ -550,6 +771,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "uploads_parent_upload_id_fkey"
+            columns: ["parent_upload_id"]
+            isOneToOne: false
+            referencedRelation: "uploads"
             referencedColumns: ["id"]
           },
         ]
@@ -586,6 +814,14 @@ export type Database = {
       finalize_own_upload_delete: {
         Args: { _guest_uuid: string; _upload_id: string }
         Returns: Json
+      }
+      pet_sources_ready_for_cleanup: {
+        Args: { _limit?: number }
+        Returns: {
+          event_id: string
+          storage_path: string
+          upload_id: string
+        }[]
       }
       prepare_own_upload_delete: {
         Args: { _guest_uuid: string; _upload_id: string }
