@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useNavigate, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
