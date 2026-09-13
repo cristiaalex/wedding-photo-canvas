@@ -1,125 +1,98 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, Circle, Download, Images } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { PetPhotoUploader } from "@/components/pet-photo-uploader";
 import { Button } from "@/components/ui/button";
-import type { Event, Mosaic } from "@/lib/database.types";
-import { PET_PRICE_LABEL, PET_PRINT_OPTIONS, petProjectName } from "@/lib/pet-product";
+import type { Event } from "@/lib/database.types";
+import { petProjectName } from "@/lib/pet-product";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [
-    { title: "Your Pet Mosaic Studio — Mosaic Pet" },
-    { name: "description", content: "Continue your private pet mosaic, review its preview and download the purchased final artwork." },
-    { property: "og:title", content: "Your Pet Mosaic Studio — Mosaic Pet" },
-    { property: "og:description", content: "Continue your private pet mosaic, review its preview and download the purchased final artwork." },
+    { title: "My Mosaics — Mosaic Pet" },
+    { name: "description", content: "See the pet mosaics you have already created and open them again." },
+    { property: "og:title", content: "My Mosaics — Mosaic Pet" },
+    { property: "og:description", content: "See the pet mosaics you have already created and open them again." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),
-  component: DashboardPage,
+  component: MyMosaicsPage,
 });
 
-function DashboardPage() {
+type Item = { project: Event; thumb: string | null; createdAt: string };
+
+async function signMosaicPath(value: string | null | undefined): Promise<string | null> {
+  if (!value) return null;
+  let path = value;
+  if (/^https?:\/\//.test(value)) {
+    const match = value.match(/\/mosaics\/(.+)$/);
+    if (!match) return value;
+    path = match[1];
+  }
+  const { data } = await supabase.storage.from("mosaics").createSignedUrl(path, 60 * 60);
+  return data?.signedUrl ?? null;
+}
+
+function MyMosaicsPage() {
   const navigate = useNavigate();
-  const [project, setProject] = useState<Event | null>(null);
-  const [latest, setLatest] = useState<Mosaic | null>(null);
-  const [photoCount, setPhotoCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [justPaid, setJustPaid] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("billing") !== "success") return;
-    setJustPaid(true);
-    window.history.replaceState({}, "", window.location.pathname);
-  }, []);
-
+  const [items, setItems] = useState<Item[] | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return setLoading(false);
-      const { data: event } = await supabase.from("events").select("*").eq("organizer_id", auth.user.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      if (!auth.user) return;
+      const { data: events } = await supabase
+        .from("events").select("*").eq("organizer_id", auth.user.id)
+        .order("created_at", { ascending: false });
       if (cancelled) return;
-      if (!event) { navigate({ to: "/create", replace: true }); return; }
-      const [{ count }, { data: mosaic }] = await Promise.all([
-        supabase.from("uploads").select("id", { count: "exact", head: true }).eq("event_id", event.id),
-        supabase.from("mosaics").select("*").eq("event_id", event.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
-      ]);
-      if (cancelled) return;
-      setProject(event); setLatest(mosaic); setPhotoCount(count ?? 0); setLoading(false);
+      if (!events || events.length === 0) { navigate({ to: "/create", replace: true }); return; }
+
+      const resolved = await Promise.all(events.map(async (project) => {
+        const { data: mosaic } = await supabase
+          .from("mosaics").select("thumb_url,preview_url,created_at")
+          .eq("event_id", project.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
+        const thumb = await signMosaicPath(mosaic?.thumb_url ?? mosaic?.preview_url);
+        return { project, thumb, createdAt: mosaic?.created_at ?? project.created_at } as Item;
+      }));
+      if (!cancelled) setItems(resolved);
     })();
     return () => { cancelled = true; };
   }, [navigate]);
 
-  if (loading || !project) return <AppShell><div className="grid min-h-[60vh] place-items-center"><p className="text-eyebrow">Opening your studio…</p></div></AppShell>;
-  const orientation = project.orientation ?? "portrait";
-  const size = PET_PRINT_OPTIONS[orientation].find((option) => option.id === project.print_size);
-  const previewReady = latest?.status === "ready" || latest?.status === "deepzoom_ready";
-  const finalReady = latest?.final_available === true || (latest?.print_status === "ready" && project.payment_status === "paid");
-
   return (
-    <AppShell projectName={project.pet_name}>
-      <div className="space-y-10 py-4 md:space-y-14 md:py-8">
-        {justPaid && (
-          <div className="rounded-[2rem] border-2 border-mint bg-mint/25 p-6">
-            <p className="text-display text-2xl">We&rsquo;re creating your Mosaic ❤️</p>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">Thank you! Your high-resolution mosaic is being made right now. We&rsquo;ll email you a link the moment it&rsquo;s ready — you can close this page.</p>
-          </div>
-        )}
-        <header className="max-w-3xl">
-          <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">My Pet Mosaic</span>
-          <h1 className="mt-5 text-display text-4xl md:text-6xl">Hey, {petProjectName(project.pet_name || project.event_name)}! Ready for more magic?</h1>
-          <p className="mt-5 text-base leading-7 text-muted-foreground">Your photos, choices, preview and finished mosaic are all together here.</p>
+    <AppShell>
+      <div className="space-y-9 py-4 md:py-8">
+        <header>
+          <span className="sticker inline-flex bg-sunshine/35 px-4 py-2 text-xs font-extrabold">My Mosaics</span>
+          <h1 className="mt-5 text-display text-4xl md:text-5xl">The mosaics you&rsquo;ve made</h1>
         </header>
 
-        <section className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-          <Stage done={photoCount > 0} label="Photos" detail={`${photoCount} uploaded`} />
-          <Stage done={!!project.main_upload_id && !!project.orientation} label="Design" detail={size ? `${orientation} · ${size.dimensions}` : "Choose format"} />
-          <Stage done={previewReady} label="Preview" detail={previewReady ? "Ready to explore" : latest ? "Being created" : "Not started"} />
-          <Stage done={finalReady} label="Final artwork" detail={finalReady ? "Ready to download" : project.payment_status === "paid" ? "Being finished" : "Purchase after preview"} />
-        </section>
-
-        {!project.main_upload_id ? (
-          <section className="rounded-[2rem] bg-blush p-7 md:p-12">
-            <p className="text-eyebrow text-coral">Let&rsquo;s keep going</p>
-            <h2 className="mt-3 text-display text-4xl">Your big picture is waiting.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">Add your photos, choose a format and select the main portrait the mosaic will recreate.</p>
-            <Button asChild size="lg" className="mt-7"><Link to="/gallery">Add photos <ArrowRight /></Link></Button>
-          </section>
+        {items === null ? (
+          <p className="py-20 text-center text-eyebrow">Looking for your mosaics…</p>
         ) : (
-          <section className="grid gap-8 md:grid-cols-2 md:items-center">
-            <div>
-              <p className="text-eyebrow text-coral">Your next step</p>
-              <h2 className="mt-4 text-display text-4xl md:text-5xl">{previewReady ? "Whoa — your preview is ready!" : latest ? "The magic is happening." : "Ready to see the big picture?"}</h2>
-              <p className="mt-5 text-sm leading-7 text-muted-foreground">{previewReady ? "Open it full-screen, zoom into the tiny memories, or return to your photos before purchase." : "Preview generation is included before purchase. Your source photographs stay private and available while your artwork is being prepared."}</p>
-              <Button asChild size="lg" className="mt-7"><Link to="/mosaic">{previewReady ? "Explore preview" : "Create preview"}<ArrowRight /></Link></Button>
-            </div>
-            <dl className="joyful-card p-7 md:p-9">
-              <Detail term="Orientation" value={orientation} />
-              <Detail term="Print size" value={size?.dimensions ?? "Not chosen"} />
-              <Detail term="Purchase" value={project.payment_status === "paid" ? "Paid" : PET_PRICE_LABEL} />
-              <Detail term="Final file" value={finalReady ? "High-resolution artwork ready" : "Prepared after purchase"} last />
-            </dl>
-          </section>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+              <li key={item.project.id} className="joyful-card overflow-hidden p-0">
+                <div className="aspect-square w-full bg-mist">
+                  {item.thumb ? (
+                    <img src={item.thumb} alt="Pet mosaic" loading="lazy" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="grid h-full w-full place-items-center text-sky"><Sparkles className="h-6 w-6" /></span>
+                  )}
+                </div>
+                <div className="p-5">
+                  <p className="text-display text-2xl">{petProjectName(item.project.pet_name || item.project.event_name)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Created {new Date(item.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                  </p>
+                  <Button asChild variant="outline" className="mt-5 w-full"><Link to="/mosaic">View mosaic <ArrowRight /></Link></Button>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
-
-        <section>
-          <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-eyebrow text-coral">Add more memories</p><h2 className="mt-3 text-display text-3xl md:text-4xl">There&rsquo;s always room for one more silly face.</h2></div><Button asChild variant="outline"><Link to="/gallery">View all <Images /></Link></Button></div>
-          <PetPhotoUploader eventId={project.id} petName={project.pet_name} />
-        </section>
-
-        {finalReady && <section className="rounded-[2rem] bg-mint/45 p-7 md:p-12"><Download className="h-7 w-7 text-navy" /><h2 className="mt-5 text-display text-4xl">Your Mosaic is ready!</h2><p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">All their little moments are together. Open it, zoom in, and download the high-resolution final mosaic.</p><Button asChild size="lg" className="mt-7"><Link to="/mosaic">See the finished mosaic <ArrowRight /></Link></Button></section>}
       </div>
     </AppShell>
   );
-}
-
-function Stage({ done, label, detail }: { done: boolean; label: string; detail: string }) {
-  return <div className={`min-h-28 rounded-3xl border-2 p-5 ${done ? "border-mint bg-mint/25" : "border-sky/20 bg-card"}`}><div className="flex items-center gap-2">{done ? <Check className="h-4 w-4 text-navy" /> : <Circle className="h-4 w-4 text-sky" />}<p className="text-eyebrow">{label}</p></div><p className="mt-4 text-sm capitalize text-foreground">{detail}</p></div>;
-}
-function Detail({ term, value, last = false }: { term: string; value: string; last?: boolean }) {
-  return <div className={`flex items-start justify-between gap-5 py-4 ${last ? "" : "border-b border-border"}`}><dt className="text-eyebrow">{term}</dt><dd className="text-right text-sm capitalize text-foreground">{value}</dd></div>;
 }
