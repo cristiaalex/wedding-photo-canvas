@@ -2,7 +2,6 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   Heart,
-  Images,
   Sparkles,
   LogOut,
   type LucideIcon,
@@ -30,9 +29,8 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { label: "My mosaic", to: "/dashboard", icon: Heart },
-  { label: "Photos", to: "/gallery", icon: Images },
-  { label: "Preview", to: "/mosaic", icon: Sparkles },
+  { label: "My mosaic", to: "/mosaic", icon: Sparkles },
+  { label: "My mosaics", to: "/dashboard", icon: Heart },
 ];
 
 export type AppShellProps = {

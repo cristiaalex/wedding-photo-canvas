@@ -625,7 +625,8 @@ function MosaicPage() {
         )}
 
 
-        <Generations items={mosaics} onOpen={setViewing} />
+        {/* History only matters once there is more than one generation. */}
+        {mosaics.length > 1 && <Generations items={mosaics} onOpen={setViewing} />}
 
         {!latestReady && (
           <Studio
@@ -1365,7 +1366,7 @@ function EmptyArtwork({
               Add your pet&rsquo;s favorite moments, choose the photo that looks most like them, then create your free preview.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/gallery" className="btn-primary inline-flex items-center gap-2">Add photos <UploadIcon className="h-3.5 w-3.5" /></Link>
+              <Link to="/create" className="btn-primary inline-flex items-center gap-2">Add photos <UploadIcon className="h-3.5 w-3.5" /></Link>
             </div>
             <p className="mt-9 text-eyebrow text-muted-foreground">
               {isProcessing
