@@ -625,7 +625,8 @@ function MosaicPage() {
         )}
 
 
-        <Generations items={mosaics} onOpen={setViewing} />
+        {/* History only matters once there is more than one generation. */}
+        {mosaics.length > 1 && <Generations items={mosaics} onOpen={setViewing} />}
 
         {!latestReady && (
           <Studio
