@@ -15,7 +15,6 @@ import { BillingCard } from "@/components/billing-card";
 import { PageStack } from "@/components/page-layout";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import { isTrialPlan } from "@/lib/trial";
 import { MIN_PHOTOS_FOR_MOSAIC } from "@/lib/run-mosaic-generation";
 
 // Premium plan cap: keep the current mosaic plus the previous two generations.
