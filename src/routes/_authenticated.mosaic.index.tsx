@@ -1267,7 +1267,7 @@ function ArtworkStage({
             </div>
 
             <div className="flex flex-col items-center text-center">
-              {purchased && printReady && printSignedUrl ? (
+              {purchased && finalAvailable && printSignedUrl ? (
                 <a
                   href={printSignedUrl}
                   download={`mosaic-print-${eventId}.jpg`}
