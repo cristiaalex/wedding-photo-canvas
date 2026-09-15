@@ -105,6 +105,17 @@ function MyMosaicsPage() {
                   <p className="mt-1 text-sm text-muted-foreground">
                     Created {new Date(item.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                   </p>
+                  <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
+                    <li>{item.photos} {item.photos === 1 ? "photo" : "photos"} uploaded</li>
+                    <li>{item.project.print_size ? `Design: ${item.project.orientation ?? ""} · ${item.project.print_size.replace(/^[a-z]+-/, "")}`.trim() : "Design not chosen yet"}</li>
+                    <li>{item.previewReady ? "Preview ready" : "Preview not ready yet"}</li>
+                    <li>{item.project.payment_status === "paid" ? "Purchased" : "Not purchased yet"}</li>
+                    <li>
+                      {item.project.payment_status === "paid"
+                        ? item.finalReady ? "Final mosaic ready to download" : "Final mosaic being finished ❤️"
+                        : "Final mosaic available after purchase"}
+                    </li>
+                  </ul>
                   <Button asChild variant="outline" className="mt-5 w-full"><Link to="/mosaic">View mosaic <ArrowRight /></Link></Button>
                 </div>
               </li>
