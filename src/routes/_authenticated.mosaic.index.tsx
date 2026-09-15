@@ -612,7 +612,7 @@ function MosaicPage() {
               eventId={event.id}
               latestReady={latestReady}
               isProcessing={isProcessing}
-              isTrial={isTrial}
+              
               onRegenerate={() => setRegenerateOpen(true)}
             />
           </>
@@ -1114,14 +1114,12 @@ function ArtworkStage({
   eventId,
   latestReady,
   isProcessing,
-  isTrial,
   onRegenerate,
 }: {
   event: Event;
   eventId: string;
   latestReady: SignedMosaic;
   isProcessing: boolean;
-  isTrial: boolean;
   onRegenerate: () => void;
 }) {
   const blurClass = isProcessing
