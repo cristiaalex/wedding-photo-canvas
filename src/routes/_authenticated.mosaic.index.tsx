@@ -1165,7 +1165,11 @@ function ArtworkStage({
   const printGenerating =
     printStatus === "processing" || (!printUrl && printStatus != null && printStatus !== "failed");
   const printReady = !!printUrl && printStatus === "ready";
-  const purchased = event.payment_status === "paid" || event.plan === "pro";
+  // One-time purchase only. The final artwork is the purchased product, so it
+  // is only ever offered when payment succeeded AND the print-ready file
+  // actually exists and has been signed for this customer.
+  const purchased = event.payment_status === "paid";
+  const finalAvailable = printReady || latestReady.row.final_available === true;
 
   return (
     <section>
@@ -1207,13 +1211,23 @@ function ArtworkStage({
                 <ImageIcon className="h-10 w-10" />
               </div>
             )}
-            {isTrial && latestReady.previewSrc && <TrialWatermark />}
+            {!purchased && latestReady.previewSrc && <TrialWatermark />}
           </div>
         </figure>
 
         <p className="mt-4 text-center text-eyebrow text-muted-foreground">
-          Crafted {formatRelativeTime(latestReady.row.completed_at ?? latestReady.row.created_at)}
+          {purchased ? "Your mosaic" : "Free preview"} · crafted {formatRelativeTime(latestReady.row.completed_at ?? latestReady.row.created_at)}
         </p>
+
+        {purchased && !finalAvailable && (
+          <div className="mt-6 rounded-[2rem] border-2 border-mint bg-mint/20 p-6 text-center">
+            <p className="text-display text-2xl">Your mosaic is being finished ❤️</p>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+              We&rsquo;re preparing the high-resolution, ready-to-print version. It appears here the moment it&rsquo;s ready, and we&rsquo;ll email you too.
+            </p>
+          </div>
+        )}
+
 
           <div className="mt-10 rounded-[2rem] border-2 border-sky/20 bg-mist/45 p-6 md:p-10">
           <div className="text-center">
