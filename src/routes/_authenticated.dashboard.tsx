@@ -19,7 +19,14 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: MyMosaicsPage,
 });
 
-type Item = { project: Event; thumb: string | null; createdAt: string };
+type Item = {
+  project: Event;
+  thumb: string | null;
+  createdAt: string;
+  photos: number;
+  previewReady: boolean;
+  finalReady: boolean;
+};
 
 async function signMosaicPath(value: string | null | undefined): Promise<string | null> {
   if (!value) return null;
@@ -50,15 +57,27 @@ function MyMosaicsPage() {
 
       const resolved = await Promise.all(events.map(async (project) => {
         const { data: mosaic } = await supabase
-          .from("mosaics").select("thumb_url,preview_url,created_at")
+          .from("mosaics").select("thumb_url,preview_url,created_at,status,print_url,print_status,final_available")
           .eq("event_id", project.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
+        const { count } = await supabase
+          .from("uploads").select("id", { count: "exact", head: true }).eq("event_id", project.id);
         const thumb = await signMosaicPath(mosaic?.thumb_url ?? mosaic?.preview_url);
-        return { project, thumb, createdAt: mosaic?.created_at ?? project.created_at } as Item;
+        const finalReady =
+          (!!mosaic?.print_url && mosaic.print_status === "ready") || mosaic?.final_available === true;
+        return {
+          project,
+          thumb,
+          createdAt: mosaic?.created_at ?? project.created_at,
+          photos: count ?? 0,
+          previewReady: !!(mosaic?.preview_url || mosaic?.thumb_url),
+          finalReady,
+        } as Item;
       }));
       if (!cancelled) setItems(resolved);
     })();
     return () => { cancelled = true; };
   }, [navigate]);
+
 
   return (
     <AppShell>
