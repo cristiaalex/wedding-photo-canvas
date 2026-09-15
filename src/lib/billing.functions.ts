@@ -180,8 +180,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         ...(discounts ? { discounts } : { allow_promotion_codes: true }),
         client_reference_id: organizer.userId,
         invoice_creation: { enabled: true },
-        success_url: `${origin}/dashboard?billing=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/dashboard?billing=cancelled`,
+        // Pet returns the customer to their mosaic studio, where the
+        // "being finished" state and the final download live.
+        success_url: `${origin}/mosaic?billing=success&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/mosaic?billing=cancelled`,
         metadata,
         payment_intent_data: { metadata },
       });
@@ -224,7 +226,7 @@ export const createPortalSession = createServerFn({ method: "POST" }).handler(
 
       const session = await getStripe().billingPortal.sessions.create({
         customer: data.stripe_customer_id,
-        return_url: `${siteOrigin()}/dashboard`,
+        return_url: `${siteOrigin()}/mosaic`,
       });
       return { url: session.url };
     } catch (err) {
