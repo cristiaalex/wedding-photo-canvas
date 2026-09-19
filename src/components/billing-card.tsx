@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function BillingCard({ eventId }: { eventId?: string }) {
   const [showPromo, setShowPromo] = useState(false);
   const [email, setEmail] = useState("");
   const [knownEmail, setKnownEmail] = useState<string | null>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async () => { try { setState(await loadState()); } catch { setState(null); } }, [loadState]);
   useEffect(() => { void refresh(); }, [refresh]);
