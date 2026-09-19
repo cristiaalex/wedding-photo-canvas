@@ -21,7 +21,7 @@ export function BillingCard({ eventId }: { eventId?: string }) {
 
   const refresh = useCallback(async () => { try { setState(await loadState()); } catch { setState(null); } }, [loadState]);
   useEffect(() => { void refresh(); }, [refresh]);
-  useEffect(() => { void supabase.auth.getUser().then(({ data }) => setKnownEmail(data.user?.email ?? null)); }, []);
+  useEffect(() => { void supabase.auth.getUser().then(({ data }) => setKnownEmail(data.user?.email?.trim() || null)); }, []);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("billing") !== "success") return;
@@ -33,7 +33,8 @@ export function BillingCard({ eventId }: { eventId?: string }) {
 
   async function checkout() {
     // Read the live field at click time so browser-autofilled emails count.
-    const freshEmail = (knownEmail ?? (emailInputRef.current?.value ?? email)).trim();
+    const typedEmail = (emailInputRef.current?.value ?? email).trim();
+    const freshEmail = typedEmail || (knownEmail ?? "").trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(freshEmail)) { setError("Please add the email where we should send your mosaic."); return; }
     setBusy("checkout"); setError(null);
     try {
