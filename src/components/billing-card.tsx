@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function BillingCard({ eventId }: { eventId?: string }) {
   const [showPromo, setShowPromo] = useState(false);
   const [email, setEmail] = useState("");
   const [knownEmail, setKnownEmail] = useState<string | null>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async () => { try { setState(await loadState()); } catch { setState(null); } }, [loadState]);
   useEffect(() => { void refresh(); }, [refresh]);
@@ -29,14 +30,14 @@ export function BillingCard({ eventId }: { eventId?: string }) {
     return () => window.clearTimeout(timer);
   }, [refresh]);
 
-  const emailToUse = (knownEmail ?? email).trim();
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailToUse);
 
   async function checkout() {
-    if (!emailValid) { setError("Please add the email where we should send your mosaic."); return; }
+    // Read the live field at click time so browser-autofilled emails count.
+    const freshEmail = (knownEmail ?? (emailInputRef.current?.value ?? email)).trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(freshEmail)) { setError("Please add the email where we should send your mosaic."); return; }
     setBusy("checkout"); setError(null);
     try {
-      const { url } = await startCheckout({ data: { ...(eventId ? { eventId } : {}), email: emailToUse, ...(promo.trim() ? { promoCode: promo.trim() } : {}) } });
+      const { url } = await startCheckout({ data: { ...(eventId ? { eventId } : {}), email: freshEmail, ...(promo.trim() ? { promoCode: promo.trim() } : {}) } });
       window.location.href = url;
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Checkout is not available yet."); setBusy(null); }
   }
@@ -53,11 +54,11 @@ export function BillingCard({ eventId }: { eventId?: string }) {
     {!knownEmail && (
       <label className="mt-6 block max-w-md">
         <span className="text-eyebrow">Your email</span>
-        <input type="email" inputMode="email" autoComplete="email" className="field mt-2" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@email.com" />
+        <input ref={emailInputRef} type="email" inputMode="email" autoComplete="email" className="field mt-2" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@email.com" />
         <span className="mt-2 block text-xs leading-5 text-muted-foreground">This is where we&rsquo;ll send access to your mosaic and the &ldquo;Your Mosaic is ready ❤️&rdquo; note. No password needed.</span>
       </label>
     )}
-    <Button size="lg" className="mt-6 w-full sm:w-auto" onClick={() => void checkout()} disabled={busy !== null || !emailValid}>{busy === "checkout" ? <Loader2 className="animate-spin" /> : <CreditCard />}Get my final mosaic</Button>
+    <Button size="lg" className="mt-6 w-full sm:w-auto" onClick={() => void checkout()} disabled={busy !== null}>{busy === "checkout" ? <Loader2 className="animate-spin" /> : <CreditCard />}Get my final mosaic</Button>
     {showPromo ? <label className="mt-6 block max-w-xs"><span className="text-eyebrow">Discount code</span><input className="field mt-2" value={promo} onChange={(event) => setPromo(event.target.value.toUpperCase())} placeholder="ENTER CODE" /></label> : <button type="button" className="mt-5 block text-sm text-muted-foreground underline" onClick={() => setShowPromo(true)}>I have a discount code</button>}
     {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
   </div>;
