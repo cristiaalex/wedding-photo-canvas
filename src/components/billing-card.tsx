@@ -30,11 +30,6 @@ export function BillingCard({ eventId }: { eventId?: string }) {
     return () => window.clearTimeout(timer);
   }, [refresh]);
 
-  // Browser autofill never fires onChange, so the input can show an email
-  // while React state is still empty. Read the live field value as fallback.
-  const liveEmail = emailInputRef.current?.value ?? "";
-  const emailToUse = (knownEmail ?? (email || liveEmail)).trim();
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailToUse);
 
   async function checkout() {
     // Read the live field at click time so browser-autofilled emails count.
