@@ -57,11 +57,11 @@ export function BillingCard({ eventId }: { eventId?: string }) {
     {!knownEmail && (
       <label className="mt-6 block max-w-md">
         <span className="text-eyebrow">Your email</span>
-        <input type="email" inputMode="email" autoComplete="email" className="field mt-2" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@email.com" />
+        <input ref={emailInputRef} type="email" inputMode="email" autoComplete="email" className="field mt-2" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@email.com" />
         <span className="mt-2 block text-xs leading-5 text-muted-foreground">This is where we&rsquo;ll send access to your mosaic and the &ldquo;Your Mosaic is ready ❤️&rdquo; note. No password needed.</span>
       </label>
     )}
-    <Button size="lg" className="mt-6 w-full sm:w-auto" onClick={() => void checkout()} disabled={busy !== null || !emailValid}>{busy === "checkout" ? <Loader2 className="animate-spin" /> : <CreditCard />}Get my final mosaic</Button>
+    <Button size="lg" className="mt-6 w-full sm:w-auto" onClick={() => void checkout()} disabled={busy !== null}>{busy === "checkout" ? <Loader2 className="animate-spin" /> : <CreditCard />}Get my final mosaic</Button>
     {showPromo ? <label className="mt-6 block max-w-xs"><span className="text-eyebrow">Discount code</span><input className="field mt-2" value={promo} onChange={(event) => setPromo(event.target.value.toUpperCase())} placeholder="ENTER CODE" /></label> : <button type="button" className="mt-5 block text-sm text-muted-foreground underline" onClick={() => setShowPromo(true)}>I have a discount code</button>}
     {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
   </div>;
