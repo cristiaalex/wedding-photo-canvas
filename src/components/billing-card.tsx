@@ -37,10 +37,12 @@ export function BillingCard({ eventId }: { eventId?: string }) {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailToUse);
 
   async function checkout() {
-    if (!emailValid) { setError("Please add the email where we should send your mosaic."); return; }
+    // Read the live field at click time so browser-autofilled emails count.
+    const freshEmail = (knownEmail ?? (emailInputRef.current?.value ?? email)).trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(freshEmail)) { setError("Please add the email where we should send your mosaic."); return; }
     setBusy("checkout"); setError(null);
     try {
-      const { url } = await startCheckout({ data: { ...(eventId ? { eventId } : {}), email: emailToUse, ...(promo.trim() ? { promoCode: promo.trim() } : {}) } });
+      const { url } = await startCheckout({ data: { ...(eventId ? { eventId } : {}), email: freshEmail, ...(promo.trim() ? { promoCode: promo.trim() } : {}) } });
       window.location.href = url;
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Checkout is not available yet."); setBusy(null); }
   }
