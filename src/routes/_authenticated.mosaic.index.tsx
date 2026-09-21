@@ -1270,15 +1270,16 @@ function ArtworkStage({
             </div>
 
             <div className="flex flex-col items-center text-center">
-              {purchased && finalAvailable && printSignedUrl ? (
-                <a
-                  href={printSignedUrl}
-                  download={`mosaic-print-${eventId}.jpg`}
+              {purchased && finalAvailable ? (
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadFinal()}
+                  disabled={downloadBusy}
                   className={mosaicAction({ variant: "accent" })}
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Download final mosaic
-                </a>
+                  {downloadBusy ? "Preparing your download…" : "Download final mosaic"}
+                </button>
               ) : !purchased ? (
                 <span className={mosaicAction({ variant: "idle" })}>
                   <Printer className="h-3.5 w-3.5" />
@@ -1291,8 +1292,9 @@ function ArtworkStage({
                 </span>
               )}
               <p className="mt-3 text-xs text-muted-foreground">
-                Get your ready-to-print version.
+                {downloadError ?? "Get your ready-to-print version."}
               </p>
+
             </div>
 
             <div className="flex flex-col items-center text-center">
