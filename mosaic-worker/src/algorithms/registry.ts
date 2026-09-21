@@ -1629,7 +1629,7 @@ const sharpDeepZoom: DeepZoomBuilder = {
       log.info({ tiles: tileFiles.length }, 'DZI pyramid: uploading tiles');
       const tDziUpload = Date.now();
 
-      const CONCURRENCY = 8;
+      const CONCURRENCY = 2;
       let cursor = 0;
       let uploaded = 0;
       const tilePrefix = `${ctx.eventId}/${ctx.mosaicId}/dzi_files/`;
