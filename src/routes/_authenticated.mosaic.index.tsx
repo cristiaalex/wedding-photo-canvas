@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import {
   Sparkles,
   ExternalLink,
@@ -21,6 +23,8 @@ import { MIN_PHOTOS_FOR_MOSAIC } from "@/lib/run-mosaic-generation";
 // Configurable so future subscription tiers can raise it.
 const MAX_MOSAIC_HISTORY = 3;
 import { triggerMosaicWorker, cancelMosaicWorker } from "@/lib/worker.functions";
+import { getFinalMosaicDownloadUrl } from "@/lib/download.functions";
+
 import {
   Dialog,
   DialogContent,
