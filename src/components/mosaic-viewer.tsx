@@ -147,7 +147,7 @@ export function MosaicViewer({ imageUrl, dziUrl, manifest, onTileClick }: Props)
       if (dzi) {
         viewer.addOnceHandler("open-failed", () => {
           try {
-            viewer?.open({ type: "image", url: imageUrl });
+            viewer?.open({ type: "image", url: imageUrl } as never);
           } catch {
             /* noop */
           }
