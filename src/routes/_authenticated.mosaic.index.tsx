@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import {
   Sparkles,
   ExternalLink,
@@ -21,6 +23,8 @@ import { MIN_PHOTOS_FOR_MOSAIC } from "@/lib/run-mosaic-generation";
 // Configurable so future subscription tiers can raise it.
 const MAX_MOSAIC_HISTORY = 3;
 import { triggerMosaicWorker, cancelMosaicWorker } from "@/lib/worker.functions";
+import { getFinalMosaicDownloadUrl } from "@/lib/download.functions";
+
 import {
   Dialog,
   DialogContent,
@@ -1140,22 +1144,27 @@ function ArtworkStage({
       (!!latestReady.row.dzi_url || !!latestReady.row.image_url));
   const interactiveFailed = dziStatus === "failed" && !interactiveReady;
   const interactiveProcessing = !interactiveReady && !interactiveFailed;
-  const [printSignedUrl, setPrintSignedUrl] = useState<string | null>(null);
+  // The final print link is minted by the server only (ownership + payment +
+  // print availability are verified there). The browser never signs print.jpg.
+  const requestFinalDownload = useServerFn(getFinalMosaicDownloadUrl);
+  const [downloadBusy, setDownloadBusy] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    if (!printUrl) {
-      setPrintSignedUrl(null);
-      return;
+  const handleDownloadFinal = useCallback(async () => {
+    setDownloadBusy(true);
+    setDownloadError(null);
+    try {
+      const { url } = await requestFinalDownload({ data: { eventId } });
+      window.location.href = url;
+    } catch (err) {
+      setDownloadError(
+        err instanceof Error ? err.message : "Could not prepare your download just now.",
+      );
+    } finally {
+      setDownloadBusy(false);
     }
-    (async () => {
-      const signed = await signMosaicPath(printUrl);
-      if (!cancelled) setPrintSignedUrl(signed);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [printUrl]);
+  }, [requestFinalDownload, eventId]);
+
 
   // Only show "Preparing print…" when the worker is actively generating.
   // For legacy mosaics created before the print variant existed, BOTH
@@ -1265,15 +1274,16 @@ function ArtworkStage({
             </div>
 
             <div className="flex flex-col items-center text-center">
-              {purchased && finalAvailable && printSignedUrl ? (
-                <a
-                  href={printSignedUrl}
-                  download={`mosaic-print-${eventId}.jpg`}
+              {purchased && finalAvailable ? (
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadFinal()}
+                  disabled={downloadBusy}
                   className={mosaicAction({ variant: "accent" })}
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Download final mosaic
-                </a>
+                  {downloadBusy ? "Preparing your download…" : "Download final mosaic"}
+                </button>
               ) : !purchased ? (
                 <span className={mosaicAction({ variant: "idle" })}>
                   <Printer className="h-3.5 w-3.5" />
@@ -1286,8 +1296,9 @@ function ArtworkStage({
                 </span>
               )}
               <p className="mt-3 text-xs text-muted-foreground">
-                Get your ready-to-print version.
+                {downloadError ?? "Get your ready-to-print version."}
               </p>
+
             </div>
 
             <div className="flex flex-col items-center text-center">
