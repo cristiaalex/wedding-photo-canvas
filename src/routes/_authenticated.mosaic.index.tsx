@@ -1272,15 +1272,19 @@ function ArtworkStage({
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
               ) : interactiveFailed ? (
-                <button
-                  type="button"
-                  onClick={onRegenerate}
-                  disabled={isProcessing}
+                // Retry Viewer is independent of the regeneration limit and
+                // payment: it only re-opens the existing zoom viewer for the
+                // CURRENT mosaic version (manifest → tiles → preview
+                // fallback). It never creates a new version or consumes the
+                // free regeneration.
+                <Link
+                  to="/mosaic/$eventId"
+                  params={{ eventId }}
                   className={mosaicAction({ variant: "muted" })}
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Retry Viewer
-                </button>
+                </Link>
               ) : (
                 <span className={mosaicAction({ variant: "idle" })}>
                   <Sparkles className="h-3.5 w-3.5 animate-pulse" />
