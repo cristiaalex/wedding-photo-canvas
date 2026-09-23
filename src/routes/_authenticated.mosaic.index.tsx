@@ -415,11 +415,25 @@ function MosaicPage() {
   const heroStatus: "ready" | "growing" | "empty" =
     latestReady ? "ready" : photoCount > 0 ? "growing" : "empty";
 
+  // One original + exactly one regeneration before payment. Every non-failed
+  // generation row counts as a used version; payment locks regeneration.
+  const usedVersions = mosaics.filter((m) => m.row.status !== "failed").length;
+  const isPaid = event?.payment_status === "paid";
+  const regenerateLocked = isPaid || usedVersions >= 2;
+
   async function launchGeneration(
     opts: { tempCoverImageUrl?: string | null } = {},
   ): Promise<void> {
     if (!event) return;
     if (crafting || isProcessing) return;
+    if (regenerateLocked) {
+      toast.error(
+        isPaid
+          ? "Your mosaic is purchased — this version is your final artwork."
+          : "You've used your one free regeneration.",
+      );
+      return;
+    }
     setCrafting(true);
 
     // Concurrency guard: bail if a recent generation is still inflight.
@@ -614,11 +628,13 @@ function MosaicPage() {
               eventId={event.id}
               latestReady={latestReady}
               isProcessing={isProcessing}
-              
-              onRegenerate={() => setRegenerateOpen(true)}
+              regenerateLocked={regenerateLocked}
+              onRegenerate={() => {
+                if (!regenerateLocked) setRegenerateOpen(true);
+              }}
             />
           </>
-        ) : (
+        ) : crafting || isProcessing ? null : (
           <EmptyArtwork
             slug={event.slug}
             photoCount={photoCount}
@@ -658,6 +674,7 @@ function MosaicPage() {
         busy={crafting || isProcessing}
         onConfirm={async ({ tempCoverImageUrl }) => {
           setRegenerateOpen(false);
+          if (regenerateLocked) return;
           await launchGeneration({ tempCoverImageUrl });
         }}
       />
@@ -1116,12 +1133,14 @@ function ArtworkStage({
   eventId,
   latestReady,
   isProcessing,
+  regenerateLocked,
   onRegenerate,
 }: {
   event: Event;
   eventId: string;
   latestReady: SignedMosaic;
   isProcessing: boolean;
+  regenerateLocked: boolean;
   onRegenerate: () => void;
 }) {
   const blurClass = isProcessing
@@ -1305,14 +1324,18 @@ function ArtworkStage({
               <button
                 type="button"
                 onClick={onRegenerate}
-                disabled={isProcessing}
-                className={mosaicAction({ variant: "muted" })}
+                disabled={isProcessing || regenerateLocked}
+                className={`${mosaicAction({ variant: "muted" })} disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 <RefreshCw className="h-3.5 w-3.5" />
                 Regenerate
               </button>
               <p className="mt-3 text-xs text-muted-foreground">
-                 Try a fresh version with your latest photos.
+                {purchased
+                  ? "This version is your final artwork."
+                  : regenerateLocked
+                    ? "You've used your one free regeneration."
+                    : "One free fresh version before you buy."}
               </p>
             </div>
           </div>
