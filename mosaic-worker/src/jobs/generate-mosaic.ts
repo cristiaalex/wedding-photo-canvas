@@ -214,6 +214,14 @@ export async function runGenerateMosaic(
     if (!outputs.thumb?.length) {
       throw new Error('compositor: no thumb produced');
     }
+    {
+      const mw = grid.cols * 120;
+      const mh = grid.rows * 120;
+      log.info(
+        { width: mw, height: mh, pixelCount: mw * mh, format: 'png' },
+        `MASTER DIMENSIONS: width = ${mw} height = ${mh} pixelCount = ${mw * mh} format = png`,
+      );
+    }
 
     const matcherStats = matches.stats ?? null;
     // `photo_count` in the DB is displayed to the user as "N photos used" in
