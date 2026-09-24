@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import logoAsset from "@/assets/mosaic-logo.png.asset.json";
+import logo from "@/assets/mosaic-pet-logo-upscaled.png";
 
 const LINKS = [
   { href: "#how-it-works", label: "How it works" },
@@ -48,7 +48,7 @@ export function LandingHeader() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-6 md:py-4 lg:px-12 lg:py-6">
         <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
-          <img src={logoAsset.url} alt="Mosaic Wedding" className="h-7 w-auto sm:h-8 md:h-8 lg:h-10" />
+          <img src={logo} alt="Mosaic Pet" className="h-7 w-auto object-contain sm:h-8 md:h-8 lg:h-10" />
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex lg:gap-9">

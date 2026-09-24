@@ -16,7 +16,7 @@ import {
 
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/mosaic-logo.png.asset.json";
+import logo from "@/assets/mosaic-pet-logo-upscaled.png";
 
 /**
  * AdminShell — persistent chrome for the internal Mosaic back-office.
@@ -61,7 +61,7 @@ export function AdminShell({
       {/* Mobile top bar */}
       <header className="sticky top-0 z-30 flex items-center justify-between bg-[color:var(--ivory)]/95 px-5 py-3 backdrop-blur-md lg:hidden">
         <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="Mosaic" className="h-7 w-auto" />
+          <img src={logo} alt="Mosaic Pet" className="h-7 w-auto object-contain" />
           <span className="text-eyebrow text-[color:var(--gold)]">Admin</span>
         </div>
         <button
@@ -95,7 +95,7 @@ export function AdminShell({
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col justify-between px-5 py-8 lg:flex">
           <div>
             <Link to="/admin" className="flex items-center gap-3">
-              <img src={logoAsset.url} alt="Mosaic" className="h-8 w-auto" />
+              <img src={logo} alt="Mosaic Pet" className="h-8 w-auto object-contain" />
             </Link>
             <p className="text-eyebrow mt-3 text-[color:var(--gold)]">
               Internal admin
