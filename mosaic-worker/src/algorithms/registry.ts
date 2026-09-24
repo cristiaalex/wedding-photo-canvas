@@ -50,12 +50,22 @@ const gridAnalyzer: GridAnalyzer = {
     if (!w || !h) {
       throw new Error('analyzer: cover image has unknown dimensions');
     }
-    // Aim for ~40 px per cell, capped to a sane upper bound so memory
-    // stays bounded on tiny Railway containers. Grid adapts to the cover's
-    // (oriented) aspect ratio — never the other way around.
-    const cols = Math.max(20, Math.min(MAX_COLS, Math.round(w / TARGET_CELL_PX)));
-    const aspect = h / w;
-    const rows = Math.max(15, Math.min(MAX_ROWS, Math.round(cols * aspect)));
+    // Print-master grid: the LONG edge is always MASTER_LONG_EDGE_CELLS
+    // cells (× renderCellPx 120 = ~24,000 px), independent of the cover's
+    // pixel size and of the uploaded photo count. The short edge follows
+    // the cover's (oriented) aspect ratio — never distorted.
+    const MASTER_LONG_EDGE_CELLS = 200;
+    let cols: number;
+    let rows: number;
+    if (w >= h) {
+      cols = MASTER_LONG_EDGE_CELLS;
+      rows = Math.max(1, Math.round((MASTER_LONG_EDGE_CELLS * h) / w));
+    } else {
+      rows = MASTER_LONG_EDGE_CELLS;
+      cols = Math.max(1, Math.round((MASTER_LONG_EDGE_CELLS * w) / h));
+    }
+    void MAX_COLS;
+    void MAX_ROWS;
 
     const targetWidth = cols * TARGET_CELL_PX;
     const targetHeight = rows * TARGET_CELL_PX;
