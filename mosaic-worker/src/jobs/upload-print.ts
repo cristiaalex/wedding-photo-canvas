@@ -49,6 +49,15 @@ export async function runUploadPrint(input: UploadPrintInput): Promise<void> {
       { elapsedMs: Date.now() - tEncode, bytes: printBuf.length },
       'timing:jpeg-encode-print',
     );
+    try {
+      const pm = await sharp(printBuf, { limitInputPixels: false }).metadata();
+      log.info(
+        { width: pm.width, height: pm.height },
+        `PRINT DIMENSIONS: width = ${pm.width} height = ${pm.height}`,
+      );
+    } catch (e) {
+      log.warn({ err: String(e) }, 'print-dimensions:metadata-failed');
+    }
 
     throwIfCancelled(mosaicId);
     const uploaded = await uploadVariantResumable({
