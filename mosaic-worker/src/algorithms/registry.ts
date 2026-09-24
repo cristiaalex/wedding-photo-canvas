@@ -1481,7 +1481,12 @@ const tileCompositor: Compositor = {
     }
 
     const base = () =>
-      sharp(canvas, { raw: { width: canvasW, height: canvasH, channels: 3 } });
+      // 24k master canvas (e.g. 24000x16000 = 384MP) intentionally exceeds
+      // Sharp's default input safety limit; disable it for this one pipeline.
+      sharp(canvas, {
+        raw: { width: canvasW, height: canvasH, channels: 3 },
+        limitInputPixels: false,
+      });
 
     // --- Master PNG (lossless, size-optimized) ------------------------------
     // The only artifact persisted to /tmp. compressionLevel 9 +
