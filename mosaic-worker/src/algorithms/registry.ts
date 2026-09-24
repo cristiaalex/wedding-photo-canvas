@@ -1498,7 +1498,7 @@ const tileCompositor: Compositor = {
     const masterPng = await base()
       .png({ compressionLevel: 9, adaptiveFiltering: true, palette: false, effort: 10 })
       .toBuffer();
-    const masterMeta = await sharp(masterPng).metadata();
+    const masterMeta = await sharp(masterPng, { limitInputPixels: false }).metadata();
     log.info(
       {
         stage: 'master-png:generated',
