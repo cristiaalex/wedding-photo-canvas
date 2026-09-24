@@ -6,7 +6,7 @@ import {
   coverImageStyle,
 } from "@/lib/cover-position";
 import { GuestHeroContent } from "@/components/guest-hero-content";
-import logoAsset from "@/assets/mosaic-logo.png.asset.json";
+import logo from "@/assets/mosaic-pet-logo-upscaled.png";
 
 // ---------------------------------------------------------------------------
 // CoverPhotoEditor — true WYSIWYG editor for the Guest Page hero.
@@ -222,9 +222,9 @@ export function CoverPhotoEditor({
         style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)" }}
       >
         <img
-          src={logoAsset.url}
-          alt="Mosaic Wedding"
-          className="h-7 w-auto sm:h-8 md:h-8 lg:h-10"
+          src={logo}
+          alt="Mosaic Pet"
+          className="h-7 w-auto object-contain sm:h-8 md:h-8 lg:h-10"
         />
         {showDots ? (
           <div className="flex items-center gap-1.5">
