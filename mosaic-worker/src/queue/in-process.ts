@@ -4,6 +4,7 @@ import { logger } from '../lib/logger';
 import { createProgressService } from '../lib/progress';
 import { runGenerateMosaic } from '../jobs/generate-mosaic';
 import { runGenerateDeepZoom } from '../jobs/generate-deepzoom';
+import { runGenerateWebZoom } from '../jobs/generate-web-zoom';
 import { runUploadPrint } from '../jobs/upload-print';
 import { runGenerateArchive } from '../jobs/generate-archive';
 import { runOptimizeUpload } from '../jobs/optimize-upload';
@@ -23,7 +24,7 @@ import type {
  *
  * - Bounded concurrency (`MAX_CONCURRENT_JOBS`).
  * - Hard wall-clock timeout per job.
- * - Chains `generate-deepzoom` after a successful `generate-mosaic`.
+ * - Chains `generate-web-zoom` + `upload-print` after a successful `generate-mosaic`.
  *
  * It satisfies the `Queue` contract so it can be replaced by a
  * DB-backed `SupabaseLeaseQueue` later (see queue.ts header) without
@@ -183,11 +184,10 @@ export class InProcessQueue implements Queue {
             log.info({ mosaicId: p.mosaicId }, 'queue:chain-skipped-cancelled');
             return;
           }
-          this.enqueue('generate-deepzoom', {
+          this.enqueue('generate-web-zoom', {
             eventId: p.eventId,
             mosaicId: p.mosaicId,
             masterPath: result.masterPath,
-            suite: p.suite,
           });
           this.enqueue('upload-print', {
             eventId: p.eventId,
@@ -213,6 +213,21 @@ export class InProcessQueue implements Queue {
           ]);
           log.info({ eventId: p.eventId, mosaicId: p.mosaicId, jobType: item.kind }, 'immediately after calling the handler');
           log.info({ ms: Date.now() - start }, 'queue:job-b:complete');
+          return;
+        }
+        case 'generate-web-zoom': {
+          const p = item.payload as JobPayloadMap['generate-web-zoom'];
+          await Promise.race([
+            runGenerateWebZoom({
+              jobId: item.jobId,
+              workerId: this.workerId,
+              eventId: p.eventId,
+              mosaicId: p.mosaicId,
+              masterPath: p.masterPath,
+            }),
+            timeout,
+          ]);
+          log.info({ ms: Date.now() - start }, 'queue:job-b:web-zoom:complete');
           return;
         }
         case 'upload-print': {
@@ -292,12 +307,12 @@ export class InProcessQueue implements Queue {
         if (item.kind === 'generate-mosaic') {
           const p = item.payload as JobPayloadMap['generate-mosaic'];
           await createProgressService(p.mosaicId).markFailed(message);
-        } else if (item.kind === 'generate-deepzoom') {
-          const p = item.payload as JobPayloadMap['generate-deepzoom'];
+        } else if (item.kind === 'generate-deepzoom' || item.kind === 'generate-web-zoom') {
+          const p = item.payload as JobPayloadMap['generate-web-zoom'];
           await createProgressService(p.mosaicId).apply({
             type: 'log',
             level: 'error',
-            msg: 'deepzoom failed',
+            msg: `${item.kind} failed`,
             meta: { error: message },
           });
         }

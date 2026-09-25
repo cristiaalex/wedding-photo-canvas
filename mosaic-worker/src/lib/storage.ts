@@ -11,7 +11,7 @@ import { getSupabase } from './supabase';
  * route through here so the job code never touches bucket names directly.
  */
 
-export type MosaicVariant = 'full' | 'preview' | 'thumb' | 'print' | 'dzi';
+export type MosaicVariant = 'full' | 'preview' | 'thumb' | 'print' | 'dzi' | 'webzoom';
 
 const EXT: Record<MosaicVariant, { ext: string; contentType: string }> = {
   full: { ext: 'jpg', contentType: 'image/jpeg' },
@@ -23,6 +23,8 @@ const EXT: Record<MosaicVariant, { ext: string; contentType: string }> = {
   print: { ext: 'jpg', contentType: 'image/jpeg' },
   // Deep Zoom manifests are XML; tiles are JPEG (uploaded individually later).
   dzi: { ext: 'dzi', contentType: 'application/xml' },
+  // Single web zoom image (replaces DZI tiles) — one object per mosaic.
+  webzoom: { ext: 'webp', contentType: 'image/webp' },
 };
 
 export function pathFor(

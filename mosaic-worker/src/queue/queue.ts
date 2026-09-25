@@ -43,6 +43,12 @@ export interface JobPayloadMap {
     masterPath: string;
     suite?: string;
   };
+  'generate-web-zoom': {
+    eventId: string;
+    mosaicId: string;
+    /** Local /tmp path to the master produced by Job A. */
+    masterPath: string;
+  };
   'generate-archive': {
     eventId: string;
     /** Row id in `download_batches` — membership is already persisted. */
