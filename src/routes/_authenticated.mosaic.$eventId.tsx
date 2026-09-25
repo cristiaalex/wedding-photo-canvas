@@ -209,7 +209,6 @@ function MosaicViewerPage() {
         {imageUrl && (
           <MosaicViewer
             imageUrl={imageUrl}
-            dziUrl={dziUrl}
             manifest={manifest}
             onTileClick={handleTileClick}
           />
