@@ -124,22 +124,25 @@ function MosaicViewerPage() {
         .limit(1)
         .maybeSingle();
       if (error) throw error;
-      // In the single-master pipeline, `image_url` is the DZI manifest URL
-      // when `dzi_status === 'ready'`. For legacy rows it's a plain JPEG,
-      // so only treat it as a DZI manifest when DZI actually succeeded.
-      const dziReady = data?.dzi_status === "ready";
-      const dziUrl = data?.dzi_url ?? (dziReady ? data?.image_url ?? null : null);
-      // Prefer the legacy JPEG for OpenSeadragon's single-image fallback;
-      // otherwise fall back to image_url (which is a DZI manifest for new rows).
-      const mosaicSource =
-        data?.mosaic_image_url ?? data?.image_url ?? null;
-      if (!data || !mosaicSource) throw new Error("No ready mosaic for this event yet.");
+      // `image_url` holds the single web zoom WebP (private object path) once
+      // `dzi_status === 'ready'`. Older rows may point at a .dzi manifest,
+      // which is no longer used — those fall back to the preview image.
       const toPath = (v: string) =>
-        /^https?:\/\//.test(v) ? (v.match(/\/mosaics\/(.+)$/)?.[1] ?? v) : v;
+        /^https?:\/\//.test(v) ? (v.split("?")[0].match(/\/mosaics\/(.+)$/)?.[1] ?? v) : v;
+      const webZoomPath =
+        data?.dzi_status === "ready" && data?.image_url && /\.webp$/i.test(data.image_url.split("?")[0])
+          ? toPath(data.image_url)
+          : null;
+      const fallbackSource =
+        data?.mosaic_image_url ??
+        (data?.image_url && !/\.dzi$/i.test(data.image_url.split("?")[0]) ? data.image_url : null);
+      if (!data || (!webZoomPath && !fallbackSource)) {
+        throw new Error("No ready mosaic for this event yet.");
+      }
       return {
         mosaicId: data.id as string,
-        mosaicPath: toPath(mosaicSource),
-        dziUrl,
+        webZoomPath,
+        fallbackPath: fallbackSource ? toPath(fallbackSource) : null,
         manifest: (data.tiles_json ?? null) as MosaicManifest | null,
       };
     },
@@ -149,26 +152,26 @@ function MosaicViewerPage() {
   const loadedManifest = mosaicRowQuery.data?.manifest ?? null;
 
 
-  // Cache the signed URL per-mosaic, so remounts within 55 min reuse the same
-  // token → CDN can actually cache the JPEG instead of re-fetching for every
-  // fresh query-string.
+  // Signed (private) URL, cached per mosaic. Prefers the single web zoom
+  // image; falls back to the preview image if it is missing or unsignable.
   const signedUrlQuery = useQuery({
-    queryKey: ["signed-mosaic-url", mosaicRowQuery.data?.mosaicId],
+    queryKey: ["signed-mosaic-url", mosaicRowQuery.data?.mosaicId, mosaicRowQuery.data?.webZoomPath],
     queryFn: async () => {
-      const { data, error } = await supabase.storage
-        .from("mosaics")
-        .createSignedUrl(mosaicRowQuery.data!.mosaicPath, 60 * 60);
-      if (error || !data) throw error ?? new Error("Could not sign mosaic URL");
-      return data.signedUrl;
+      const row = mosaicRowQuery.data!;
+      for (const p of [row.webZoomPath, row.fallbackPath]) {
+        if (!p) continue;
+        const { data } = await supabase.storage.from("mosaics").createSignedUrl(p, 60 * 60);
+        if (data?.signedUrl) return data.signedUrl;
+      }
+      throw new Error("Could not open your mosaic.");
     },
-    enabled: !!mosaicRowQuery.data?.mosaicPath,
+    enabled: !!mosaicRowQuery.data,
     staleTime: SIGNED_URL_STALE_MS,
     gcTime: SIGNED_URL_GC_MS,
   });
 
   const eventName = eventQuery.data ?? "";
   const imageUrl = signedUrlQuery.data ?? null;
-  const dziUrl = mosaicRowQuery.data?.dziUrl ?? null;
   const manifest = loadedManifest;
   const error =
     (mosaicRowQuery.error instanceof Error ? mosaicRowQuery.error.message : null) ??
