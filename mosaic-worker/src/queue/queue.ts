@@ -33,16 +33,6 @@ export interface JobPayloadMap {
     coverImageUrl: string;
     suite?: string;
   };
-  'generate-deepzoom': {
-    eventId: string;
-    mosaicId: string;
-    /**
-     * Local /tmp path to the lossless PNG master produced by Job A.
-     * The DZI builder consumes unencoded pixels — no JPEG round-trip.
-     */
-    masterPath: string;
-    suite?: string;
-  };
   'generate-web-zoom': {
     eventId: string;
     mosaicId: string;

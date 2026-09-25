@@ -3,7 +3,6 @@ import { config } from '../config';
 import { logger } from '../lib/logger';
 import { createProgressService } from '../lib/progress';
 import { runGenerateMosaic } from '../jobs/generate-mosaic';
-import { runGenerateDeepZoom } from '../jobs/generate-deepzoom';
 import { runGenerateWebZoom } from '../jobs/generate-web-zoom';
 import { runUploadPrint } from '../jobs/upload-print';
 import { runGenerateArchive } from '../jobs/generate-archive';
@@ -137,7 +136,7 @@ export class InProcessQueue implements Queue {
       workerId: this.workerId,
     });
     const start = Date.now();
-    const payloadForDiagnostics = item.payload as Partial<JobPayloadMap['generate-mosaic'] & JobPayloadMap['generate-deepzoom']>;
+    const payloadForDiagnostics = item.payload as Partial<JobPayloadMap['generate-mosaic'] & JobPayloadMap['generate-web-zoom']>;
     const eventId = payloadForDiagnostics.eventId;
     const mosaicId = payloadForDiagnostics.mosaicId;
 
@@ -197,24 +196,6 @@ export class InProcessQueue implements Queue {
           return;
         }
 
-        case 'generate-deepzoom': {
-          const p = item.payload as JobPayloadMap['generate-deepzoom'];
-          log.info({ eventId: p.eventId, mosaicId: p.mosaicId, jobType: item.kind }, 'just before calling the handler');
-          await Promise.race([
-            runGenerateDeepZoom({
-              jobId: item.jobId,
-              workerId: this.workerId,
-              eventId: p.eventId,
-              mosaicId: p.mosaicId,
-              masterPath: p.masterPath,
-              suite: p.suite,
-            }),
-            timeout,
-          ]);
-          log.info({ eventId: p.eventId, mosaicId: p.mosaicId, jobType: item.kind }, 'immediately after calling the handler');
-          log.info({ ms: Date.now() - start }, 'queue:job-b:complete');
-          return;
-        }
         case 'generate-web-zoom': {
           const p = item.payload as JobPayloadMap['generate-web-zoom'];
           await Promise.race([
@@ -300,14 +281,14 @@ export class InProcessQueue implements Queue {
       );
       log.error({ err, ms: Date.now() - start }, 'queue:job:failed');
       // Job A failure ⇒ mark mosaic as failed.
-      // Job B failure ⇒ leave mosaic READY; log + record error.
+      // Job B (web zoom) failure ⇒ leave mosaic READY; log + record error.
       // Job C (print) failure ⇒ the job itself writes print_status='failed';
       //   we only need to log here.
       try {
         if (item.kind === 'generate-mosaic') {
           const p = item.payload as JobPayloadMap['generate-mosaic'];
           await createProgressService(p.mosaicId).markFailed(message);
-        } else if (item.kind === 'generate-deepzoom' || item.kind === 'generate-web-zoom') {
+        } else if (item.kind === 'generate-web-zoom') {
           const p = item.payload as JobPayloadMap['generate-web-zoom'];
           await createProgressService(p.mosaicId).apply({
             type: 'log',
