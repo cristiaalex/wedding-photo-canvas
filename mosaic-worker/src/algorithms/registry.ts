@@ -585,6 +585,16 @@ const perceptualMatcher: TileMatcher = {
 
     // Gaussian-decayed spatial penalty: iterate the cell-index Set for
     // this photo (insertion-order preserved, identical to old Map<id,Set>).
+    // Exact Math.exp lookup tables (dSq is always an integer in range),
+    // computed with the identical expression → bit-identical values.
+    const SPATIAL_EXP = new Float64Array(2 * SPATIAL_RADIUS * SPATIAL_RADIUS + 1);
+    for (let d = 0; d < SPATIAL_EXP.length; d++) SPATIAL_EXP[d] = Math.exp(-d / SPATIAL_TWO_SIGMA_SQ);
+    const SIM_EXP = new Float64Array(2 * SIM_RADIUS * SIM_RADIUS + 1);
+    for (let d = 0; d < SIM_EXP.length; d++) SIM_EXP[d] = Math.exp(-d / SIM_TWO_SIGMA_SQ);
+    // Above this reuse count, scanning the fixed (2R+1)² window is cheaper
+    // than walking every placement of the photo.
+    const SPATIAL_WINDOW_THRESHOLD = (2 * SPATIAL_RADIUS + 1) * (2 * SPATIAL_RADIUS + 1);
+
     const spatialReusePenalty = (
       idx: number,
       photoIdx: number,
@@ -595,6 +605,27 @@ const perceptualMatcher: TileMatcher = {
       const r = (idx / cols) | 0;
       const c = idx - r * cols;
       let p = 0;
+      if (s.size > SPATIAL_WINDOW_THRESHOLD) {
+        // Exact local-window scan over assignmentsIdx (same cells, same
+        // distances, same formula as the Set path; only sum order differs).
+        const r0 = r - SPATIAL_RADIUS < 0 ? 0 : r - SPATIAL_RADIUS;
+        const r1 = r + SPATIAL_RADIUS > rows - 1 ? rows - 1 : r + SPATIAL_RADIUS;
+        const c0 = c - SPATIAL_RADIUS < 0 ? 0 : c - SPATIAL_RADIUS;
+        const c1 = c + SPATIAL_RADIUS > cols - 1 ? cols - 1 : c + SPATIAL_RADIUS;
+        for (let rr = r0; rr <= r1; rr++) {
+          const rowBase = rr * cols;
+          const dy = rr - r;
+          const dy2 = dy * dy;
+          for (let cc = c0; cc <= c1; cc++) {
+            const other = rowBase + cc;
+            if (other === idx || other === ignoreIdx) continue;
+            if (assignmentsIdx[other] !== photoIdx) continue;
+            const dx = cc - c;
+            p += SPATIAL_WEIGHT_BASE * SPATIAL_EXP[dx * dx + dy2]!;
+          }
+        }
+        return p;
+      }
       for (const other of s) {
         if (other === idx || other === ignoreIdx) continue;
         const rr = (other / cols) | 0;
@@ -606,7 +637,7 @@ const perceptualMatcher: TileMatcher = {
         const dCheb = adx > ady ? adx : ady;
         if (dCheb > SPATIAL_RADIUS) continue;
         const dSq = dx * dx + dy * dy;
-        p += SPATIAL_WEIGHT_BASE * Math.exp(-dSq / SPATIAL_TWO_SIGMA_SQ);
+        p += SPATIAL_WEIGHT_BASE * SPATIAL_EXP[dSq]!;
       }
       return p;
     };
@@ -694,7 +725,7 @@ const perceptualMatcher: TileMatcher = {
           const t = (sim - SIM_THRESHOLD) / (1 - SIM_THRESHOLD);
           const dx = cc - c;
           const dSq = dx * dx + dy2;
-          const decay = Math.exp(-dSq / SIM_TWO_SIGMA_SQ);
+          const decay = SIM_EXP[dSq]!;
           p += SIM_PENALTY_BASE * t * t * decay;
           simPenaltyApplications++;
         }
@@ -868,8 +899,9 @@ const perceptualMatcher: TileMatcher = {
       }
       return s;
     };
-    let previousPassScore = computeGlobalScore();
-    log.info({ initialScore: previousPassScore }, 'matcher:swap:initial-score');
+    // Full-grid score is diagnostic-only (never feeds any decision); it is
+    // no longer computed per pass on the production path.
+    void computeGlobalScore;
 
     // --- delta-scoring infrastructure ---------------------------------
     const basePen = new Float64Array(totalCells);
@@ -928,7 +960,7 @@ const perceptualMatcher: TileMatcher = {
       if (sim <= SIM_THRESHOLD) return 0;
       const t = (sim - SIM_THRESHOLD) / (1 - SIM_THRESHOLD);
       const dSq = dx * dx + dy * dy;
-      const decay = Math.exp(-dSq / SIM_TWO_SIGMA_SQ);
+      const decay = SIM_EXP[dSq]!;
       return SIM_PENALTY_BASE * t * t * decay;
     };
 
@@ -959,10 +991,9 @@ const perceptualMatcher: TileMatcher = {
       const oldPen = (baseI - crossIJ) + (baseJ - crossJI);
 
       const newColor = colorCost(i, photoB) + colorCost(j, photoA);
-      removePosition(photoA, i);
-      removePosition(photoB, j);
-      addPosition(photoA, j);
-      addPosition(photoB, i);
+      // No trial Set mutation: with ignore=j / ignore=i, scoring against the
+      // unmutated positions yields exactly the same cell set as before
+      // (the only differing cells, i and j, are excluded by idx/ignoreIdx).
       const newPen =
         cellTotalPenalty(i, photoB, j) + cellTotalPenalty(j, photoA, i);
 
@@ -970,6 +1001,10 @@ const perceptualMatcher: TileMatcher = {
       if (delta < 0) {
         assignmentsIdx[i] = photoB;
         assignmentsIdx[j] = photoA;
+        removePosition(photoA, i);
+        removePosition(photoB, j);
+        addPosition(photoA, j);
+        addPosition(photoB, i);
         invalidateBasePenAround(i);
         invalidateBasePenAround(j);
         _swap_passSumDelta += delta;
@@ -977,11 +1012,6 @@ const perceptualMatcher: TileMatcher = {
         if (delta > _swap_passWorstDelta) _swap_passWorstDelta = delta;
         return true;
       }
-      // revert
-      removePosition(photoA, j);
-      removePosition(photoB, i);
-      addPosition(photoA, i);
-      addPosition(photoB, j);
       _swap_passRejects++;
       return false;
     };
@@ -1067,12 +1097,9 @@ const perceptualMatcher: TileMatcher = {
         ? Math.round((_swap_passSwaps * 10000) / _swap_passCandidates) / 100
         : 0;
       const avgDelta = _swap_passSwaps > 0 ? _swap_passSumDelta / _swap_passSwaps : 0;
-      const currentScore = computeGlobalScore();
-      const scoreImprovementFromPreviousPass = previousPassScore - currentScore;
-      const scoreImprovementPct = previousPassScore !== 0
-        ? Math.round((scoreImprovementFromPreviousPass / previousPassScore) * 10000) / 100
-        : 0;
-      previousPassScore = currentScore;
+      const currentScore = null;
+      const scoreImprovementFromPreviousPass = null;
+      const scoreImprovementPct = null;
       const basePenTotal = basePenHits + basePenMisses;
       const basePenHitRatioPct = basePenTotal > 0
         ? Math.round((basePenHits * 10000) / basePenTotal) / 100
