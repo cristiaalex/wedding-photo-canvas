@@ -182,8 +182,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         invoice_creation: { enabled: true },
         // Pet returns the customer to their mosaic studio, where the
         // "being finished" state and the final download live.
-        success_url: `${origin}/mosaic?billing=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/mosaic?billing=cancelled`,
+        success_url: `${origin}/mosaic?billing=success&session_id={CHECKOUT_SESSION_ID}${eventId ? `&event=${eventId}` : ""}`,
+        cancel_url: `${origin}/mosaic?billing=cancelled${eventId ? `&event=${eventId}` : ""}`,
         metadata,
         payment_intent_data: { metadata },
       });
@@ -246,3 +246,38 @@ export const createPortalSession = createServerFn({ method: "POST" }).handler(
     }
   },
 );
+
+/**
+ * Post-Stripe return lookup. Verifies the checkout session server-side and
+ * resolves the exact event from its metadata. It never unlocks downloads —
+ * it only tells the page which event to load and whether the current
+ * session still owns it (ownership checked with the caller's RLS scope).
+ */
+export const resolveCheckoutReturn = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z.object({ sessionId: z.string().trim().regex(/^cs_[A-Za-z0-9_]+$/).max(255) }).parse(input),
+  )
+  .handler(async ({ data }): Promise<{ eventId: string | null; owned: boolean }> => {
+    const { requireOrganizer, getStripe, authedSupabase } = await import("./billing.server");
+    const organizer = await requireOrganizer(authHeader());
+    let session;
+    try {
+      session = await getStripe().checkout.sessions.retrieve(data.sessionId);
+    } catch (err) {
+      console.error("[billing] checkout return lookup failed", err);
+      return { eventId: null, owned: false };
+    }
+    const meta = session.metadata ?? {};
+    if (meta["product"] !== PET_STRIPE_PRODUCT_TAG || session.mode !== "payment") {
+      return { eventId: null, owned: false };
+    }
+    const eventId = meta["event_id"] ?? null;
+    if (!eventId) return { eventId: null, owned: false };
+    const { data: ev } = await authedSupabase(organizer.token)
+      .from("events")
+      .select("id")
+      .eq("id", eventId)
+      .eq("organizer_id", organizer.userId)
+      .maybeSingle();
+    return { eventId, owned: Boolean(ev?.id) };
+  });
