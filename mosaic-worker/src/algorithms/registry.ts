@@ -64,6 +64,25 @@ const gridAnalyzer: GridAnalyzer = {
       rows = MASTER_LONG_EDGE_CELLS;
       cols = Math.max(1, Math.round((MASTER_LONG_EDGE_CELLS * w) / h));
     }
+    // TEMPORARY BENCHMARK: fixed 2:3 portrait grid 60×90 = 5,400 cells
+    // (× 120 px → 7,200 × 10,800 master). Set to null to restore the
+    // 200-cell long-edge grid above.
+    const BENCHMARK_GRID: { cols: number; rows: number } | null = { cols: 60, rows: 90 };
+    if (BENCHMARK_GRID) {
+      cols = BENCHMARK_GRID.cols;
+      rows = BENCHMARK_GRID.rows;
+    }
+    console.log(
+      JSON.stringify({
+        msg: 'BENCHMARK GRID',
+        benchmark: !!BENCHMARK_GRID,
+        cols,
+        rows,
+        totalCells: cols * rows,
+        expectedMasterWidth: cols * 120,
+        expectedMasterHeight: rows * 120,
+      }),
+    );
     void MAX_COLS;
     void MAX_ROWS;
 
