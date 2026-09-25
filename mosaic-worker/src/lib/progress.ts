@@ -93,14 +93,15 @@ export async function maybePromoteReady(mosaicId: string): Promise<boolean> {
   // the UI hides the corresponding button/link when the sidecar status is
   // not 'ready'. Without this, a transient failure would leave the mosaic
   // stuck at 'finalizing' forever.
-  const dziDone = row.dzi_status === 'ready' || row.dzi_status === 'failed';
+  // The web zoom image is a viewing asset only — READY no longer waits for
+  // it. READY is gated solely on the print job reaching a terminal state;
+  // print_status itself stays 'failed' on failure (never silently 'ready').
   const printDone = row.print_status === 'ready' || row.print_status === 'failed';
-  if (!dziDone || !printDone) return false;
+  if (!printDone) return false;
   await writePatch(mosaicId, {
     status: STAGE.READY,
     stage: STAGE.READY,
     progress: 100,
-    deepzoom_ready: row.dzi_status === 'ready',
     error: null,
   });
   logger.info({ mosaicId }, 'promote-ready:mosaic marked READY');
