@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { BillingCard } from "@/components/billing-card";
+import { resolveCheckoutReturn } from "@/lib/billing.functions";
 import { PageStack } from "@/components/page-layout";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -115,6 +116,8 @@ function MosaicPage() {
   const [regenerateOpen, setRegenerateOpen] = useState(false);
   const studioRef = useRef<HTMLDivElement | null>(null);
   const autoStarted = useRef(false);
+  const resolveReturn = useServerFn(resolveCheckoutReturn);
+  const [checkEmail, setCheckEmail] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -125,14 +128,36 @@ function MosaicPage() {
         setLoading(false);
         return;
       }
-      const { data: events } = await supabase
-        .from("events")
-        .select("*")
-        .eq("organizer_id", userData.user.id)
-        .order("created_at", { ascending: false })
-        .limit(1);
+      // Returning from Stripe: load the exact purchased event, never "newest".
+      const params = new URLSearchParams(window.location.search);
+      const returnSession = params.get("billing") === "success" ? params.get("session_id") : null;
+      let targetEventId: string | null = null;
+      if (returnSession) {
+        try {
+          const res = await resolveReturn({ data: { sessionId: returnSession } });
+          if (cancelled) return;
+          if (res.eventId && !res.owned) {
+            setCheckEmail(true);
+            setLoading(false);
+            return;
+          }
+          targetEventId = res.eventId;
+        } catch (err) {
+          console.error("[mosaic-pet] checkout return lookup failed", err);
+        }
+      }
+      let query = supabase.from("events").select("*").eq("organizer_id", userData.user.id);
+      query = targetEventId
+        ? query.eq("id", targetEventId)
+        : query.order("created_at", { ascending: false });
+      const { data: events } = await query.limit(1);
       if (cancelled) return;
       if (!events || events.length === 0) {
+        if (returnSession) {
+          setCheckEmail(true);
+          setLoading(false);
+          return;
+        }
         navigate({ to: "/create", replace: true });
         return;
       }
@@ -398,6 +423,21 @@ function MosaicPage() {
     autoStarted.current = true;
     void launchGeneration();
   }, [loading, event, mosaics.length, crafting, isProcessing, photoCount]);
+
+  if (checkEmail) {
+    return (
+      <AppShell>
+        <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-6 text-center">
+          <p className="text-eyebrow text-coral">Payment received ❤️</p>
+          <h1 className="mt-3 text-display text-3xl">Check your email to access your mosaic</h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Your mosaic is saved to the email you used at checkout. Open the sign-in link we sent there to see it.
+          </p>
+          <Link to="/login" className="btn-primary mt-6 inline-flex items-center gap-2">Send me the sign-in link</Link>
+        </div>
+      </AppShell>
+    );
+  }
 
   if (loading || !event) {
     return (
