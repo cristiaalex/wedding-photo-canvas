@@ -424,6 +424,21 @@ function MosaicPage() {
     void launchGeneration();
   }, [loading, event, mosaics.length, crafting, isProcessing, photoCount]);
 
+  if (checkEmail) {
+    return (
+      <AppShell>
+        <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-6 text-center">
+          <p className="text-eyebrow text-coral">Payment received ❤️</p>
+          <h1 className="mt-3 text-display text-3xl">Check your email to access your mosaic</h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Your mosaic is saved to the email you used at checkout. Open the sign-in link we sent there to see it.
+          </p>
+          <Link to="/login" className="btn-primary mt-6 inline-flex items-center gap-2">Send me the sign-in link</Link>
+        </div>
+      </AppShell>
+    );
+  }
+
   if (loading || !event) {
     return (
       <AppShell projectName={event?.pet_name ?? event?.event_name ?? undefined}>
