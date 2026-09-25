@@ -316,6 +316,24 @@ export async function runGenerateMosaic(
       'master.png saved to /tmp',
     );
     retainMaster(masterPath, 2);
+    log.info(
+      {
+        gridCols: grid.cols,
+        gridRows: grid.rows,
+        totalCells: grid.cells.length,
+        masterWidth: grid.cols * RENDER_CELL_PX,
+        masterHeight: grid.rows * RENDER_CELL_PX,
+        masterBytes: outputs.masterPng.length,
+        uploadedPhotos: photos.length,
+        uniquePhotosUsed: matcherStats?.uniquePhotosUsed ?? null,
+        maxReusePerPhoto: matcherStats?.maxReusePerPhoto ?? null,
+        avgReusePerPhoto: grid.cells.length / Math.max(1, uniqueUsed),
+        matcherMs: stageTimings['matcher-total'] ?? null,
+        compositorMs: stageTimings['compositor-total'] ?? null,
+        masterGenerationMs: Date.now() - tJobStart,
+      },
+      'BENCHMARK SUMMARY (Job A) — print/webzoom times+sizes in timing:jpeg-encode-print, JOB C COMPLETE, WEB ZOOM DIMENSIONS, job-b:web-zoom:done',
+    );
 
     let preview: Awaited<ReturnType<typeof uploadVariant>>;
     let thumb: Awaited<ReturnType<typeof uploadVariant>>;
