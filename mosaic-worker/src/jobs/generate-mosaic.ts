@@ -6,7 +6,7 @@ import { startCreep } from '../lib/progress-creep';
 import { downloadToBuffer, uploadVariant } from '../lib/storage';
 import { STAGE } from '../lib/stages';
 import { CHECKPOINT } from '../lib/checkpoints';
-import { getSuite } from '../algorithms/registry';
+import { getSuite, BENCHMARK_CELL_PX } from '../algorithms/registry';
 import { loadEventPhotos } from '../lib/photo-bank';
 import { masterPathFor, retainMaster, writeMaster } from '../lib/master-file';
 import {
@@ -17,6 +17,11 @@ import {
   unregisterActive,
   watchCancellation,
 } from '../lib/cancellation';
+
+// Cell size of the master render. During the temporary benchmark this is the
+// 150 px override from the registry; in production it is the original 120.
+const RENDER_CELL_PX = BENCHMARK_CELL_PX ?? 120;
+
 
 
 /**
@@ -197,7 +202,7 @@ export async function runGenerateMosaic(
     let outputs;
     try {
       outputs = await suite.compositor.composite(targetBuf, grid, photos, matches, {
-        renderCellPx: 120,
+        renderCellPx: RENDER_CELL_PX,
         previewLongestSide: 3000,
       });
     } finally {
@@ -215,10 +220,10 @@ export async function runGenerateMosaic(
       throw new Error('compositor: no thumb produced');
     }
     {
-      const mw = grid.cols * 120;
-      const mh = grid.rows * 120;
+      const mw = grid.cols * RENDER_CELL_PX;
+      const mh = grid.rows * RENDER_CELL_PX;
       log.info(
-        { width: mw, height: mh, pixelCount: mw * mh, format: 'png' },
+        { width: mw, height: mh, cellPx: RENDER_CELL_PX, pixelCount: mw * mh, format: 'png' },
         `MASTER DIMENSIONS: width = ${mw} height = ${mh} pixelCount = ${mw * mh} format = png`,
       );
     }
@@ -240,7 +245,6 @@ export async function runGenerateMosaic(
     // across time. The viewer signs / resolves it later. Use the photo bank
     // records already loaded for matching instead of a second huge `.in(id, …)`
     // query; large events can exceed URL/query limits and leave every src empty.
-    const RENDER_CELL_PX = 120;
     const canvasW = grid.cols * RENDER_CELL_PX;
     const idToSrc = new Map(photos.map((p) => [p.id, p.imageUrl ?? '']));
     const tiles = matches.assignments.map((photoId, i) => {
@@ -320,6 +324,7 @@ export async function runGenerateMosaic(
       {
         gridCols: grid.cols,
         gridRows: grid.rows,
+        cellPx: RENDER_CELL_PX,
         totalCells: grid.cells.length,
         masterWidth: grid.cols * RENDER_CELL_PX,
         masterHeight: grid.rows * RENDER_CELL_PX,
