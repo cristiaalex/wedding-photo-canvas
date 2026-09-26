@@ -202,7 +202,7 @@ export async function runGenerateMosaic(
     let outputs;
     try {
       outputs = await suite.compositor.composite(targetBuf, grid, photos, matches, {
-        renderCellPx: 120,
+        renderCellPx: RENDER_CELL_PX,
         previewLongestSide: 3000,
       });
     } finally {
@@ -220,10 +220,10 @@ export async function runGenerateMosaic(
       throw new Error('compositor: no thumb produced');
     }
     {
-      const mw = grid.cols * 120;
-      const mh = grid.rows * 120;
+      const mw = grid.cols * RENDER_CELL_PX;
+      const mh = grid.rows * RENDER_CELL_PX;
       log.info(
-        { width: mw, height: mh, pixelCount: mw * mh, format: 'png' },
+        { width: mw, height: mh, cellPx: RENDER_CELL_PX, pixelCount: mw * mh, format: 'png' },
         `MASTER DIMENSIONS: width = ${mw} height = ${mh} pixelCount = ${mw * mh} format = png`,
       );
     }
