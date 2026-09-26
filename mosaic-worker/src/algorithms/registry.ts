@@ -33,6 +33,10 @@ const TARGET_CELL_PX = 40; // physical pixel size of each tile on the canvas
 const MAX_COLS = 200;
 const MAX_ROWS = 150;
 
+// TEMPORARY BENCHMARK cell size (px per tile in the master). The job reads
+// this for the compositor; null falls back to the production 120.
+export const BENCHMARK_CELL_PX: number | null = 150;
+
 const gridAnalyzer: GridAnalyzer = {
   name: 'uniform@0',
   async analyze(target) {
