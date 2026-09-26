@@ -324,6 +324,7 @@ export async function runGenerateMosaic(
       {
         gridCols: grid.cols,
         gridRows: grid.rows,
+        cellPx: RENDER_CELL_PX,
         totalCells: grid.cells.length,
         masterWidth: grid.cols * RENDER_CELL_PX,
         masterHeight: grid.rows * RENDER_CELL_PX,
