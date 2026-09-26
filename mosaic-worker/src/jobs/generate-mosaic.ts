@@ -245,7 +245,6 @@ export async function runGenerateMosaic(
     // across time. The viewer signs / resolves it later. Use the photo bank
     // records already loaded for matching instead of a second huge `.in(id, …)`
     // query; large events can exceed URL/query limits and leave every src empty.
-    const RENDER_CELL_PX = 120;
     const canvasW = grid.cols * RENDER_CELL_PX;
     const idToSrc = new Map(photos.map((p) => [p.id, p.imageUrl ?? '']));
     const tiles = matches.assignments.map((photoId, i) => {
