@@ -72,9 +72,7 @@ const gridAnalyzer: GridAnalyzer = {
     // (× 150 px → 4,800 × 7,200 master ≈ 305 PPI at 40×60 cm).
     // Set BENCHMARK_GRID to null to restore the 200-cell long-edge grid.
     const BENCHMARK_GRID: { cols: number; rows: number } | null = { cols: 32, rows: 48 };
-    // TEMPORARY BENCHMARK cell size (px per tile in the master). The job
-    // reads this for the compositor; null falls back to the production 120.
-    export const BENCHMARK_CELL_PX: number | null = 150;
+    // TEMPORARY BENCHMARK cell size comes from module-level BENCHMARK_CELL_PX.
     const RENDER_CELL_PX_EFFECTIVE = BENCHMARK_CELL_PX ?? 120;
     if (BENCHMARK_GRID) {
       cols = BENCHMARK_GRID.cols;
