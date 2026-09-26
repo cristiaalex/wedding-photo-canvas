@@ -1500,8 +1500,32 @@ const tileCompositor: Compositor = {
 
     log.info({ uniqueTiles: tileCache.size }, 'Composite finished');
 
+    // --- TEMPORARY OVERLAY BENCHMARK: normal alpha blend @ 35% --------------
+    // final = mosaic × 0.65 + cover × 0.35. Replaces the soft-light overlay
+    // for this benchmark only. Set to null to restore the soft-light path.
+    const BENCHMARK_OVERLAY_OPACITY: number | null = 0.35;
+    if (BENCHMARK_OVERLAY_OPACITY !== null) {
+      const coverRaw = await sharp(target, { failOn: 'none', limitInputPixels: false })
+        .rotate()
+        .resize(canvasW, canvasH, { fit: 'cover', position: 'centre' })
+        .removeAlpha()
+        .raw()
+        .toBuffer();
+      if (coverRaw.length !== canvas.length) {
+        throw new Error('overlay benchmark: cover size mismatch');
+      }
+      const op = BENCHMARK_OVERLAY_OPACITY;
+      const inv = 1 - op;
+      for (let i = 0, len = canvas.length; i < len; i++) {
+        canvas[i] = Math.round(canvas[i]! * inv + coverRaw[i]! * op);
+      }
+      log.info(
+        `OVERLAY BENCHMARK: opacity=${Math.round(op * 100)}%, grid=${grid.cols}x${grid.rows}, cellPx=${RENDER_CELL_PX}`,
+      );
+    }
+
     // --- Cover overlay (soft light @ 10%) -----------------------------------
-    try {
+    if (BENCHMARK_OVERLAY_OPACITY === null) try {
       const coverRaw = await sharp(target, { failOn: 'none' })
         .rotate()
         .resize(canvasW, canvasH, { fit: 'cover', position: 'centre' })
