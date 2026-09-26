@@ -64,10 +64,14 @@ const gridAnalyzer: GridAnalyzer = {
       rows = MASTER_LONG_EDGE_CELLS;
       cols = Math.max(1, Math.round((MASTER_LONG_EDGE_CELLS * w) / h));
     }
-    // TEMPORARY BENCHMARK: fixed 2:3 portrait grid 100×150 = 15,000 cells
-    // (× 120 px → 12,000 × 18,000 master). Set to null to restore the
-    // 200-cell long-edge grid above.
-    const BENCHMARK_GRID: { cols: number; rows: number } | null = { cols: 100, rows: 150 };
+    // TEMPORARY BENCHMARK: fixed 2:3 portrait grid 32×48 = 1,536 cells
+    // (× 150 px → 4,800 × 7,200 master ≈ 305 PPI at 40×60 cm).
+    // Set BENCHMARK_GRID to null to restore the 200-cell long-edge grid.
+    const BENCHMARK_GRID: { cols: number; rows: number } | null = { cols: 32, rows: 48 };
+    // TEMPORARY BENCHMARK cell size (px per tile in the master). The job
+    // reads this for the compositor; null falls back to the production 120.
+    export const BENCHMARK_CELL_PX: number | null = 150;
+    const RENDER_CELL_PX_EFFECTIVE = BENCHMARK_CELL_PX ?? 120;
     if (BENCHMARK_GRID) {
       cols = BENCHMARK_GRID.cols;
       rows = BENCHMARK_GRID.rows;
@@ -78,9 +82,10 @@ const gridAnalyzer: GridAnalyzer = {
         benchmark: !!BENCHMARK_GRID,
         cols,
         rows,
+        cellPx: RENDER_CELL_PX_EFFECTIVE,
         totalCells: cols * rows,
-        expectedMasterWidth: cols * 120,
-        expectedMasterHeight: rows * 120,
+        expectedMasterWidth: cols * RENDER_CELL_PX_EFFECTIVE,
+        expectedMasterHeight: rows * RENDER_CELL_PX_EFFECTIVE,
       }),
     );
     void MAX_COLS;
