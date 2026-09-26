@@ -6,7 +6,7 @@ import { startCreep } from '../lib/progress-creep';
 import { downloadToBuffer, uploadVariant } from '../lib/storage';
 import { STAGE } from '../lib/stages';
 import { CHECKPOINT } from '../lib/checkpoints';
-import { getSuite } from '../algorithms/registry';
+import { getSuite, BENCHMARK_CELL_PX } from '../algorithms/registry';
 import { loadEventPhotos } from '../lib/photo-bank';
 import { masterPathFor, retainMaster, writeMaster } from '../lib/master-file';
 import {
@@ -17,6 +17,11 @@ import {
   unregisterActive,
   watchCancellation,
 } from '../lib/cancellation';
+
+// Cell size of the master render. During the temporary benchmark this is the
+// 150 px override from the registry; in production it is the original 120.
+const RENDER_CELL_PX = BENCHMARK_CELL_PX ?? 120;
+
 
 
 /**
